@@ -1,0 +1,36 @@
+# == Class: contrail::config
+#
+# Install and configure the config service
+#
+# === Parameters:
+#
+# [*package_name*]
+#   (optional) Package name for config
+#
+class contrail::config (
+  $package_name = $contrail::params::config_package_name,
+  $api_config,
+  $basicauthusers_property,
+  $config_nodemgr_config,
+  $device_manager_config,
+  $schema_config,
+  $discovery_config,
+  $svc_monitor_config,
+) inherits contrail::params  {
+
+  anchor {'contrail::config::start': } ->
+  #class {'::contrail::config::install': } ->
+  class {'::contrail::config::config': 
+    api_config => $api_config,
+    basicauthusers_property => $basicauthusers_property,
+    config_nodemgr_config => $config_nodemgr_config,
+    device_manager_config => $device_manager_config,
+    schema_config => $schema_config,
+    discovery_config => $discovery_config,
+    svc_monitor_config => $svc_monitor_config,
+  } ~>
+  class {'::contrail::config::service': }
+  anchor {'contrail::config::end': }
+  
+}
+
