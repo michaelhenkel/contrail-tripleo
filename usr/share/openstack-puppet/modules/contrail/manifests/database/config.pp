@@ -18,8 +18,8 @@ class contrail::database::config (
   $client_port_thrift = '9160',
   $zookeeper_server_ips = hiera('contrail::zk_server_ip'),
   $zookeeper_client_ip = hiera('contrail::database::host_ip'),
-  $zookeeper_hostnames = hiera('controller_node_names', ''),
-  $packages = hiera('zookeeper::params::packages'),
+  $zookeeper_hostnames = hiera('contrail_database_short_node_names', ''),
+  $packages = ['zookeeper'],
   $service_name = 'zookeeper'
 ) {
 
