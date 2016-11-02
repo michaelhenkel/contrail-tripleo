@@ -106,21 +106,21 @@ class tripleo::network::contrail::control(
   $control_ifmap_password = "${ifmap_username}.control"
   $dns_ifmap_user         = "${ifmap_username}.dns"
   $dns_ifmap_password     = "${ifmap_username}.dns"
-  class {'::contrail::keystone':
-    keystone_config => {
-      'KEYSTONE' => {
-        'admin_tenant_name' => $admin_tenant_name,
-        'admin_token'       => $admin_token,
-        'admin_password'    => $admin_password,
-        'admin_user'        => $admin_user,
-        'auth_host'         => $auth_host,
-        'auth_port'         => $auth_port,
-        'auth_protocol'     => $auth_protocol,
-        'insecure'          => $insecure,
-        'memcached_servers' => $memcached_servers,
-      },
-    },
-  } ->
+#  class {'::contrail::keystone':
+#    keystone_config => {
+#      'KEYSTONE' => {
+#        'admin_tenant_name' => $admin_tenant_name,
+#        'admin_token'       => $admin_token,
+#        'admin_password'    => $admin_password,
+#        'admin_user'        => $admin_user,
+#        'auth_host'         => $auth_host,
+#        'auth_port'         => $auth_port,
+#        'auth_protocol'     => $auth_protocol,
+#        'insecure'          => $insecure,
+#        'memcached_servers' => $memcached_servers,
+#      },
+#    },
+#  } ->
   class {'::contrail::control':
     secret                 => $secret,
     control_config         => {
