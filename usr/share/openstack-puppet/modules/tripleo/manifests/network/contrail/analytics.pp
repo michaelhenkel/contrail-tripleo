@@ -129,7 +129,7 @@
 #  Defaults to hiera('contrail::zk_server_ip')
 #
 class tripleo::network::contrail::analytics(
-  $host_ip = hiera('contrail::analytics::host_ip'),
+  $host_ip = $::ipaddress,
   $admin_password = hiera('contrail::admin_password'),
   $admin_tenant_name = hiera('contrail::admin_tenant_name'),
   $admin_token = hiera('contrail::admin_token'),
@@ -137,14 +137,14 @@ class tripleo::network::contrail::analytics(
   $auth_host = hiera('contrail::auth_host'),
   $auth_port = hiera('contrail::auth_port'),
   $auth_protocol = hiera('contrail::auth_protocol'),
-  $cassandra_server_list = hiera('contrail::cassandra_server_list'),
+  $cassandra_server_list = hiera('contrail_database_node_ips'),
   $collector_http_server_port = 8089,
   $collector_sandesh_port = 8086,
   $disc_server_ip = hiera('contrail::disc_server_ip'),
   $disc_server_port = hiera('contrail::disc_server_port'),
   $http_server_port = 8090,
   $insecure = hiera('contrail::insecure'),
-  $kafka_broker_list = hiera('contrail::kafka_broker_list'),
+  $kafka_broker_list = hiera('contrail_database_node_ips'),
   $memcached_servers = hiera('contrail::memcached_server'),
   $rabbit_server = hiera('contrail::rabbit_server'),
   $rabbit_user = hiera('contrail::rabbit_user'),
@@ -154,7 +154,7 @@ class tripleo::network::contrail::analytics(
   $redis_server_port = 6379,
   $rest_api_ip = '0.0.0.0',
   $rest_api_port = 8081,
-  $zk_server_ip = hiera('contrail::zk_server_ip'),
+  $zk_server_ip = hiera('contrail_database_node_ips'),
 )
 {
   $cassandra_server_list_9042 = join([join($zk_server_ip, ':9042,'),":9042"],'')
@@ -170,7 +170,7 @@ class tripleo::network::contrail::analytics(
         'auth_port'         => $auth_port,
         'auth_protocol'     => $auth_protocol,
         'insecure'          => $insecure,
-        'memcache_servers' => $memcached_servers,
+        'memcache_servers'  => $memcached_servers,
       },
     },
   } ->
@@ -192,7 +192,7 @@ class tripleo::network::contrail::analytics(
     analytics_nodemgr_config  => {
       'DISCOVERY' => {
         'server'   => $disc_server_ip,
-        'port' => $disc_server_port,
+        'port'     => $disc_server_port,
       },
     },
     analytics_api_config  => {

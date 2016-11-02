@@ -10,16 +10,16 @@
 #
 class contrail::database::config (
   $database_nodemgr_config = {},
-  $cassandra_servers = hiera('contrail::cassandra_server_list'),
-  $cassandra_ip = hiera('contrail::database::host_ip'),  
+  $cassandra_servers = hiera('contrail_database_node_ips'),
+  $cassandra_ip = $::ipaddress,
   $storage_port       = '7000',
   $ssl_storage_port   = '7001',
   $client_port        = '9042',
   $client_port_thrift = '9160',
-  $zookeeper_server_ips = hiera('contrail::zk_server_ip'),
-  $zookeeper_client_ip = hiera('contrail::database::host_ip'),
-  $zookeeper_hostnames = hiera('contrail_database_short_node_names', ''),
-  $packages = ['zookeeper'],
+  $zookeeper_server_ips = hiera('contrail_database_node_ips'),
+  $zookeeper_client_ip = $::ipaddress,
+  $zookeeper_hostnames = hiera('contrail_database_node_names', ''),
+  $packages = hiera('zookeeper::params::packages'),
   $service_name = 'zookeeper'
 ) {
 
@@ -29,20 +29,13 @@ class contrail::database::config (
   create_ini_settings($database_nodemgr_config, $contrail_database_nodemgr_config)
   validate_ipv4_address($cassandra_ip)
 
-  package { 'java-1.8.0-openjdk.x86_64':
-    ensure => 'installed',
-  } ->
-  file { '/var/lib/cassandra/data':
-    ensure => 'directory',
-    owner  => 'cassandra',
-    mode   => '0750',
-  } ->
-  file { '/var/lib/cassandra/saved_caches':
-    ensure => 'directory',
-    owner  => 'cassandra',
-    mode   => '0750',
-  } ->
-  file { '/var/lib/cassandra/commitlog':
+#  package { 'java-1.8.0-openjdk.x86_64':
+#    ensure => 'installed',
+#  } ->
+  file { ['/var/lib/cassandra',
+          '/var/lib/cassandra/data',
+          '/var/lib/cassandra/saved_caches',
+          '/var/lib/cassandra/commitlog', ]:
     ensure => 'directory',
     owner  => 'cassandra',
     mode   => '0750',

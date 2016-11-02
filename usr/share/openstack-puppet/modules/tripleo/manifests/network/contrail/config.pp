@@ -118,7 +118,7 @@ class tripleo::network::contrail::config(
   $ifmap_password = hiera('contrail::config::ifmap_password'),
   $ifmap_server_ip = hiera('contrail::config::ifmap_server_ip'),
   $ifmap_username = hiera('contrail::config::ifmap_username'),
-  $control_server_list = hiera('contrail_control_short_node_names'),
+  $control_server_list = hiera('contrail_control_node_ips'),
   $rabbit_server = hiera('contrail::rabbit_server'),
   $rabbit_user = hiera('contrail::rabbit_user'),
   $rabbit_password = hiera('contrail::rabbit_password'),
@@ -131,7 +131,7 @@ class tripleo::network::contrail::config(
   $auth_host = hiera('contrail::auth_host'),
   $auth_port = hiera('contrail::auth_port'),
   $auth_protocol = hiera('contrail::auth_protocol'),
-  $cassandra_server_list = hiera('contrail::cassandra_server_list'),
+  $cassandra_server_list = hiera('contrail_database_node_ips'),
   $disc_server_ip = hiera('contrail::disc_server_ip'),
   $disc_server_port = hiera('contrail::disc_server_port'),
   $insecure = hiera('contrail::insecure'),
@@ -140,7 +140,7 @@ class tripleo::network::contrail::config(
   $memcached_servers = hiera('contrail::memcached_server'),
   $multi_tenancy = hiera('contrail::multi_tenancy'),
   $redis_server = '127.0.0.1',
-  $zk_server_ip = hiera('contrail::zk_server_ip'),
+  $zk_server_ip = hiera('contrail_database_node_ips'),
 )
 {
   validate_ip_address($listen_ip_address)
