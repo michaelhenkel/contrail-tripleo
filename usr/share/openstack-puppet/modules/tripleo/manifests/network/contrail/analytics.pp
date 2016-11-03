@@ -160,6 +160,7 @@ class tripleo::network::contrail::analytics(
   $cassandra_server_list_9042 = join([join($zk_server_ip, ':9042,'),":9042"],'')
   $zk_server_ip_2181 = join([join($zk_server_ip, ':2181,'),":2181"],'')
   $kafka_broker_list_9092 = join([join($kafka_broker_list, ':9092,'),":9092"],'')
+  $redis_config = "bind ${host_ip} 127.0.0.1"
   class {'::contrail::keystone':
     keystone_config => {
       'KEYSTONE' => {
@@ -257,6 +258,7 @@ class tripleo::network::contrail::analytics(
         'disc_server_port' => $disc_server_port,
       },
     },
+    redis_config          => $redis_config,
     topology_config       => {
       'DEFAULTS'  => {
         'zk_server_ip' => $zk_server_ip_2181,

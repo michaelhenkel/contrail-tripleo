@@ -15,6 +15,7 @@ class contrail::analytics (
   $collector_config,
   $query_engine_config,
   $snmp_collector_config,
+  $redis_config,
   $topology_config,
 ) inherits contrail::params {
 
@@ -27,6 +28,7 @@ class contrail::analytics (
     collector_config => $collector_config,
     query_engine_config => $query_engine_config,
     snmp_collector_config => $snmp_collector_config,
+    redis_config => $redis_config,
     topology_config => $topology_config,
   } ~>
   class {'::contrail::analytics::service': }

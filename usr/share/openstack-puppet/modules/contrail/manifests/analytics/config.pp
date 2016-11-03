@@ -35,6 +35,7 @@ class contrail::analytics::config (
   $collector_config         = {},
   $query_engine_config      = {},
   $snmp_collector_config    = {},
+  $redis_config,
   $topology_config          = {},
 ) {
   validate_hash($alarm_gen_config)
@@ -52,6 +53,12 @@ class contrail::analytics::config (
   $contrail_snmp_collector_config    = { 'path' => '/etc/contrail/contrail-snmp-collector.conf' }
   $contrail_analytics_nodemgr_config = { 'path' => '/etc/contrail/contrail-analytics-nodemgr.conf' }
   $contrail_topology_config          = { 'path' => '/etc/contrail/contrail-toplogy.conf' }
+
+  file_line { 'add bind to /etc/redis.conf':
+    path => '/etc/redis.conf',
+    line => $redis_config,
+    match   => "^bind.*$",
+  }
 
   create_ini_settings($alarm_gen_config, $contrail_alarm_gen_config)
   create_ini_settings($analytics_api_config, $contrail_analytics_api_config)
