@@ -146,7 +146,7 @@ class tripleo::network::contrail::analytics(
   $insecure = hiera('contrail::insecure'),
   $kafka_broker_list = hiera('contrail_database_node_ips'),
   $memcached_servers = hiera('contrail::memcached_server'),
-  $rabbit_server = hiera('contrail::rabbit_server'),
+  $rabbit_server = hiera('rabbitmq_node_ips'),
   $rabbit_user = hiera('contrail::rabbit_user'),
   $rabbit_password = hiera('contrail::rabbit_password'),
   $rabbit_port = hiera('contrail::rabbit_port'),
@@ -160,6 +160,7 @@ class tripleo::network::contrail::analytics(
   $cassandra_server_list_9042 = join([join($zk_server_ip, ':9042,'),":9042"],'')
   $zk_server_ip_2181 = join([join($zk_server_ip, ':2181,'),":2181"],'')
   $kafka_broker_list_9092 = join([join($kafka_broker_list, ':9092,'),":9092"],'')
+  $rabbit_server_list_5672 = join([join($rabbit_server, ':5672,'),":5672"],'')
   $redis_config = "bind ${host_ip} 127.0.0.1"
   class {'::contrail::keystone':
     keystone_config => {
@@ -180,7 +181,7 @@ class tripleo::network::contrail::analytics(
       'DEFAULTS'  => {
         'host_ip'              => $host_ip,
         'kafka_broker_list'    => $kafka_broker_list_9092,
-        'rabbitmq_server_list' => "${rabbit_server}:${rabbit_port}",
+        'rabbitmq_server_list' => $rabbit_server_list_5672,
         'rabbitmq_user'        => $rabbit_user,
         'rabbitmq_password'    => $rabbit_password,
         'zk_server_ip'         => $zk_server_ip_2181,

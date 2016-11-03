@@ -44,6 +44,7 @@ class contrail::config::config (
   $schema_config           = {},
   $device_manager_config   = {},
   $svc_monitor_config      = {},
+  $vnc_api_lib_config      = {},
   $basicauthusers_property = [],
 ) {
 
@@ -54,6 +55,7 @@ class contrail::config::config (
   validate_hash($schema_config)
   validate_hash($device_manager_config)
   validate_hash($svc_monitor_config)
+  validate_hash($vnc_api_lib_config)
 
   validate_array($basicauthusers_property)
 
@@ -64,6 +66,7 @@ class contrail::config::config (
   $contrail_schema_config = { 'path' => '/etc/contrail/contrail-schema.conf' }
   $contrail_device_manager_config = { 'path' => '/etc/contrail/contrail-device-manager.conf' }
   $contrail_svc_monitor_config = { 'path' => '/etc/contrail/contrail-svc-monitor.conf' }
+  $contrail_vnc_api_lib_config = { 'path' => '/etc/contrail/vnc_api_lib.ini' }
 
   create_ini_settings($api_config, $contrail_api_config)
   create_ini_settings($alarm_gen_config, $contrail_alarm_gen_config)
@@ -72,6 +75,7 @@ class contrail::config::config (
   create_ini_settings($schema_config, $contrail_schema_config)
   create_ini_settings($device_manager_config, $contrail_device_manager_config)
   create_ini_settings($svc_monitor_config, $contrail_svc_monitor_config)
+  create_ini_settings($vnc_api_lib_config, $contrail_vnc_api_lib_config)
 
   #create_resources('contrail_api_config', $api_config)
   #create_resources('contrail_alarm_gen_config', $alarm_gen_config)

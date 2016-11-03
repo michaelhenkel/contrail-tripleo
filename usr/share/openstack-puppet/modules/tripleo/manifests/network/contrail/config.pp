@@ -119,7 +119,7 @@ class tripleo::network::contrail::config(
   $ifmap_server_ip = hiera('contrail::config::ifmap_server_ip'),
   $ifmap_username = hiera('contrail::config::ifmap_username'),
   $control_server_list = hiera('contrail_control_node_ips'),
-  $rabbit_server = hiera('contrail::rabbit_server'),
+  $rabbit_server = hiera('rabbitmq_node_ips'),
   $rabbit_user = hiera('contrail::rabbit_user'),
   $rabbit_password = hiera('contrail::rabbit_password'),
   $rabbit_port = hiera('contrail::rabbit_port'),
@@ -148,6 +148,7 @@ class tripleo::network::contrail::config(
   validate_ip_address($ifmap_server_ip)
   $cassandra_server_list_9160 = join([join($cassandra_server_list, ':9160 '),":9160"],'')
   $zk_server_ip_2181 = join([join($zk_server_ip, ':2181 '),":2181"],'')
+  $rabbit_server_list_5672 = join([join($rabbit_server, ':5672,'),":5672"],'')
   $basicauthusers_property_control = map($control_server_list) |$item| { "${item}.control:${item}.control" }
   $basicauthusers_property_dns = $control_server_list.map |$item| { "${item}.dns:${item}.dns" }
   $basicauthusers_property = concat($basicauthusers_property_control, $basicauthusers_property_dns)
@@ -183,7 +184,7 @@ class tripleo::network::contrail::config(
         'listen_ip_addr'        => $listen_ip_address,
         'listen_port'           => $listen_port,
         'multi_tenancy'         => $multi_tenancy,
-        'rabbit_server'         => "${rabbit_server}:${rabbit_port}",
+        'rabbit_server'         => $rabbit_server_list_5672,
         'rabbit_user'           => $rabbit_user,
         'rabbit_password'       => $rabbit_password,
         'redis_server'          => $redis_server,
@@ -202,7 +203,7 @@ class tripleo::network::contrail::config(
         'cassandra_server_list' => $cassandra_server_list_9160,
         'disc_server_ip'        => $disc_server_ip,
         'disc_server_port'      => $disc_server_port,
-        'rabbit_server'         => "${rabbit_server}:${rabbit_port}",
+        'rabbit_server'         => $rabbit_server_list_5672,
         'redis_server'          => $redis_server,
         'rabbit_user'           => $rabbit_user,
         'rabbit_password'       => $rabbit_password,
@@ -217,7 +218,7 @@ class tripleo::network::contrail::config(
         'ifmap_password'        => $ifmap_password,
         'ifmap_server_ip'       => $ifmap_server_ip,
         'ifmap_username'        => $ifmap_username,
-        'rabbit_server'         => "${rabbit_server}:${rabbit_port}",
+        'rabbit_server'         => $rabbit_server_list_5672,
         'rabbit_user'           => $rabbit_user,
         'rabbit_password'       => $rabbit_password,
         'redis_server'          => $redis_server,
@@ -238,11 +239,16 @@ class tripleo::network::contrail::config(
         'ifmap_password'        => $ifmap_password,
         'ifmap_server_ip'       => $ifmap_server_ip,
         'ifmap_username'        => $ifmap_username,
-        'rabbit_server'         => "${rabbit_server}:${rabbit_port}",
+        'rabbit_server'         => $rabbit_server_list_5672,
         'rabbit_user'           => $rabbit_user,
         'rabbit_password'       => $rabbit_password,
         'redis_server'          => $redis_server,
         'zk_server_ip'          => $zk_server_ip_2181,
+      },
+    },
+    vnc_api_lib_config    => {
+      'auth' => {
+        'AUTHN_SERVER' => $auth_host,
       },
     },
   }
