@@ -31,6 +31,7 @@ class tripleo::profile::base::neutron::opencontrail::vrouter (
   $auth_host = hiera('contrail::auth_host'),
   $auth_port = hiera('contrail::auth_port'),
   $auth_protocol = hiera('contrail::auth_protocol'),
+  $control_server = hiera('contrail_control_node_ips'),
   $disc_server_ip = hiera('controller_virtual_ip'),
   $disc_server_port = 5998,
   $insecure = hiera('contrail::insecure'),
@@ -53,6 +54,7 @@ class tripleo::profile::base::neutron::opencontrail::vrouter (
     #class {'::contrail::vrouter::provision_vrouter':
     #  require => Class['contrail::vrouter'],
     #}
+    $control_server_list = join($control_server, ' ')
     class {'::contrail::keystone':
       keystone_config => {
         'KEYSTONE' => {
@@ -76,8 +78,8 @@ class tripleo::profile::base::neutron::opencontrail::vrouter (
       macaddr => $::macaddress,
       physical_interface => $physical_interface,
       vrouter_agent_config       => {
-        'NETWORKS'  => {
-          'control_network_ip' => $::ipaddress,
+        'CONTROL-NODE'  => {
+          'server' => $control_server_list,
         },
         'VIRTUAL-HOST-INTERFACE'  => {
           'name' => "vhost0",

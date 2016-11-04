@@ -84,10 +84,8 @@
 #  String (IPv4) value + port
 #  Defaults to hiera('contrail::memcached_servers'),
 #
-class tripleo::network::contrail::control(
+class tripleo::network::contrail::register(
   $host_ip = $::ipaddress,
-  $ifmap_password = $::ipaddress,
-  $ifmap_username = $::ipaddress,
   $admin_password = hiera('contrail::admin_password'),
   $admin_tenant_name = hiera('contrail::admin_tenant_name'),
   $admin_token = hiera('contrail::admin_token'),
@@ -95,66 +93,20 @@ class tripleo::network::contrail::control(
   $auth_host = hiera('contrail::auth_host'),
   $auth_port = hiera('contrail::auth_port'),
   $auth_protocol = hiera('contrail::auth_protocol'),
-  $disc_server_ip = hiera('controller_virtual_ip'),
-  $disc_server_port = hiera('contrail::disc_server_port'),
-  $insecure = hiera('contrail::insecure'),
-  $memcached_servers = hiera('contrail::memcached_server'),
-  $secret = hiera('contrail::control::rndc_secret'),
+  $api_server = hiera('controller_virtual_ip'),
 )
 {
-  $control_ifmap_user     = "${ifmap_username}.control"
-  $control_ifmap_password = "${ifmap_username}.control"
-  $dns_ifmap_user         = "${ifmap_username}.dns"
-  $dns_ifmap_password     = "${ifmap_username}.dns"
-#  class {'::contrail::keystone':
-#    keystone_config => {
-#      'KEYSTONE' => {
-#        'admin_tenant_name' => $admin_tenant_name,
-#        'admin_token'       => $admin_token,
-#        'admin_password'    => $admin_password,
-#        'admin_user'        => $admin_user,
-#        'auth_host'         => $auth_host,
-#        'auth_port'         => $auth_port,
-#        'auth_protocol'     => $auth_protocol,
-#        'insecure'          => $insecure,
-#        'memcached_servers' => $memcached_servers,
-#      },
-#    },
-#  } ->
-  class {'::contrail::control':
-    secret                 => $secret,
-    control_config         => {
-      'DEFAULT'  => {
-        'hostip' => $host_ip,
-      },
-      'DISCOVERY' => {
-        'port'   => $disc_server_port,
-        'server' => $disc_server_ip,
-      },
-      'IFMAP'     => {
-        'password' => $control_ifmap_user,
-        'user'     => $control_ifmap_password,
-      },
-    },
-    dns_config             => {
-      'DEFAULT'  => {
-        'hostip'      => $host_ip,
-        'rndc_secret' => $secret,
-      },
-      'DISCOVERY' => {
-        'port'   => $disc_server_port,
-        'server' => $disc_server_ip,
-      },
-      'IFMAP'     => {
-        'password' => $dns_ifmap_user,
-        'user'     => $dns_ifmap_password,
-      }
-    },
-    control_nodemgr_config => {
-      'DISCOVERY' => {
-        'port'   => $disc_server_port,
-        'server' => $disc_server_ip,
-      },
-    },
+  class {'::contrail::control::provision_control':
+    api_address => $api_server,
+    keystone_admin_user => $admin_user,
+    keystone_admin_password => $admin_password,
+    keystone_admin_tenant_name => $admin_tenant_name,
+  }
+  class {'::contrail::control::provision_linklocal':
+    api_address => $api_server,
+    keystone_admin_user => $admin_user,
+    keystone_admin_password => $admin_password,
+    keystone_admin_tenant_name => $admin_tenant_name,
+    ipfabric_service_ip => $api_server,
   }
 }

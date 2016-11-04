@@ -140,7 +140,7 @@ class tripleo::network::contrail::analytics(
   $cassandra_server_list = hiera('contrail_database_node_ips'),
   $collector_http_server_port = 8089,
   $collector_sandesh_port = 8086,
-  $disc_server_ip = hiera('contrail::disc_server_ip'),
+  $disc_server_ip = hiera('controller_virtual_ip'),
   $disc_server_port = hiera('contrail::disc_server_port'),
   $http_server_port = 8090,
   $insecure = hiera('contrail::insecure'),
