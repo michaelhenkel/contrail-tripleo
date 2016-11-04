@@ -60,7 +60,7 @@ class contrail::vrouter::config (
   $vhost_ip               = '127.0.0.1',
   $discovery_ip           = '127.0.0.1',
   $device                 = 'eth0',
-  $kmod_path              = "/lib/modules/${::kernelrelease}/extra/net/vrouter/vrouter.ko",
+  $kmod_path              = "vrouter",
   $compute_device         = 'eth0',
   $mask                   = '24',
   $netmask                = '255.255.255.0',
@@ -70,6 +70,7 @@ class contrail::vrouter::config (
   $macaddr                = $::macaddress,
   $vrouter_agent_config   = {},
   $vrouter_nodemgr_config = {},
+  $vnc_api_lib_config     = {},
 ) {
 
   include ::contrail::vnc_api
@@ -79,8 +80,16 @@ class contrail::vrouter::config (
   validate_hash($vrouter_agent_config)
   validate_hash($vrouter_nodemgr_config)
 
-  create_resources('contrail_vrouter_agent_config', $vrouter_agent_config)
-  create_resources('contrail_vrouter_nodemgr_config', $vrouter_nodemgr_config)
+  $contrail_vrouter_agent_config = { 'path' => '/etc/contrail/contrail-vrouter-agent.conf' }
+  $contrail_vrouter_nodemgr_config = { 'path' => '/etc/contrail/contrail-vrouter-nodemgr.conf' }
+  $contrail_vnc_api_lib_config = { 'path' => '/etc/contrail/vnc_api_lib.ini' }
+
+  create_ini_settings($vrouter_agent_config, $contrail_vrouter_agent_config)
+  create_ini_settings($vrouter_nodemgr_config, $contrail_vrouter_nodemgr_config)
+  create_ini_settings($vnc_api_lib_config, $contrail_vnc_api_lib_config)
+
+  #create_resources('contrail_vrouter_agent_config', $vrouter_agent_config)
+  #create_resources('contrail_vrouter_nodemgr_config', $vrouter_nodemgr_config)
 
   file { '/etc/contrail/agent_param' :
     ensure  => file,
@@ -97,6 +106,10 @@ class contrail::vrouter::config (
     content => "DISCOVERY=${discovery_ip}",
   }
 
+  file { '/opt/contrail/utils/update_dev_net_config_files.py':
+    ensure => file,
+    source => '/usr/share/openstack-puppet/modules/contrail/files/vrouter/update_dev_net_config_files.py',
+  } -> 
   exec { '/bin/python /opt/contrail/utils/update_dev_net_config_files.py' :
     path => '/usr/bin',
     command => "/bin/python /opt/contrail/utils/update_dev_net_config_files.py \
