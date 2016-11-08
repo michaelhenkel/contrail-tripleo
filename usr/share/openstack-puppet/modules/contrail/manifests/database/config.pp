@@ -22,7 +22,7 @@ class contrail::database::config (
   $packages = hiera('zookeeper::params::packages'),
   $service_name = 'zookeeper'
 ) {
-
+  $zk_server_ip_2181 = join([join($zookeeper_server_ips, ':2181,'),":2181"],'')
   validate_hash($database_nodemgr_config)
   $contrail_database_nodemgr_config = { 'path' => '/etc/contrail/contrail-database-nodemgr.conf' }
 
@@ -61,7 +61,7 @@ class contrail::database::config (
           'class_name' => 'org.apache.cassandra.locator.SimpleSeedProvider',
           'parameters' => [
             {
-              'seeds' => $::ipaddress,
+              'seeds' => $cassandra_servers[0],
             },
           ],
         },
@@ -79,10 +79,10 @@ class contrail::database::config (
     ensure => directory
   }
 
-  file {'/usr/lib/zookeeper/bin/zkEnv.sh':
-    ensure => link,
-    target => '/usr/libexec/zkEnv.sh'
-  }
+  #file {'/usr/lib/zookeeper/bin/zkEnv.sh':
+  #  ensure => link,
+  #  target => '/usr/libexec/zkEnv.sh'
+  #}
 
   class {'::zookeeper':
     servers   => $zookeeper_server_ips,
@@ -91,7 +91,18 @@ class contrail::database::config (
     cfg_dir   => '/etc/zookeeper/conf',
     packages  => $packages,
     service_name => $service_name,
+    #service_provider => 'systemd',
+    #manage_service_file => true,
   }
 
   File['/usr/lib/zookeeper/bin/zkEnv.sh'] -> Class['::zookeeper']
+
+  file { '/usr/share/kafka/config/server.properties':
+    ensure => present,
+  }->
+  file_line { 'add zookeeper servers to kafka config':
+    path => '/usr/share/kafka/config/server.properties',
+    line => "zookeeper.connect=${zk_server_ip_2181}",
+    match   => "^zookeeper.connect=.*$",
+  }
 }

@@ -85,6 +85,7 @@
 #  Defaults to hiera('contrail::memcached_servers'),
 #
 class tripleo::network::contrail::control(
+  $step = hiera('step'),
   $host_ip = $::ipaddress,
   $ifmap_password = $::ipaddress,
   $ifmap_username = $::ipaddress,
@@ -96,6 +97,7 @@ class tripleo::network::contrail::control(
   $auth_port = hiera('contrail::auth_port'),
   $auth_protocol = hiera('contrail::auth_protocol'),
   $disc_server_ip = hiera('controller_virtual_ip'),
+  $api_server = hiera('controller_virtual_ip'),
   $disc_server_port = hiera('contrail::disc_server_port'),
   $insecure = hiera('contrail::insecure'),
   $memcached_servers = hiera('contrail::memcached_server'),
@@ -156,5 +158,23 @@ class tripleo::network::contrail::control(
         'server' => $disc_server_ip,
       },
     },
+  }
+  if $step >= 5 {
+    class {'::contrail::control::provision_control':
+      api_address => $api_server,
+      keystone_admin_user => $admin_user,
+      keystone_admin_password => $admin_password,
+      keystone_admin_tenant_name => $admin_tenant_name,
+    }
+    file { '/tmp/test':
+        content => 'I was here',
+    }
+    class {'::contrail::control::provision_linklocal':
+      api_address => $api_server,
+      keystone_admin_user => $admin_user,
+      keystone_admin_password => $admin_password,
+      keystone_admin_tenant_name => $admin_tenant_name,
+      ipfabric_service_ip => $api_server,
+    }
   }
 }
