@@ -116,7 +116,7 @@
 #
 class tripleo::network::contrail::config(
   $ifmap_password = hiera('contrail::config::ifmap_password'),
-  $ifmap_server_ip = hiera('contrail::config::ifmap_server_ip'),
+  $ifmap_server_ip = $::ipaddress,
   $ifmap_username = hiera('contrail::config::ifmap_username'),
   $control_server_list = hiera('contrail_control_node_ips'),
   $rabbit_server = hiera('rabbitmq_node_ips'),
@@ -147,7 +147,7 @@ class tripleo::network::contrail::config(
   validate_ip_address($disc_server_ip)
   validate_ip_address($ifmap_server_ip)
   $cassandra_server_list_9160 = join([join($cassandra_server_list, ':9160 '),":9160"],'')
-  $zk_server_ip_2181 = join([join($zk_server_ip, ':2181 '),":2181"],'')
+  $zk_server_ip_2181 = join([join($zk_server_ip, ':2181,'),":2181"],'')
   $rabbit_server_list_5672 = join([join($rabbit_server, ':5672,'),":5672"],'')
   $basicauthusers_property_control = map($control_server_list) |$item| { "${item}.control:${item}.control" }
   $basicauthusers_property_dns = $control_server_list.map |$item| { "${item}.dns:${item}.dns" }

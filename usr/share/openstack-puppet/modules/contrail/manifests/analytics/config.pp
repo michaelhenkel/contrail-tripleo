@@ -52,7 +52,7 @@ class contrail::analytics::config (
   $contrail_query_engine_config      = { 'path' => '/etc/contrail/contrail-query-engine.conf' }
   $contrail_snmp_collector_config    = { 'path' => '/etc/contrail/contrail-snmp-collector.conf' }
   $contrail_analytics_nodemgr_config = { 'path' => '/etc/contrail/contrail-analytics-nodemgr.conf' }
-  $contrail_topology_config          = { 'path' => '/etc/contrail/contrail-toplogy.conf' }
+  $contrail_topology_config          = { 'path' => '/etc/contrail/contrail-topology.conf' }
 
   file_line { 'add bind to /etc/redis.conf':
     path => '/etc/redis.conf',

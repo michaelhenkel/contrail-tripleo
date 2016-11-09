@@ -184,7 +184,7 @@ class tripleo::network::contrail::analytics(
         'rabbitmq_server_list' => $rabbit_server_list_5672,
         'rabbitmq_user'        => $rabbit_user,
         'rabbitmq_password'    => $rabbit_password,
-        'zk_server_ip'         => $zk_server_ip_2181,
+        'zk_list'         => $zk_server_ip_2181,
       },
       'DISCOVERY' => {
         'disc_server_ip'   => $disc_server_ip,
@@ -202,7 +202,6 @@ class tripleo::network::contrail::analytics(
         'cassandra_server_list' => $cassandra_server_list_9042,
         'host_ip'               => $host_ip,
         'http_server_port'      => $http_server_port,
-        'redis_server'          => $redis_server,
         'rest_api_ip'           => $rest_api_ip,
         'rest_api_port'         => $rest_api_port,
       },
@@ -252,7 +251,7 @@ class tripleo::network::contrail::analytics(
     },
     snmp_collector_config => {
       'DEFAULTS'  => {
-        'zk_server_ip' => $zk_server_ip_2181,
+        'zookeeper' => $zk_server_ip_2181,
       },
       'DISCOVERY' => {
         'disc_server_ip'   => $disc_server_ip,
@@ -262,7 +261,7 @@ class tripleo::network::contrail::analytics(
     redis_config          => $redis_config,
     topology_config       => {
       'DEFAULTS'  => {
-        'zk_server_ip' => $zk_server_ip_2181,
+        'zookeeper' => $zk_server_ip_2181,
       },
       'DISCOVERY' => {
         'disc_server_ip'   => $disc_server_ip,

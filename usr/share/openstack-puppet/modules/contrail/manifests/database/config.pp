@@ -18,7 +18,7 @@ class contrail::database::config (
   $client_port_thrift = '9160',
   $zookeeper_server_ips = hiera('contrail_database_node_ips'),
   $zookeeper_client_ip = $::ipaddress,
-  $zookeeper_hostnames = hiera('contrail_database_node_names', ''),
+  $zookeeper_hostnames = hiera('contrail_database_short_node_names', ''),
   $packages = hiera('zookeeper::params::packages'),
   $service_name = 'zookeeper'
 ) {
@@ -83,7 +83,14 @@ class contrail::database::config (
   #  ensure => link,
   #  target => '/usr/libexec/zkEnv.sh'
   #}
-
+  file_line { 'adjust zookeeper service':
+    path => '/etc/rc.d/init.d/zookeeper',
+    line => "ZOOCFGDIR=/etc/zookeeper/conf",
+    match   => "^ZOOCFGDIR=.*$",
+  } ->
+  exec { 'systemctl daemon-reload':
+    path => '/bin',
+  } ->
   class {'::zookeeper':
     servers   => $zookeeper_server_ips,
     client_ip => $zookeeper_client_ip,
@@ -95,7 +102,7 @@ class contrail::database::config (
     #manage_service_file => true,
   }
 
-  File['/usr/lib/zookeeper/bin/zkEnv.sh'] -> Class['::zookeeper']
+  #File['/usr/lib/zookeeper/bin/zkEnv.sh'] -> Class['::zookeeper']
 
   file { '/usr/share/kafka/config/server.properties':
     ensure => present,
@@ -104,5 +111,11 @@ class contrail::database::config (
     path => '/usr/share/kafka/config/server.properties',
     line => "zookeeper.connect=${zk_server_ip_2181}",
     match   => "^zookeeper.connect=.*$",
+  }
+  $kafka_broker_id = extract_id($zookeeper_hostnames, $::hostname)
+  file_line { 'set kafka broker id':
+    path => '/usr/share/kafka/config/server.properties',
+    line => "broker.id=${kafka_broker_id}",
+    match   => "^broker.id=.*$",
   }
 }
