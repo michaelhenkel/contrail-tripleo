@@ -157,9 +157,10 @@ class tripleo::network::contrail::analytics(
   $zk_server_ip = hiera('contrail_database_node_ips'),
 )
 {
-  $cassandra_server_list_9042 = join([join($zk_server_ip, ':9042,'),":9042"],'')
-  $zk_server_ip_2181 = join([join($zk_server_ip, ':2181,'),":2181"],'')
-  $kafka_broker_list_9092 = join([join($kafka_broker_list, ':9092,'),":9092"],'')
+  $cassandra_server_list_9042 = join([join($zk_server_ip, ':9042 '),":9042"],'')
+  $zk_server_ip_2181 = join([join($zk_server_ip, ':2181 '),":2181"],'')
+  $zk_server_ip_2181_comma = join([join($zk_server_ip, ':2181,'),":2181"],'')
+  $kafka_broker_list_9092 = join([join($kafka_broker_list, ':9092 '),":9092"],'')
   $rabbit_server_list_5672 = join([join($rabbit_server, ':5672,'),":5672"],'')
   $redis_config = "bind ${host_ip} 127.0.0.1"
   class {'::contrail::keystone':
@@ -221,7 +222,7 @@ class tripleo::network::contrail::analytics(
         'hostip'                => $host_ip,
         'http_server_port'      => $collector_http_server_port,
         'kafka_broker_list'     => $kafka_broker_list_9092,
-        'zookeeper_server_list' => $zk_server_ip_2181,
+        'zookeeper_server_list' => $zk_server_ip_2181_comma,
       },
       'COLLECTOR' => {
         'port' => $collector_sandesh_port,
@@ -251,7 +252,7 @@ class tripleo::network::contrail::analytics(
     },
     snmp_collector_config => {
       'DEFAULTS'  => {
-        'zookeeper' => $zk_server_ip_2181,
+        'zookeeper' => $zk_server_ip_2181_comma,
       },
       'DISCOVERY' => {
         'disc_server_ip'   => $disc_server_ip,
@@ -261,7 +262,7 @@ class tripleo::network::contrail::analytics(
     redis_config          => $redis_config,
     topology_config       => {
       'DEFAULTS'  => {
-        'zookeeper' => $zk_server_ip_2181,
+        'zookeeper' => $zk_server_ip_2181_comma,
       },
       'DISCOVERY' => {
         'disc_server_ip'   => $disc_server_ip,
