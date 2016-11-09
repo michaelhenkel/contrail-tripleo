@@ -166,15 +166,5 @@ class tripleo::network::contrail::control(
       keystone_admin_password => $admin_password,
       keystone_admin_tenant_name => $admin_tenant_name,
     }
-    file { '/tmp/test':
-        content => 'I was here',
-    }
-    class {'::contrail::control::provision_linklocal':
-      api_address => $api_server,
-      keystone_admin_user => $admin_user,
-      keystone_admin_password => $admin_password,
-      keystone_admin_tenant_name => $admin_tenant_name,
-      ipfabric_service_ip => $api_server,
-    }
   }
 }

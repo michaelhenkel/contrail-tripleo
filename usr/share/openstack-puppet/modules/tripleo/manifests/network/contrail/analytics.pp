@@ -215,6 +215,15 @@ class tripleo::network::contrail::analytics(
         'redis_query_port'  => $redis_server_port,
         'server'            => $redis_server,
       },
+      'KEYSTONE'     => {
+        'admin_password'    => $admin_password,
+        'admin_tenant_name' => $admin_tenant_name,
+        'admin_user'        => $admin_user,
+        'auth_host'         => $auth_host,
+        'auth_port'         => $auth_port,
+        'auth_protocol'     => $auth_protocol,
+        'insecure'          => $insecure,
+      },
     },
     collector_config      => {
       'DEFAULT'  => {

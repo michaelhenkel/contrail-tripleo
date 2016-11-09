@@ -115,6 +115,8 @@
 #  Defaults to hiera('contrail::zk_server_ip')
 #
 class tripleo::network::contrail::config(
+  $step = hiera('step'),
+  $config_hostnames = hiera('contrail_config_short_node_names'),
   $ifmap_password = hiera('contrail::config::ifmap_password'),
   $ifmap_server_ip = $::ipaddress,
   $ifmap_username = hiera('contrail::config::ifmap_username'),
@@ -141,6 +143,7 @@ class tripleo::network::contrail::config(
   $multi_tenancy = hiera('contrail::multi_tenancy'),
   $redis_server = '127.0.0.1',
   $zk_server_ip = hiera('contrail_database_node_ips'),
+  $api_server = hiera('controller_virtual_ip'),
 )
 {
   validate_ip_address($listen_ip_address)
@@ -251,5 +254,16 @@ class tripleo::network::contrail::config(
         'AUTHN_SERVER' => $auth_host,
       },
     },
+  }
+  if $step >= 5 {
+    if $config_hostnames[0] == $::hostname {
+      class {'::contrail::control::provision_linklocal':
+        api_address => $api_server,
+        keystone_admin_user => $admin_user,
+        keystone_admin_password => $admin_password,
+        keystone_admin_tenant_name => $admin_tenant_name,
+        ipfabric_service_ip => $api_server,
+      }
+    }
   }
 }
