@@ -41,14 +41,14 @@ class tripleo::network::contrail::database(
   $admin_tenant_name = hiera('contrail::admin_tenant_name'),
   $admin_token = hiera('contrail::admin_token'),
   $admin_user = hiera('contrail::admin_user'),
-  $host_ip = hiera('contrail::database::host_ip'),
-  $disc_server_ip = hiera('contrail::disc_server_ip'),
+  $host_ip = $::ipaddress,
+  $disc_server_ip = hiera('controller_virtual_ip'),
   $disc_server_port = hiera('contrail::disc_server_port'),
 )
 {
   class {'::contrail::database':
     database_nodemgr_config => {
-      'DEFAULTS'  => {
+      'DEFAULT'  => {
         'hostip' => $host_ip,
       },
       'DISCOVERY' => {
