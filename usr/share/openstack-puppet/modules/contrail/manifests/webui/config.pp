@@ -48,5 +48,9 @@ class contrail::webui::config (
     ensure  => file,
     content => template('contrail/config.global.js.erb'),
   }
+  file { '/etc/contrail/contrail-webui-userauth.js' :
+    ensure  => file,
+    content => template('contrail/contrail-webui-userauth.js.erb'),
+  }
 
 }
