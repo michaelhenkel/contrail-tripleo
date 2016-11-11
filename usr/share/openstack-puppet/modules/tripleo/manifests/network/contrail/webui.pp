@@ -77,15 +77,15 @@
 #  Defaults to '127.0.0.1'
 #
 class tripleo::network::contrail::webui(
-  $contrail_analytics_vip = hiera('contrail::webui::contrail_analytics_vip'),
-  $contrail_config_vip = hiera('contrail::webui::contrail_config_vip'),
-  $neutron_vip = hiera('contrail::webui::neutron_vip'),
+  $contrail_analytics_vip = hiera('controller_virtual_ip'),
+  $contrail_config_vip = hiera('controller_virtual_ip'),
+  $neutron_vip = hiera('controller_virtual_ip'),
   $admin_password = hiera('contrail::admin_password'),
   $admin_tenant_name = hiera('contrail::admin_tenant_name'),
   $admin_token = hiera('contrail::admin_token'),
   $admin_user = hiera('contrail::admin_user'),
   $auth_host = hiera('contrail::auth_host'),
-  $cassandra_server_list = hiera('contrail::cassandra_server_list'),
+  $cassandra_server_list = hiera('contrail_database_node_ips'),
   $contrail_webui_http_port = 8080,
   $contrail_webui_https_port = 8143,
   $redis_ip = '127.0.0.1',
