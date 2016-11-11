@@ -256,6 +256,13 @@ class tripleo::network::contrail::config(
     },
   }
   if $step >= 5 {
+    class {'::contrail::config::provision_config':
+      api_address => $api_server,
+      keystone_admin_user => $admin_user,
+      keystone_admin_password => $admin_password,
+      keystone_admin_tenant_name => $admin_tenant_name,
+      openstack_vip => $auth_host,
+    }
     if $config_hostnames[0] == $::hostname {
       class {'::contrail::control::provision_linklocal':
         api_address => $api_server,

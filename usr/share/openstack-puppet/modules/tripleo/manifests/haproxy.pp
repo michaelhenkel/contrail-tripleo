@@ -365,6 +365,8 @@ class tripleo::haproxy (
     contrail_config_port => 8082,
     contrail_discovery_port => 5998,
     contrail_analytics_port => 8090,
+    contrail_webui_http_port => 8080,
+    contrail_webui_https_port => 8143,
     glance_api_port => 9292,
     glance_api_ssl_port => 13292,
     glance_registry_port => 9191,
@@ -617,6 +619,28 @@ class tripleo::haproxy (
       internal_ip       => hiera('controller_virtual_ip'),
       #internal_ip       => hiera('contrail_config_node_ips', $controller_virtual_ip),
       service_port      => $ports[contrail_analytics_port],
+      ip_addresses      => hiera('contrail_config_node_ips', $contrail_config_node_ips),
+      server_names      => hiera('contrail_config_node_ips', $contrail_config_node_ips),
+    }
+  }
+
+ if $contrail_config {
+    ::tripleo::haproxy::endpoint { 'contrail_webui_http':
+      public_virtual_ip => $public_virtual_ip,
+      internal_ip       => hiera('controller_virtual_ip'),
+      #internal_ip       => hiera('contrail_config_node_ips', $controller_virtual_ip),
+      service_port      => $ports[contrail_webui_http_port],
+      ip_addresses      => hiera('contrail_config_node_ips', $contrail_config_node_ips),
+      server_names      => hiera('contrail_config_node_ips', $contrail_config_node_ips),
+    }
+  }
+
+ if $contrail_config {
+    ::tripleo::haproxy::endpoint { 'contrail_webui_https':
+      public_virtual_ip => $public_virtual_ip,
+      internal_ip       => hiera('controller_virtual_ip'),
+      #internal_ip       => hiera('contrail_config_node_ips', $controller_virtual_ip),
+      service_port      => $ports[contrail_webui_https_port],
       ip_addresses      => hiera('contrail_config_node_ips', $contrail_config_node_ips),
       server_names      => hiera('contrail_config_node_ips', $contrail_config_node_ips),
     }

@@ -43,6 +43,7 @@ class contrail::webui::config (
   $admin_tenant_name,
 ) {
 
+  $contrail_vip = $contrail_config_vip
   file { '/etc/contrail/config.global.js' :
     ensure  => file,
     content => template('contrail/config.global.js.erb'),

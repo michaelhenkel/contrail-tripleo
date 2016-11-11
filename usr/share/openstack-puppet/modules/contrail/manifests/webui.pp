@@ -26,11 +26,11 @@ class contrail::webui (
   anchor {'contrail::webui::start': } ->
   #class {'::contrail::webui::install': } ->
   class {'::contrail::webui::config': 
-    openstack_vip             => $auth_host,
+    openstack_vip             => $openstack_vip,
     contrail_config_vip       => $contrail_config_vip,
     contrail_analytics_vip    => $contrail_analytics_vip,
     neutron_vip               => $neutron_vip,
-    cassandra_ip              => $cassandra_server_list,
+    cassandra_ip              => $cassandra_ip,
     redis_ip                  => $redis_ip,
     contrail_webui_http_port  => $contrail_webui_http_port,
     contrail_webui_https_port => $contrail_webui_https_port,

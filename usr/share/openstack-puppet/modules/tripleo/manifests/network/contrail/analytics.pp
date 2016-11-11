@@ -129,8 +129,10 @@
 #  Defaults to hiera('contrail::zk_server_ip')
 #
 class tripleo::network::contrail::analytics(
+  $step = hiera('step'),
   $host_ip = $::ipaddress,
   $admin_password = hiera('contrail::admin_password'),
+  $api_server = hiera('controller_virtual_ip'),
   $admin_tenant_name = hiera('contrail::admin_tenant_name'),
   $admin_token = hiera('contrail::admin_token'),
   $admin_user = hiera('contrail::admin_user'),
@@ -278,5 +280,14 @@ class tripleo::network::contrail::analytics(
         'disc_server_port' => $disc_server_port,
       },
     },
+  }
+  if $step >= 5 {
+    class {'::contrail::analytics::provision_analytics':
+      api_address => $api_server,
+      keystone_admin_user => $admin_user,
+      keystone_admin_password => $admin_password,
+      keystone_admin_tenant_name => $admin_tenant_name,
+      openstack_vip => $auth_host,
+    }
   }
 }
