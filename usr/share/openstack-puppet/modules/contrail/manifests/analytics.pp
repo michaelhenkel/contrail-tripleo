@@ -17,6 +17,7 @@ class contrail::analytics (
   $snmp_collector_config,
   $redis_config,
   $topology_config,
+  $vnc_api_lib_config,
 ) inherits contrail::params {
 
   anchor {'contrail::analytics::start': } ->
@@ -30,6 +31,7 @@ class contrail::analytics (
     snmp_collector_config => $snmp_collector_config,
     redis_config => $redis_config,
     topology_config => $topology_config,
+    vnc_api_lib_config => $vnc_api_lib_config,
   } ~>
   class {'::contrail::analytics::service': }
   anchor {'contrail::analytics::end': }

@@ -37,6 +37,7 @@ class contrail::analytics::config (
   $snmp_collector_config    = {},
   $redis_config,
   $topology_config          = {},
+  $vnc_api_lib_config        = {},
 ) {
   validate_hash($alarm_gen_config)
   validate_hash($analytics_api_config)
@@ -45,6 +46,8 @@ class contrail::analytics::config (
   validate_hash($query_engine_config)
   validate_hash($snmp_collector_config)
   validate_hash($topology_config)
+  validate_hash($vnc_api_lib_config)
+
 
   $contrail_alarm_gen_config         = { 'path' => '/etc/contrail/contrail-alarm-gen.conf' }
   $contrail_analytics_api_config     = { 'path' => '/etc/contrail/contrail-analytics-api.conf' }
