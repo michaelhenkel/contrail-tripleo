@@ -56,6 +56,7 @@ class contrail::analytics::config (
   $contrail_snmp_collector_config    = { 'path' => '/etc/contrail/contrail-snmp-collector.conf' }
   $contrail_analytics_nodemgr_config = { 'path' => '/etc/contrail/contrail-analytics-nodemgr.conf' }
   $contrail_topology_config          = { 'path' => '/etc/contrail/contrail-topology.conf' }
+  $contrail_vnc_api_lib_config       = { 'path' => '/etc/contrail/vnc_api_lib.ini' }
 
   file_line { 'add bind to /etc/redis.conf':
     path => '/etc/redis.conf',
@@ -70,5 +71,6 @@ class contrail::analytics::config (
   create_ini_settings($query_engine_config, $contrail_query_engine_config)
   create_ini_settings($snmp_collector_config, $contrail_snmp_collector_config)
   create_ini_settings($topology_config, $contrail_topology_config)
+  create_ini_settings($vnc_api_lib_config, $contrail_vnc_api_lib_config)
 
 }

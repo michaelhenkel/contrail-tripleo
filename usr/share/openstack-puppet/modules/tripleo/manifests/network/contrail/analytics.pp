@@ -139,7 +139,7 @@ class tripleo::network::contrail::analytics(
   $auth_host = hiera('contrail::auth_host'),
   $auth_port = hiera('contrail::auth_port'),
   $auth_protocol = hiera('contrail::auth_protocol'),
-  $cassandra_server_list = hiera('contrail_database_node_ips'),
+  $cassandra_server_list = hiera('contrail_analytics_database_node_ips'),
   $collector_http_server_port = 8089,
   $collector_sandesh_port = 8086,
   $disc_server_ip = hiera('controller_virtual_ip'),
@@ -159,7 +159,7 @@ class tripleo::network::contrail::analytics(
   $zk_server_ip = hiera('contrail_database_node_ips'),
 )
 {
-  $cassandra_server_list_9042 = join([join($zk_server_ip, ':9042 '),":9042"],'')
+  $cassandra_server_list_9042 = join([join($cassandra_server_list, ':9042 '),":9042"],'')
   $zk_server_ip_2181 = join([join($zk_server_ip, ':2181 '),":2181"],'')
   $zk_server_ip_2181_comma = join([join($zk_server_ip, ':2181,'),":2181"],'')
   $kafka_broker_list_9092 = join([join($kafka_broker_list, ':9092 '),":9092"],'')
@@ -187,7 +187,7 @@ class tripleo::network::contrail::analytics(
         'rabbitmq_server_list' => $rabbit_server_list_5672,
         'rabbitmq_user'        => $rabbit_user,
         'rabbitmq_password'    => $rabbit_password,
-        'zk_list'         => $zk_server_ip_2181,
+        'zk_list'              => $zk_server_ip_2181,
       },
       'DISCOVERY' => {
         'disc_server_ip'   => $disc_server_ip,
@@ -202,6 +202,7 @@ class tripleo::network::contrail::analytics(
     },
     analytics_api_config  => {
       'DEFAULTS'  => {
+        'api_server'            => "${api_server}:8082",
         'cassandra_server_list' => $cassandra_server_list_9042,
         'host_ip'               => $host_ip,
         'http_server_port'      => $http_server_port,
@@ -278,6 +279,11 @@ class tripleo::network::contrail::analytics(
       'DISCOVERY' => {
         'disc_server_ip'   => $disc_server_ip,
         'disc_server_port' => $disc_server_port,
+      },
+    },
+    vnc_api_lib_config    => {
+      'auth' => {
+        'AUTHN_SERVER' => $auth_host,
       },
     },
   }

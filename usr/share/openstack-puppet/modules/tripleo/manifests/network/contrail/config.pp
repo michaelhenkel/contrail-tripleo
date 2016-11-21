@@ -160,21 +160,21 @@ class tripleo::network::contrail::config(
       message => $value
     }
   }
-#  class {'::contrail::keystone':
-#    keystone_config => {
-#      'KEYSTONE' => {
-#        'admin_password'    => $admin_password,
-#        'admin_tenant_name' => $admin_tenant_name,
-#        'admin_token'       => $admin_token,
-#        'admin_user'        => $admin_user,
-#        'auth_host'         => $auth_host,
-#        'auth_port'         => $auth_port,
-#        'auth_protocol'     => $auth_protocol,
-#        'insecure'          => $insecure,
-#        'memcached_servers' => $memcached_servers,
-#      },
-#    },
-#  } ->
+  class {'::contrail::keystone':
+    keystone_config => {
+      'KEYSTONE' => {
+        'admin_password'    => $admin_password,
+        'admin_tenant_name' => $admin_tenant_name,
+        'admin_token'       => $admin_token,
+        'admin_user'        => $admin_user,
+        'auth_host'         => $auth_host,
+        'auth_port'         => $auth_port,
+        'auth_protocol'     => $auth_protocol,
+        'insecure'          => $insecure,
+        'memcached_servers' => $memcached_servers,
+      },
+    },
+  } ->
   class {'::contrail::config':
     api_config            => {
       'DEFAULTS' => {
