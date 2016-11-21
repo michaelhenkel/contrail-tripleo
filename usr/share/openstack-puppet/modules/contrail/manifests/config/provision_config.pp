@@ -40,7 +40,7 @@ class contrail::config::provision_config (
   $api_address                = '127.0.0.1',
   $api_port                   = 8082,
   $router_asn                 = 64512,
-  $config_node_address       = $::ipaddress,
+  $config_node_address       = $host_ip,
   $config_node_name          = $::hostname,
   $keystone_admin_user        = 'admin',
   $keystone_admin_password    = 'password',

@@ -39,7 +39,7 @@
 class contrail::database::provision_database (
   $api_address                = '127.0.0.1',
   $api_port                   = 8082,
-  $database_node_address       = $::ipaddress,
+  $database_node_address       = $host_ip,
   $database_node_name          = $::hostname,
   $keystone_admin_user        = 'admin',
   $keystone_admin_password    = 'password',

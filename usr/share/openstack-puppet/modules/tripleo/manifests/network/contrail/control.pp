@@ -86,9 +86,9 @@
 #
 class tripleo::network::contrail::control(
   $step = hiera('step'),
-  $host_ip = $::ipaddress,
-  $ifmap_password = $::ipaddress,
-  $ifmap_username = $::ipaddress,
+  $host_ip = hiera('contrail::control::host_ip'),
+  $ifmap_password = hiera('contrail::control::host_ip'),
+  $ifmap_username = hiera('contrail::control::host_ip'),
   $admin_password = hiera('contrail::admin_password'),
   $admin_tenant_name = hiera('contrail::admin_tenant_name'),
   $admin_token = hiera('contrail::admin_token'),

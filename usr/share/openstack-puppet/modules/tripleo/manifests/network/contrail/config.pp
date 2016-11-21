@@ -118,7 +118,7 @@ class tripleo::network::contrail::config(
   $step = hiera('step'),
   $config_hostnames = hiera('contrail_config_short_node_names'),
   $ifmap_password = hiera('contrail::config::ifmap_password'),
-  $ifmap_server_ip = $::ipaddress,
+  $ifmap_server_ip = hiera('contrail::config::host_ip'),
   $ifmap_username = hiera('contrail::config::ifmap_username'),
   $control_server_list = hiera('contrail_control_node_ips'),
   $rabbit_server = hiera('rabbitmq_node_ips'),

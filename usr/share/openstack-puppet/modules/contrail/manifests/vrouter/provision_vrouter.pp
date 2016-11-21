@@ -39,7 +39,7 @@
 class contrail::vrouter::provision_vrouter (
   $api_address                = '127.0.0.1',
   $api_port                   = 8082,
-  $node_address               = $::ipaddress,
+  $host_ip                    = $host_ip,
   $node_name                  = $::hostname,
   $keystone_admin_user        = 'admin',
   $keystone_admin_password    = 'password',
@@ -51,7 +51,7 @@ class contrail::vrouter::provision_vrouter (
     path => '/usr/bin',
     command => "python /opt/contrail/utils/provision_vrouter.py \
                  --host_name ${node_name} \
-                 --host_ip ${node_address} \
+                 --host_ip ${host_ip} \
                  --api_server_ip ${api_address} \
                  --api_server_port ${api_port} \
                  --admin_user ${keystone_admin_user} \

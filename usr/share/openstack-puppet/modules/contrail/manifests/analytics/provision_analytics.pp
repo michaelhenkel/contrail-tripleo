@@ -39,8 +39,8 @@
 class contrail::analytics::provision_analytics (
   $api_address                = '127.0.0.1',
   $api_port                   = 8082,
-  $analytics_node_address       = $::ipaddress,
-  $analytics_node_name          = $::hostname,
+  $analytics_node_address      = $host_ip,
+  $analytics_node_name         = $::hostname,
   $keystone_admin_user        = 'admin',
   $keystone_admin_password    = 'password',
   $keystone_admin_tenant_name = 'admin',

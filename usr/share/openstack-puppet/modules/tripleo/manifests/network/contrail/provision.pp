@@ -86,7 +86,6 @@
 #
 class tripleo::network::contrail::provision(
   $step             = hiera('step'),
-  $host_ip = $::ipaddress,
   $admin_password = hiera('contrail::admin_password'),
   $admin_tenant_name = hiera('contrail::admin_tenant_name'),
   $admin_token = hiera('contrail::admin_token'),
@@ -103,9 +102,6 @@ class tripleo::network::contrail::provision(
       keystone_admin_user => $admin_user,
       keystone_admin_password => $admin_password,
       keystone_admin_tenant_name => $admin_tenant_name,
-    }
-    file { '/tmp/test':
-        content => 'I was here',
     }
     class {'::contrail::control::provision_linklocal':
       api_address => $api_server,

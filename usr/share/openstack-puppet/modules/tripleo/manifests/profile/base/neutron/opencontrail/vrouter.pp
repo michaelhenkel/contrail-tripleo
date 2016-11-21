@@ -23,7 +23,8 @@
 #   Defaults to hiera('step')
 #
 class tripleo::profile::base::neutron::opencontrail::vrouter (
-  #$step           = hiera('step'),
+  $step           = hiera('step'),
+  $host_ip = hiera('neutron::plugins::opencontrail::host_ip:'),
   $admin_password = hiera('contrail::admin_password'),
   $admin_tenant_name = hiera('contrail::admin_tenant_name'),
   $admin_token = hiera('contrail::admin_token'),
@@ -36,10 +37,9 @@ class tripleo::profile::base::neutron::opencontrail::vrouter (
   $disc_server_port = 5998,
   $insecure = hiera('contrail::insecure'),
   $memcached_servers = hiera('contrail::memcached_server'),
-  $physical_interface = "eth0",
+  $physical_interface = hiera('neutron::plugins::opencontrail::physical_interface:'),
 ) {
 
-  #if $step >= 4 {
     $cidr = netmask_to_cidr($::netmask)
     notify { 'cidr':
       message => $cidr,
@@ -51,9 +51,6 @@ class tripleo::profile::base::neutron::opencontrail::vrouter (
     #include ::contrail::vrouter
     # NOTE: it's not possible to use this class without a functional
     # contrail controller up and running
-    #class {'::contrail::vrouter::provision_vrouter':
-    #  require => Class['contrail::vrouter'],
-    #}
     $control_server_list = join($control_server, ' ')
     class {'::contrail::keystone':
       keystone_config => {
@@ -70,23 +67,24 @@ class tripleo::profile::base::neutron::opencontrail::vrouter (
       },
     } ->
     class {'::contrail::vrouter':
-      vhost_ip => $::ipaddress,
+      vhost_ip => $host_ip,
       discovery_ip => $disc_server_ip,
       mask => $cidr,
       netmask => $::netmask,
       gateway => $gateway,
       macaddr => $::macaddress,
       physical_interface => $physical_interface,
+      host_ip => $host_ip,
       vrouter_agent_config       => {
         'CONTROL-NODE'  => {
           'server' => $control_server_list,
         },
         'VIRTUAL-HOST-INTERFACE'  => {
           'name' => "vhost0",
-          'ip'   => "${::ipaddress}/${cidr}",
+          'ip'   => "${host_ip}/${cidr}",
           'gateway' => $gateway,
           'physical_interface' => $physical_interface,
-          'compute_node_address' => $::ipaddress,
+          'compute_node_address' => $host_ip,
         },
         'DISCOVERY' => {
           'server' => $disc_server_ip,
@@ -105,5 +103,12 @@ class tripleo::profile::base::neutron::opencontrail::vrouter (
         },
       },
     }
-  #}
+  if $step >= 5 {
+    class {'::contrail::vrouter::provision_vrouter':
+      host_ip => $host_ip,
+      keystone_admin_user        => $admin_user,
+      keystone_admin_password    => $admin_password,
+      keystone_admin_tenant_name => $admin_tenant_name,
+    }
+  }
 }

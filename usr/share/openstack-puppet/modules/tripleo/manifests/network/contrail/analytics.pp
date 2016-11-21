@@ -130,7 +130,7 @@
 #
 class tripleo::network::contrail::analytics(
   $step = hiera('step'),
-  $host_ip = $::ipaddress,
+  $host_ip = hiera('contrail::analytics::host_ip')
   $admin_password = hiera('contrail::admin_password'),
   $api_server = hiera('controller_virtual_ip'),
   $admin_tenant_name = hiera('contrail::admin_tenant_name'),

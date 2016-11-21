@@ -10,6 +10,7 @@
 class contrail::vrouter (
   $package_name = $contrail::params::vrouter_package_name,
   $physical_interface,
+  $host_ip,
   $vhost_ip,
   $discovery_ip,
   $mask,
@@ -36,6 +37,7 @@ class contrail::vrouter (
   } ~>
   class {'::contrail::vrouter::service': 
     cidr => $mask,
+    host_ip => $host_ip,
     physical_interface => $physical_interface,
     vhost_ip => $vhost_ip,
     default_gw => $gateway,

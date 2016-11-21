@@ -11,7 +11,7 @@ class contrail::database (
   $package_name = $contrail::params::database_package_name,
   $database_nodemgr_config,
   $cassandra_servers = hiera('contrail_database_node_ips'),
-  $cassandra_ip = $::ipaddress,
+  $cassandra_ip = $host_ip,
 ) inherits contrail::params {
 
   Service <| name == 'supervisor-analytics' |> -> Service['supervisor-database']
