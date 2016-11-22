@@ -29,7 +29,7 @@ class tripleo::profile::base::neutron::opencontrail::vrouter (
   $admin_token        = hiera('contrail::admin_token'),
   $admin_user         = hiera('contrail::admin_user'),
   $api_port           = 8082,
-  $api_server         = hiera('internal_api_virtual_ip'),,
+  $api_server         = hiera('internal_api_virtual_ip'),
   $auth_host          = hiera('contrail::auth_host'),
   $auth_port          = hiera('contrail::auth_port'),
   $auth_protocol      = hiera('contrail::auth_protocol'),
