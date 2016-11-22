@@ -135,6 +135,7 @@ class tripleo::network::contrail::analytics(
   $admin_token                = hiera('contrail::admin_token'),
   $admin_user                 = hiera('contrail::admin_user'),
   $api_server                 = hiera('internal_api_virtual_ip'),
+  $api_port                   = 8082,
   $auth_host                  = hiera('contrail::auth_host'),
   $auth_port                  = hiera('contrail::auth_port'),
   $auth_protocol              = hiera('contrail::auth_protocol'),
@@ -291,6 +292,9 @@ class tripleo::network::contrail::analytics(
   if $step >= 5 {
     class {'::contrail::analytics::provision_analytics':
       api_address                => $api_server,
+      api_port                   => $api_port,
+      analytics_node_address     => $host_ip,
+      analytics_node_name        => $::hostname,
       keystone_admin_user        => $admin_user,
       keystone_admin_password    => $admin_password,
       keystone_admin_tenant_name => $admin_tenant_name,
