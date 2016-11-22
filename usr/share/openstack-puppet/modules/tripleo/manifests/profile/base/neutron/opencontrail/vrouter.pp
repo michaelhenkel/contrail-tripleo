@@ -36,27 +36,17 @@ class tripleo::profile::base::neutron::opencontrail::vrouter (
   $control_server     = hiera('contrail_control_node_ips'),
   $disc_server_ip     = hiera('internal_api_virtual_ip'),
   $disc_server_port   = 5998,
+  $gatway             = hiera('neutron::plugins::opencontrail::gateway'),
   $host_ip            = hiera('neutron::plugins::opencontrail::host_ip'),
   $insecure           = hiera('contrail::insecure'),
   $memcached_servers  = hiera('contrail::memcached_server'),
+  $netmask            = hiera('neutron::plugins::opencontrail::netmask'),
+  $physical_interface = hiera('neutron::plugins::opencontrail::physical_interface'),
 ) {
     
-    notify { 'host_ip':
-      message => $host_ip,
-    }
-    #fail("bla: ${host_ip}")
-    $physical_interface = interface_for_ip($host_ip)
-    notify { 'nic':
-      message => $physical_interface,
-    }
-    $netmask = inline_template("<%= scope.lookupvar('::netmask_${physical_interface}') -%>")
     $cidr = netmask_to_cidr($netmask)
     notify { 'cidr':
       message => $cidr,
-    }
-    $gateway = get_gateway()
-    notify { 'gateway':
-      message => $gateway,
     }
     $macaddress = inline_template("<%= scope.lookupvar('::macaddress_${physical_interface}') -%>")
     #include ::contrail::vrouter

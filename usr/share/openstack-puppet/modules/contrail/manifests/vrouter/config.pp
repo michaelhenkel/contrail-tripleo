@@ -105,21 +105,22 @@ class contrail::vrouter::config (
     ensure  => file,
     content => "DISCOVERY=${discovery_ip}",
   }
-
-  file { '/opt/contrail/utils/update_dev_net_config_files.py':
-    ensure => file,
-    source => '/usr/share/openstack-puppet/modules/contrail/files/vrouter/update_dev_net_config_files.py',
-  } -> 
-  exec { '/bin/python /opt/contrail/utils/update_dev_net_config_files.py' :
-    path => '/usr/bin',
-    command => "/bin/python /opt/contrail/utils/update_dev_net_config_files.py \
-                 --vhost_ip ${vhost_ip} \
-                 --dev ${device} \
-                 --compute_dev ${device} \
-                 --netmask ${netmask} \
-                 --gateway ${gateway} \
-                 --cidr ${vhost_ip}/${mask} \
-                 --mac ${macaddr}",
+  if $::ipaddress_vhost0 != $vhost_ip {
+    file { '/opt/contrail/utils/update_dev_net_config_files.py':
+      ensure => file,
+      source => '/usr/share/openstack-puppet/modules/contrail/files/vrouter/update_dev_net_config_files.py',
+    } -> 
+    exec { '/bin/python /opt/contrail/utils/update_dev_net_config_files.py' :
+      path => '/usr/bin',
+      command => "/bin/python /opt/contrail/utils/update_dev_net_config_files.py \
+                   --vhost_ip ${vhost_ip} \
+                   --dev ${device} \
+                   --compute_dev ${device} \
+                   --netmask ${netmask} \
+                   --gateway ${gateway} \
+                   --cidr ${vhost_ip}/${mask} \
+                   --mac ${macaddr}",
+    }
   }
 
 }
