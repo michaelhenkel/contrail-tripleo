@@ -279,7 +279,7 @@ class tripleo::network::contrail::config(
         keystone_admin_tenant_name => $admin_tenant_name,
         linklocal_service_name     => $linklocal_service_name,
         linklocal_service_ip       => $linklocal_service_ip,
-        linklocal_service_port     => linklocal_service_port,
+        linklocal_service_port     => $linklocal_service_port,
       }
     }
   }
