@@ -39,7 +39,7 @@ class contrail::vrouter (
   } ~>
   class {'::contrail::vrouter::service': 
     cidr               => $mask,
-    default_gw         => $gateway,
+    gateway            => $gateway,
     host_ip            => $host_ip,
     physical_interface => $physical_interface,
     vhost_ip           => $vhost_ip,

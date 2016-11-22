@@ -4,7 +4,7 @@
 #
 class contrail::vrouter::service(
   $cidr,
-  $default_gw,
+  $gateway,
   $host_ip,
   $physical_interface,
   $vhost_ip,
@@ -26,7 +26,7 @@ class contrail::vrouter::service(
   if $gateway != $default_gw {
     exec { 'add default gw':
       path => '/sbin',
-      command => "ip route add default via ${default_gw}",
+      command => "ip route add default via ${gateway}",
       refreshonly => true,
     }
   }
