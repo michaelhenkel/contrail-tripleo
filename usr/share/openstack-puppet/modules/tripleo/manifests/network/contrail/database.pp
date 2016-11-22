@@ -52,8 +52,8 @@ class tripleo::network::contrail::database(
   $zookeeper_server_ips = hiera('contrail_database_node_ips'),
 )
 {
-  class {'::contrail::params':
-    database => {
+  class {'::contrail::database':
+    database_params => {
       'auth_host'            => $auth_host,
       'api_server'           => $api_server,
       'admin_password'       => $admin_password,
@@ -77,8 +77,6 @@ class tripleo::network::contrail::database(
         },
       },
     }
-  } ->
-  class {'::contrail::database':
   }
   if $step >= 5 {
     class {'::contrail::database::provision_database':

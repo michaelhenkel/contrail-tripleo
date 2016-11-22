@@ -9,6 +9,7 @@
 #
 class contrail::database (
   $package_name = $contrail::params::database_package_name,
+  $database_params = $database_params,
 ) inherits contrail::params {
 
   Service <| name == 'supervisor-analytics' |> -> Service['supervisor-database']
@@ -19,12 +20,12 @@ class contrail::database (
   anchor {'contrail::database::start': } ->
   #class {'::contrail::database::install': } ->
   class {'::contrail::database::config': 
-    cassandra_servers       => $database['cassandra_servers'],
-    cassandra_ip            => $database['host_ip'],
-    database_nodemgr_config => $database['database_nodemgr_config'],
-    zookeeper_server_ips    => $database['zookeeper_server_ips'],
-    zookeeper_client_ip     => $database['zookeeper_client_ip'],
-    zookeeper_hostnames     => $database['zookeeper_hostnames'],
+    cassandra_servers       => $database_params['cassandra_servers'],
+    cassandra_ip            => $database_params['host_ip'],
+    database_nodemgr_config => $database_params['database_nodemgr_config'],
+    zookeeper_server_ips    => $database_params['zookeeper_server_ips'],
+    zookeeper_client_ip     => $database_params['zookeeper_client_ip'],
+    zookeeper_hostnames     => $database_params['zookeeper_hostnames'],
   } ~>
   class {'::contrail::database::service': }
   anchor {'contrail::database::end': }
