@@ -41,7 +41,7 @@ class tripleo::profile::base::neutron::opencontrail::vrouter (
   $memcached_servers  = hiera('contrail::memcached_server'),
 ) {
     $physical_interface = ip_to_nic($host_ip)
-    notiy { 'nic':
+    notify { 'nic':
       message => $physical_interface,
     }
     $netmask = inline_template("<%= scope.lookupvar('::netmask_${physical_interface}') -%>")
