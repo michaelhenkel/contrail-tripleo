@@ -50,6 +50,10 @@ class tripleo::profile::base::neutron::opencontrail::vrouter (
     notify { 'gateway':
       message => $gateway,
     }
+    $nic = ip_to_nic($host_ip)
+    notiy { 'nic':
+      message => $nic,
+    }
     #include ::contrail::vrouter
     # NOTE: it's not possible to use this class without a functional
     # contrail controller up and running
