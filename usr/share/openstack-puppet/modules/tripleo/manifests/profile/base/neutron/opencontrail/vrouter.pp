@@ -45,7 +45,7 @@ class tripleo::profile::base::neutron::opencontrail::vrouter (
       message => $host_ip,
     }
     fail("bla: ${host_ip}")
-    $physical_interface = ip_to_nic($host_ip)
+    $physical_interface = interface_for_ip($host_ip)
     notify { 'nic':
       message => $physical_interface,
     }
