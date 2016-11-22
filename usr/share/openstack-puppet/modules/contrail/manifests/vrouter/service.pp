@@ -3,10 +3,10 @@
 # Manage the vrouter service
 #
 class contrail::vrouter::service(
-  $host_ip,
-  $physical_interface,
   $cidr,
   $default_gw,
+  $host_ip,
+  $physical_interface,
   $vhost_ip,
 ) {
 
@@ -14,9 +14,8 @@ class contrail::vrouter::service(
     ensure => running,
     enable => true,
   }
-  #$address = inline_template("<%= scope.lookupvar('::ipaddress_${physical_interface}') -%>")
-  #if $address == $vhost_ip {
-  if $host_ip == $vhost_ip {
+  $address = inline_template("<%= scope.lookupvar('::ipaddress_${physical_interface}') -%>")
+  if $address == $vhost_ip {
     exec { 'ip address del':
       path => '/sbin',
       command => "ip addr del ${vhost_ip}/${cidr} dev ${physical_interface}",
