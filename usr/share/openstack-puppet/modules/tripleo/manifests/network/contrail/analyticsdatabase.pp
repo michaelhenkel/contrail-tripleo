@@ -47,7 +47,29 @@ class tripleo::network::contrail::analyticsdatabase(
   $disc_server_port = hiera('contrail::disc_server_port'),
 )
 {
+  analyticsdatabase_params => {
+    'auth_host' => auth_host,
+    'api_server' => api_server,
+    'admin_password' => admin_password,
+    'admin_tenant_name' => admin_tenant_name,
+    'admin_token' => admin_token,
+    'admin_user' => admin_user,
+    'cassandra_servers' => cassandra_servers,
+    'host_ip' => host_ip,
+    'disc_server_ip' => disc_server_ip,
+    'disc_server_port' => disc_server_port,
+    database_nodemgr_config => {
+      'DEFAULT'  => {
+        'hostip' => $host_ip,
+      },
+      'DISCOVERY' => {
+        'port'   => $disc_server_port,
+        'server' => $disc_server_ip,
+      },
+    },
+  }
   class {'::contrail::analyticsdatabase':
+    analyticsdatabase_params,
     database_nodemgr_config => {
       'DEFAULT'  => {
         'hostip' => $host_ip,
