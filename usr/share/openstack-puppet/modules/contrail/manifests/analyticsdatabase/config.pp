@@ -10,8 +10,8 @@
 #
 class contrail::analyticsdatabase::config (
   $database_nodemgr_config = {},
-  $cassandra_servers = hiera('contrail_analytics_database_node_ips'),
-  $cassandra_ip = $::ipaddress,
+  $cassandra_servers,
+  $cassandra_ip,
   $storage_port       = '7000',
   $ssl_storage_port   = '7001',
   $client_port        = '9042',

@@ -41,7 +41,7 @@ class tripleo::network::contrail::analyticsdatabase(
   $admin_tenant_name = hiera('contrail::admin_tenant_name'),
   $admin_token = hiera('contrail::admin_token'),
   $admin_user = hiera('contrail::admin_user'),
-  $host_ip = $::ipaddress,
+  $host_ip = hiera('contrail::analytics::database::host_ip'),
   $disc_server_ip = hiera('controller_virtual_ip'),
   $disc_server_port = hiera('contrail::disc_server_port'),
 )
@@ -59,6 +59,7 @@ class tripleo::network::contrail::analyticsdatabase(
   }
   if $step >= 5 {
     class {'::contrail::database::provision_database':
+      host_ip => $host_ip,
       api_address => $api_server,
       keystone_admin_user => $admin_user,
       keystone_admin_password => $admin_password,
