@@ -41,6 +41,7 @@ class tripleo::network::contrail::analyticsdatabase(
   $admin_tenant_name = hiera('contrail::admin_tenant_name'),
   $admin_token = hiera('contrail::admin_token'),
   $admin_user = hiera('contrail::admin_user'),
+  $cassandra_servers = hiera('contrail_analytics_database_node_ips'),
   $host_ip = hiera('contrail::analytics::database::host_ip'),
   $disc_server_ip = hiera('controller_virtual_ip'),
   $disc_server_port = hiera('contrail::disc_server_port'),
