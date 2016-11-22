@@ -40,6 +40,10 @@ class tripleo::profile::base::neutron::opencontrail::vrouter (
   $insecure           = hiera('contrail::insecure'),
   $memcached_servers  = hiera('contrail::memcached_server'),
 ) {
+    
+    notify { 'host_ip':
+      message => $host_ip,
+    }
     $physical_interface = ip_to_nic($host_ip)
     notify { 'nic':
       message => $physical_interface,
