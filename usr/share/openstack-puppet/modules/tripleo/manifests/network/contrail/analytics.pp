@@ -129,42 +129,43 @@
 #  Defaults to hiera('contrail::zk_server_ip')
 #
 class tripleo::network::contrail::analytics(
-  $step = hiera('step'),
-  $host_ip = hiera('contrail::analytics::host_ip'),
-  $admin_password = hiera('contrail::admin_password'),
-  $api_server = hiera('internal_api_virtual_ip'),
-  $admin_tenant_name = hiera('contrail::admin_tenant_name'),
-  $admin_token = hiera('contrail::admin_token'),
-  $admin_user = hiera('contrail::admin_user'),
-  $auth_host = hiera('contrail::auth_host'),
-  $auth_port = hiera('contrail::auth_port'),
-  $auth_protocol = hiera('contrail::auth_protocol'),
-  $cassandra_server_list = hiera('contrail_analytics_database_node_ips'),
+  $step                       = hiera('step'),
+  $admin_password             = hiera('contrail::admin_password'),
+  $admin_tenant_name          = hiera('contrail::admin_tenant_name'),
+  $admin_token                = hiera('contrail::admin_token'),
+  $admin_user                 = hiera('contrail::admin_user'),
+  $api_server                 = hiera('internal_api_virtual_ip'),
+  $auth_host                  = hiera('contrail::auth_host'),
+  $auth_port                  = hiera('contrail::auth_port'),
+  $auth_protocol              = hiera('contrail::auth_protocol'),
+  $cassandra_server_list      = hiera('contrail_analytics_database_node_ips'),
   $collector_http_server_port = 8089,
-  $collector_sandesh_port = 8086,
-  $disc_server_ip = hiera('internal_api_virtual_ip'),
-  $disc_server_port = hiera('contrail::disc_server_port'),
-  $http_server_port = 8090,
-  $insecure = hiera('contrail::insecure'),
-  $kafka_broker_list = hiera('contrail_database_node_ips'),
-  $memcached_servers = hiera('contrail::memcached_server'),
-  $rabbit_server = hiera('rabbitmq_node_ips'),
-  $rabbit_user = hiera('contrail::rabbit_user'),
-  $rabbit_password = hiera('contrail::rabbit_password'),
-  $rabbit_port = hiera('contrail::rabbit_port'),
-  $redis_server = '127.0.0.1',
-  $redis_server_port = 6379,
-  $rest_api_ip = '0.0.0.0',
-  $rest_api_port = 8081,
-  $zk_server_ip = hiera('contrail_database_node_ips'),
+  $collector_sandesh_port     = 8086,
+  $disc_server_ip             = hiera('internal_api_virtual_ip'),
+  $disc_server_port           = hiera('contrail::disc_server_port'),
+  $http_server_port           = 8090,
+  $host_ip                    = hiera('contrail::analytics::host_ip'),
+  $insecure                   = hiera('contrail::insecure'),
+  $kafka_broker_list          = hiera('contrail_database_node_ips'),
+  $memcached_servers          = hiera('contrail::memcached_server'),
+  $rabbit_server              = hiera('rabbitmq_node_ips'),
+  $rabbit_user                = hiera('contrail::rabbit_user'),
+  $rabbit_password            = hiera('contrail::rabbit_password'),
+  $rabbit_port                = hiera('contrail::rabbit_port'),
+  $redis_server               = '127.0.0.1',
+  $redis_server_port          = 6379,
+  $rest_api_ip                = '0.0.0.0',
+  $rest_api_port              = 8081,
+  $zk_server_ip               = hiera('contrail_database_node_ips'),
 )
 {
   $cassandra_server_list_9042 = join([join($cassandra_server_list, ':9042 '),":9042"],'')
-  $zk_server_ip_2181 = join([join($zk_server_ip, ':2181 '),":2181"],'')
-  $zk_server_ip_2181_comma = join([join($zk_server_ip, ':2181,'),":2181"],'')
   $kafka_broker_list_9092 = join([join($kafka_broker_list, ':9092 '),":9092"],'')
   $rabbit_server_list_5672 = join([join($rabbit_server, ':5672,'),":5672"],'')
   $redis_config = "bind ${host_ip} 127.0.0.1"
+  $zk_server_ip_2181 = join([join($zk_server_ip, ':2181 '),":2181"],'')
+  $zk_server_ip_2181_comma = join([join($zk_server_ip, ':2181,'),":2181"],'')
+
   class {'::contrail::keystone':
     keystone_config => {
       'KEYSTONE' => {
@@ -289,11 +290,11 @@ class tripleo::network::contrail::analytics(
   }
   if $step >= 5 {
     class {'::contrail::analytics::provision_analytics':
-      api_address => $api_server,
-      keystone_admin_user => $admin_user,
-      keystone_admin_password => $admin_password,
+      api_address                => $api_server,
+      keystone_admin_user        => $admin_user,
+      keystone_admin_password    => $admin_password,
       keystone_admin_tenant_name => $admin_tenant_name,
-      openstack_vip => $auth_host,
+      openstack_vip              => $auth_host,
     }
   }
 }

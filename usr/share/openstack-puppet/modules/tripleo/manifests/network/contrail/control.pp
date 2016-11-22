@@ -85,44 +85,30 @@
 #  Defaults to hiera('contrail::memcached_servers'),
 #
 class tripleo::network::contrail::control(
-  $step = hiera('step'),
-  $host_ip = hiera('contrail::control::host_ip'),
-  $ifmap_password = hiera('contrail::control::host_ip'),
-  $ifmap_username = hiera('contrail::control::host_ip'),
-  $admin_password = hiera('contrail::admin_password'),
+  $step              = hiera('step'),
+  $admin_password    = hiera('contrail::admin_password'),
   $admin_tenant_name = hiera('contrail::admin_tenant_name'),
-  $admin_token = hiera('contrail::admin_token'),
-  $admin_user = hiera('contrail::admin_user'),
-  $auth_host = hiera('contrail::auth_host'),
-  $auth_port = hiera('contrail::auth_port'),
-  $auth_protocol = hiera('contrail::auth_protocol'),
-  $disc_server_ip = hiera('internal_api_virtual_ip'),
-  $api_server = hiera('internal_api_virtual_ip'),
-  $disc_server_port = hiera('contrail::disc_server_port'),
-  $insecure = hiera('contrail::insecure'),
+  $admin_token       = hiera('contrail::admin_token'),
+  $admin_user        = hiera('contrail::admin_user'),
+  $api_server        = hiera('internal_api_virtual_ip'),
+  $auth_host         = hiera('contrail::auth_host'),
+  $auth_port         = hiera('contrail::auth_port'),
+  $auth_protocol     = hiera('contrail::auth_protocol'),
+  $disc_server_ip    = hiera('internal_api_virtual_ip'),
+  $disc_server_port  = hiera('contrail::disc_server_port'),
+  $host_ip           = hiera('contrail::control::host_ip'),
+  $ifmap_password    = hiera('contrail::control::host_ip'),
+  $ifmap_username    = hiera('contrail::control::host_ip'),
+  $insecure          = hiera('contrail::insecure'),
   $memcached_servers = hiera('contrail::memcached_server'),
-  $secret = hiera('contrail::control::rndc_secret'),
+  $secret            = hiera('contrail::control::rndc_secret'),
 )
 {
   $control_ifmap_user     = "${ifmap_username}.control"
   $control_ifmap_password = "${ifmap_username}.control"
   $dns_ifmap_user         = "${ifmap_username}.dns"
   $dns_ifmap_password     = "${ifmap_username}.dns"
-#  class {'::contrail::keystone':
-#    keystone_config => {
-#      'KEYSTONE' => {
-#        'admin_tenant_name' => $admin_tenant_name,
-#        'admin_token'       => $admin_token,
-#        'admin_password'    => $admin_password,
-#        'admin_user'        => $admin_user,
-#        'auth_host'         => $auth_host,
-#        'auth_port'         => $auth_port,
-#        'auth_protocol'     => $auth_protocol,
-#        'insecure'          => $insecure,
-#        'memcached_servers' => $memcached_servers,
-#      },
-#    },
-#  } ->
+
   class {'::contrail::control':
     secret                 => $secret,
     control_config         => {
@@ -161,9 +147,9 @@ class tripleo::network::contrail::control(
   }
   if $step >= 5 {
     class {'::contrail::control::provision_control':
-      api_address => $api_server,
-      keystone_admin_user => $admin_user,
-      keystone_admin_password => $admin_password,
+      api_address                => $api_server,
+      keystone_admin_user        => $admin_user,
+      keystone_admin_password    => $admin_password,
       keystone_admin_tenant_name => $admin_tenant_name,
     }
   }

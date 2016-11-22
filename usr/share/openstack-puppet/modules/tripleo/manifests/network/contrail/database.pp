@@ -48,7 +48,7 @@ class tripleo::network::contrail::database(
   $host_ip              = hiera('contrail::database::host_ip'),
   $host_name            = $::hostname,
   $zookeeper_client_ip  = hiera('contrail::database::host_ip'),
-  $zookeeper_hostnames  = hiera('contrail_database_short_node_names', ''),
+  $zookeeper_hostnames  = hiera('contrail_database_short_node_names'),
   $zookeeper_server_ips = hiera('contrail_database_node_ips'),
 )
 {

@@ -116,50 +116,46 @@
 #
 class tripleo::network::contrail::config(
   $step = hiera('step'),
-  $config_hostnames = hiera('contrail_config_short_node_names'),
-  $ifmap_password = hiera('contrail::config::ifmap_password'),
-  $ifmap_server_ip = hiera('contrail::config::host_ip'),
-  $ifmap_username = hiera('contrail::config::ifmap_username'),
-  $control_server_list = hiera('contrail_control_node_ips'),
-  $rabbit_server = hiera('rabbitmq_node_ips'),
-  $rabbit_user = hiera('contrail::rabbit_user'),
-  $rabbit_password = hiera('contrail::rabbit_password'),
-  $rabbit_port = hiera('contrail::rabbit_port'),
-  $admin_password = hiera('contrail::admin_password'),
-  $admin_tenant_name = hiera('contrail::admin_tenant_name'),
-  $admin_token = hiera('contrail::admin_token'),
-  $admin_user = hiera('contrail::admin_user'),
-  $auth = hiera('contrail::auth'),
-  $auth_host = hiera('contrail::auth_host'),
-  $auth_port = hiera('contrail::auth_port'),
-  $auth_protocol = hiera('contrail::auth_protocol'),
+  $admin_password        = hiera('contrail::admin_password'),
+  $admin_tenant_name     = hiera('contrail::admin_tenant_name'),
+  $admin_token           = hiera('contrail::admin_token'),
+  $admin_user            = hiera('contrail::admin_user'),
+  $api_server            = hiera('internal_api_virtual_ip'),
+  $auth                  = hiera('contrail::auth'),
+  $auth_host             = hiera('contrail::auth_host'),
+  $auth_port             = hiera('contrail::auth_port'),
+  $auth_protocol         = hiera('contrail::auth_protocol'),
   $cassandra_server_list = hiera('contrail_database_node_ips'),
-  $disc_server_ip = hiera('internal_api_virtual_ip'),
-  $disc_server_port = hiera('contrail::disc_server_port'),
-  $insecure = hiera('contrail::insecure'),
-  $listen_ip_address = '0.0.0.0',
-  $listen_port = 8082,
-  $memcached_servers = hiera('contrail::memcached_server'),
-  $multi_tenancy = hiera('contrail::multi_tenancy'),
-  $redis_server = '127.0.0.1',
-  $zk_server_ip = hiera('contrail_database_node_ips'),
-  $api_server = hiera('internal_api_virtual_ip'),
+  $config_hostnames      = hiera('contrail_config_short_node_names'),
+  $control_server_list   = hiera('contrail_control_node_ips'),
+  $disc_server_ip        = hiera('internal_api_virtual_ip'),
+  $disc_server_port      = hiera('contrail::disc_server_port'),
+  $ifmap_password        = hiera('contrail::config::ifmap_password'),
+  $ifmap_server_ip       = hiera('contrail::config::host_ip'),
+  $ifmap_username        = hiera('contrail::config::ifmap_username'),
+  $insecure              = hiera('contrail::insecure'),
+  $listen_ip_address     = '0.0.0.0',
+  $listen_port           = 8082,
+  $memcached_servers     = hiera('contrail::memcached_server'),
+  $multi_tenancy         = hiera('contrail::multi_tenancy'),
+  $rabbit_server         = hiera('rabbitmq_node_ips'),
+  $rabbit_user           = hiera('contrail::rabbit_user'),
+  $rabbit_password       = hiera('contrail::rabbit_password'),
+  $rabbit_port           = hiera('contrail::rabbit_port'),
+  $redis_server          = '127.0.0.1',
+  $zk_server_ip          = hiera('contrail_database_node_ips'),
 )
 {
   validate_ip_address($listen_ip_address)
   validate_ip_address($disc_server_ip)
   validate_ip_address($ifmap_server_ip)
-  $cassandra_server_list_9160 = join([join($cassandra_server_list, ':9160 '),":9160"],'')
-  $zk_server_ip_2181 = join([join($zk_server_ip, ':2181,'),":2181"],'')
-  $rabbit_server_list_5672 = join([join($rabbit_server, ':5672,'),":5672"],'')
   $basicauthusers_property_control = map($control_server_list) |$item| { "${item}.control:${item}.control" }
   $basicauthusers_property_dns = $control_server_list.map |$item| { "${item}.dns:${item}.dns" }
   $basicauthusers_property = concat($basicauthusers_property_control, $basicauthusers_property_dns)
-  each($basicauthusers_property) |$value| {
-    notify { $value:
-      message => $value
-    }
-  }
+  $cassandra_server_list_9160 = join([join($cassandra_server_list, ':9160 '),":9160"],'')
+  $rabbit_server_list_5672 = join([join($rabbit_server, ':5672,'),":5672"],'')
+  $zk_server_ip_2181 = join([join($zk_server_ip, ':2181,'),":2181"],'')
+
   class {'::contrail::keystone':
     keystone_config => {
       'KEYSTONE' => {
@@ -257,19 +253,19 @@ class tripleo::network::contrail::config(
   }
   if $step >= 5 {
     class {'::contrail::config::provision_config':
-      api_address => $api_server,
-      keystone_admin_user => $admin_user,
-      keystone_admin_password => $admin_password,
+      api_address                => $api_server,
+      keystone_admin_user        => $admin_user,
+      keystone_admin_password    => $admin_password,
       keystone_admin_tenant_name => $admin_tenant_name,
-      openstack_vip => $auth_host,
+      openstack_vip              => $auth_host,
     }
     if $config_hostnames[0] == $::hostname {
       class {'::contrail::control::provision_linklocal':
-        api_address => $api_server,
-        keystone_admin_user => $admin_user,
-        keystone_admin_password => $admin_password,
+        api_address                => $api_server,
+        ipfabric_service_ip        => $api_server,
+        keystone_admin_user        => $admin_user,
+        keystone_admin_password    => $admin_password,
         keystone_admin_tenant_name => $admin_tenant_name,
-        ipfabric_service_ip => $api_server,
       }
     }
   }

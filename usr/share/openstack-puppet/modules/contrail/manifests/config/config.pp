@@ -37,15 +37,15 @@
 #   Defaults to []
 #
 class contrail::config::config (
-  $api_config              = {},
   $alarm_gen_config        = {},
+  $api_config              = {},
+  $basicauthusers_property = [],
   $config_nodemgr_config   = {},
+  $device_manager_config   = {},
   $discovery_config        = {},
   $schema_config           = {},
-  $device_manager_config   = {},
   $svc_monitor_config      = {},
   $vnc_api_lib_config      = {},
-  $basicauthusers_property = [],
 ) {
 
   validate_hash($api_config)
@@ -77,14 +77,6 @@ class contrail::config::config (
   create_ini_settings($svc_monitor_config, $contrail_svc_monitor_config)
   create_ini_settings($vnc_api_lib_config, $contrail_vnc_api_lib_config)
 
-  #create_resources('contrail_api_config', $api_config)
-  #create_resources('contrail_alarm_gen_config', $alarm_gen_config)
-  #create_resources('contrail_config_nodemgr_config', $config_nodemgr_config)
-  #create_resources('contrail_discovery_config', $discovery_config)
-  #create_resources('contrail_schema_config', $schema_config)
-  #create_resources('contrail_device_manager_config', $device_manager_config)
-  #create_resources('contrail_svc_monitor_config', $svc_monitor_config)
-
   file { '/etc/ifmap-server/basicauthusers.properties' :
     ensure  => file,
     content => template('contrail/config/basicauthusers.properties.erb'),
@@ -96,4 +88,3 @@ class contrail::config::config (
   }
 
 }
-
