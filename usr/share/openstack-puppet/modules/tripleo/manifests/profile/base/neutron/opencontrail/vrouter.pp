@@ -39,10 +39,13 @@ class tripleo::profile::base::neutron::opencontrail::vrouter (
   $host_ip            = hiera('neutron::plugins::opencontrail::host_ip'),
   $insecure           = hiera('contrail::insecure'),
   $memcached_servers  = hiera('contrail::memcached_server'),
-  $physical_interface = hiera('neutron::plugins::opencontrail::physical_interface'),
 ) {
-
-    $cidr = netmask_to_cidr($::netmask)
+    $physical_interface = ip_to_nic($host_ip)
+    notiy { 'nic':
+      message => $physical_interface,
+    }
+    $netmask = inline_template("<%= scope.lookupvar('::netmask_${physical_interface}') -%>")
+    $cidr = netmask_to_cidr($netmask)
     notify { 'cidr':
       message => $cidr,
     }
@@ -50,10 +53,7 @@ class tripleo::profile::base::neutron::opencontrail::vrouter (
     notify { 'gateway':
       message => $gateway,
     }
-    $nic = ip_to_nic($host_ip)
-    notiy { 'nic':
-      message => $nic,
-    }
+    $macaddress = inline_template("<%= scope.lookupvar('::macaddress_${physical_interface}') -%>")
     #include ::contrail::vrouter
     # NOTE: it's not possible to use this class without a functional
     # contrail controller up and running
@@ -76,9 +76,9 @@ class tripleo::profile::base::neutron::opencontrail::vrouter (
       discovery_ip               => $disc_server_ip,
       gateway                    => $gateway,
       host_ip                    => $host_ip,
-      macaddr                    => $::macaddress,
+      macaddr                    => $macaddress,
       mask                       => $cidr,
-      netmask                    => $::netmask,
+      netmask                    => $netmask,
       physical_interface         => $physical_interface,
       vhost_ip                   => $host_ip,
       vrouter_agent_config       => {

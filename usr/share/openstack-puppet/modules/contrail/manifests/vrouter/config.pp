@@ -57,17 +57,17 @@
 #   Defaults {}
 #
 class contrail::vrouter::config (
-  $vhost_ip               = '127.0.0.1',
+  $compute_device         = 'eth0',
   $discovery_ip           = '127.0.0.1',
   $device                 = 'eth0',
+  $gateway                = '127.0.0.1',
   $kmod_path              = "vrouter",
-  $compute_device         = 'eth0',
+  $macaddr                = $::macaddress,
   $mask                   = '24',
   $netmask                = '255.255.255.0',
-  $gateway                = '127.0.0.1',
+  $vhost_ip               = '127.0.0.1',
   $vgw_public_subnet      = undef,
   $vgw_interface          = undef,
-  $macaddr                = $::macaddress,
   $vrouter_agent_config   = {},
   $vrouter_nodemgr_config = {},
   $vnc_api_lib_config     = {},
