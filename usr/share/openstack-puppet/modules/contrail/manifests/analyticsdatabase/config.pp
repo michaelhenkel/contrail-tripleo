@@ -10,7 +10,7 @@
 #
 class contrail::analyticsdatabase::config (
   $database_nodemgr_config = {},
-  $cassandra_servers  = $cassandra_servers,
+  $cassandra_servers  = "",
   $cassandra_ip       = $host_ip,
   $storage_port       = '7000',
   $ssl_storage_port   = '7001',
@@ -23,9 +23,6 @@ class contrail::analyticsdatabase::config (
   create_ini_settings($database_nodemgr_config, $contrail_database_nodemgr_config)
   validate_ipv4_address($cassandra_ip)
 
-#  package { 'java-1.8.0-openjdk.x86_64':
-#    ensure => 'installed',
-#  } ->
   file { ['/var/lib/cassandra',
           '/var/lib/cassandra/data',
           '/var/lib/cassandra/saved_caches',
