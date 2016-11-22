@@ -34,36 +34,62 @@
 #  Defaults to hiera('contrail::disc_server_port')
 #
 class tripleo::network::contrail::database(
-  $step = hiera('step'),
-  $auth_host = hiera('contrail::auth_host'),
-  $api_server = hiera('internal_api_virtual_ip'),
-  $admin_password = hiera('contrail::admin_password'),
-  $admin_tenant_name = hiera('contrail::admin_tenant_name'),
-  $admin_token = hiera('contrail::admin_token'),
-  $admin_user = hiera('contrail::admin_user'),
-  $host_ip = hiera('contrail::database::host_ip'),
-  $disc_server_ip = hiera('internal_api_virtual_ip'),
-  $disc_server_port = hiera('contrail::disc_server_port'),
+  $step                 = hiera('step'),
+  $auth_host            = hiera('contrail::auth_host'),
+  $api_server           = hiera('internal_api_virtual_ip'),
+  $api_port             = 8082,
+  $admin_password       = hiera('contrail::admin_password'),
+  $admin_tenant_name    = hiera('contrail::admin_tenant_name'),
+  $admin_token          = hiera('contrail::admin_token'),
+  $admin_user           = hiera('contrail::admin_user'),
+  $cassandra_servers    = hiera('contrail_database_node_ips'),
+  $disc_server_ip       = hiera('internal_api_virtual_ip'),
+  $disc_server_port     = hiera('contrail::disc_server_port'),
+  $host_ip              = hiera('contrail::database::host_ip'),
+  $host_name            = $::hostname,
+  $zookeeper_client_ip  = hiera('contrail::database::host_ip'),
+  $zookeeper_hostnames  = hiera('contrail_database_short_node_names', ''),
+  $zookeeper_server_ips = hiera('contrail_database_node_ips'),
 )
 {
+  class {'::contrail::params':
+    database => {
+      'auth_host'            => $auth_host,
+      'api_server'           => $api_server,
+      'admin_password'       => $admin_password,
+      'admin_tenant_name'    => $admin_tenant_name,
+      'admin_token'          => $admin_token,
+      'admin_user'           => $admin_user,
+      'cassandra_servers'    => $cassandra_servers,
+      'host_ip'              => $host_ip,
+      'disc_server_ip'       => $disc_server_ip,
+      'disc_server_port'     => $disc_server_port,
+      'zookeeper_client_ip'  => $zookeeper_client_ip,
+      'zookeeper_hostnames'  => $zookeeper_hostnames,
+      'zookeeper_server_ips' => $zookeeper_server_ips,
+      database_nodemgr_config => {
+        'DEFAULT'   => {
+          'hostip' => $host_ip,
+        },
+        'DISCOVERY' => {
+          'port'   => $disc_server_port,
+          'server' => $disc_server_ip,
+        },
+      },
+    }
+  } ->
   class {'::contrail::database':
-    database_nodemgr_config => {
-      'DEFAULT'  => {
-        'hostip' => $host_ip,
-      },
-      'DISCOVERY' => {
-        'port'   => $disc_server_port,
-        'server' => $disc_server_ip,
-      },
-    },
   }
   if $step >= 5 {
     class {'::contrail::database::provision_database':
-      api_address => $api_server,
-      keystone_admin_user => $admin_user,
-      keystone_admin_password => $admin_password,
+      api_address                => $api_server,
+      api_port                   => $api_port,
+      database_node_address      => $host_ip,
+      database_node_name         => $host_name, 
+      keystone_admin_user        => $admin_user,
+      keystone_admin_password    => $admin_password,
       keystone_admin_tenant_name => $admin_tenant_name,
-      openstack_vip => $auth_host,
+      openstack_vip              => $auth_host,
     }
   }
 }

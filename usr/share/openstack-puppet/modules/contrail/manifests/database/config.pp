@@ -10,17 +10,17 @@
 #
 class contrail::database::config (
   $database_nodemgr_config = {},
-  $cassandra_servers = hiera('contrail_database_node_ips'),
-  $cassandra_ip = $host_ip,
-  $storage_port       = '7000',
-  $ssl_storage_port   = '7001',
-  $client_port        = '9042',
-  $client_port_thrift = '9160',
-  $zookeeper_server_ips = hiera('contrail_database_node_ips'),
-  $zookeeper_client_ip = $host_ip,
-  $zookeeper_hostnames = hiera('contrail_database_short_node_names', ''),
-  $packages = hiera('zookeeper::params::packages'),
-  $service_name = 'zookeeper'
+  $cassandra_servers       = [],
+  $cassandra_ip            = $::ipaddress,
+  $storage_port            = '7000',
+  $ssl_storage_port        = '7001',
+  $client_port             = '9042',
+  $client_port_thrift      = '9160',
+  $zookeeper_server_ips    = hiera('contrail_database_node_ips'),
+  $zookeeper_client_ip     = $::ipaddress,
+  $zookeeper_hostnames     = hiera('contrail_database_short_node_names', ''),
+  $packages                = hiera('zookeeper::params::packages'),
+  $service_name            = 'zookeeper'
 ) {
   $zk_server_ip_2181 = join([join($zookeeper_server_ips, ':2181,'),":2181"],'')
   validate_hash($database_nodemgr_config)
@@ -43,8 +43,8 @@ class contrail::database::config (
   class {'::cassandra':
     service_ensure => true,
     settings => {
-      'cluster_name'          => 'TripleO',
-      'listen_address'        => $host_ip,
+      'cluster_name'          => 'ConfigDatabase',
+      'listen_address'        => $cassandra_ip,
       'storage_port'          => $storage_port,
       'ssl_storage_port'      => $ssl_storage_port,
       'native_transport_port' => $client_port,
