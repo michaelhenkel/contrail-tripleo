@@ -49,8 +49,8 @@ class tripleo::network::contrail::analyticsdatabase(
   $host_name         = $::hostname,
 )
 {
-  class {'::contrail::params':
-    analyticsdatabase => {
+  class {'::contrail::analyticsdatabase':
+    analyticsdatabase_params => {
       'auth_host'         => $auth_host,
       'api_server'        => $api_server,
       'admin_password'    => $admin_password,
@@ -71,8 +71,6 @@ class tripleo::network::contrail::analyticsdatabase(
         },
       },
     }
-  } ->
-  class {'::contrail::analyticsdatabase':
   }
   if $step >= 5 {
     class {'::contrail::database::provision_database':
