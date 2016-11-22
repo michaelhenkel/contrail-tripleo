@@ -11,7 +11,7 @@
 class contrail::analyticsdatabase::config (
   $database_nodemgr_config = {},
   $cassandra_servers  = "",
-  $cassandra_ip       = $host_ip,
+  $cassandra_ip       = $::ipaddress,
   $storage_port       = '7000',
   $ssl_storage_port   = '7001',
   $client_port        = '9042',
@@ -35,7 +35,7 @@ class contrail::analyticsdatabase::config (
     service_ensure => true,
     settings => {
       'cluster_name'          => 'ContrailAnalytics',
-      'listen_address'        => $host_ip,
+      'listen_address'        => $cassandra_ip,
       'storage_port'          => $storage_port,
       'ssl_storage_port'      => $ssl_storage_port,
       'native_transport_port' => $client_port,
