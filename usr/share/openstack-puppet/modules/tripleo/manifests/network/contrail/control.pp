@@ -91,16 +91,19 @@ class tripleo::network::contrail::control(
   $admin_token       = hiera('contrail::admin_token'),
   $admin_user        = hiera('contrail::admin_user'),
   $api_server        = hiera('internal_api_virtual_ip'),
+  $api_port          = 8082,
   $auth_host         = hiera('contrail::auth_host'),
   $auth_port         = hiera('contrail::auth_port'),
   $auth_protocol     = hiera('contrail::auth_protocol'),
   $disc_server_ip    = hiera('internal_api_virtual_ip'),
   $disc_server_port  = hiera('contrail::disc_server_port'),
   $host_ip           = hiera('contrail::control::host_ip'),
+  $ibgp_auto_mesh    = true,
   $ifmap_password    = hiera('contrail::control::host_ip'),
   $ifmap_username    = hiera('contrail::control::host_ip'),
   $insecure          = hiera('contrail::insecure'),
   $memcached_servers = hiera('contrail::memcached_server'),
+  $router_asn        = 64512,
   $secret            = hiera('contrail::control::rndc_secret'),
 )
 {
@@ -148,9 +151,14 @@ class tripleo::network::contrail::control(
   if $step >= 5 {
     class {'::contrail::control::provision_control':
       api_address                => $api_server,
+      api_port                   => $api_port,
+      control_node_address       => $host_ip,
+      control_node_name          => $::hostname,
+      ibgp_auto_mesh             => $ibgp_auto_mesh,
       keystone_admin_user        => $admin_user,
       keystone_admin_password    => $admin_password,
       keystone_admin_tenant_name => $admin_tenant_name,
+      router_asn                 => $router_asn,
     }
   }
 }
