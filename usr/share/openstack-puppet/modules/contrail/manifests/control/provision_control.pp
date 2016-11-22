@@ -47,14 +47,14 @@
 class contrail::control::provision_control (
   $api_address                = '127.0.0.1',
   $api_port                   = 8082,
-  $router_asn                 = 64512,
-  $control_node_address       = $host_ip,
+  $control_node_address       = $::ipaddress,
   $control_node_name          = $::hostname,
+  $ibgp_auto_mesh             = true,
   $keystone_admin_user        = 'admin',
   $keystone_admin_password    = 'password',
   $keystone_admin_tenant_name = 'admin',
-  $ibgp_auto_mesh             = true,
   $oper                       = 'add',
+  $router_asn                 = 64512,
 ) {
 
   if $ibgp_auto_mesh {
