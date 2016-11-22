@@ -22,8 +22,8 @@ class contrail::vrouter::service(
       refreshonly => true,
     }
   }
-  $gateway = get_gateway()
-  if $gateway != $default_gw {
+  $cur_gateway = get_gateway()
+  if $cur_gateway != $gateway {
     exec { 'add default gw':
       path => '/sbin',
       command => "ip route add default via ${gateway}",

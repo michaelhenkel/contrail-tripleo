@@ -36,7 +36,7 @@ class tripleo::profile::base::neutron::opencontrail::vrouter (
   $control_server     = hiera('contrail_control_node_ips'),
   $disc_server_ip     = hiera('internal_api_virtual_ip'),
   $disc_server_port   = 5998,
-  $gatway             = hiera('neutron::plugins::opencontrail::gateway'),
+  $gateway            = hiera('neutron::plugins::opencontrail::gateway'),
   $host_ip            = hiera('neutron::plugins::opencontrail::host_ip'),
   $insecure           = hiera('contrail::insecure'),
   $memcached_servers  = hiera('contrail::memcached_server'),
