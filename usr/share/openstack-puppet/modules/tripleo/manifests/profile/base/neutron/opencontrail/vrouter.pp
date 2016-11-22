@@ -48,6 +48,7 @@ class tripleo::profile::base::neutron::opencontrail::vrouter (
     notify { 'nic':
       message => $physical_interface,
     }
+    fail("bla: ${host_ip}")
     $netmask = inline_template("<%= scope.lookupvar('::netmask_${physical_interface}') -%>")
     $cidr = netmask_to_cidr($netmask)
     notify { 'cidr':
