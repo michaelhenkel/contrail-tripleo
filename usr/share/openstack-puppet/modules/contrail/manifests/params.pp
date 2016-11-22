@@ -1,12 +1,12 @@
 # == Class: contrail::params
 #
 class contrail::params(
-  analytics         = {},
-  analyticsdatabase = {},
-  config            = {},
-  control           = {},
-  database          = {},
-  webui             = {},
+  $analytics         = {},
+  $analyticsdatabase = {},
+  $config            = {},
+  $control           = {},
+  $database          = {},
+  $webui             = {},
 ){
 
   $control_package_name = ['contrail-openstack-control']

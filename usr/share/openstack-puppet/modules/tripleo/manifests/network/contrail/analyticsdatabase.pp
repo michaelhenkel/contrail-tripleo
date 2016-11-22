@@ -50,7 +50,7 @@ class tripleo::network::contrail::analyticsdatabase(
 )
 {
   class {'::contrail::params':
-    analyticsdatabase = {
+    analyticsdatabase => {
       'auth_host'         => $auth_host,
       'api_server'        => $api_server,
       'admin_password'    => $admin_password,
