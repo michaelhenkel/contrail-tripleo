@@ -77,9 +77,9 @@
 #  Defaults to '127.0.0.1'
 #
 class tripleo::network::contrail::webui(
-  $contrail_analytics_vip = hiera('controller_virtual_ip'),
-  $contrail_config_vip = hiera('controller_virtual_ip'),
-  $neutron_vip = hiera('controller_virtual_ip'),
+  $contrail_analytics_vip = hiera('internal_api_virtual_ip'),
+  $contrail_config_vip = hiera('internal_api_virtual_ip'),
+  $neutron_vip = hiera('internal_api_virtual_ip'),
   $admin_password = hiera('contrail::admin_password'),
   $admin_tenant_name = hiera('contrail::admin_tenant_name'),
   $admin_token = hiera('contrail::admin_token'),

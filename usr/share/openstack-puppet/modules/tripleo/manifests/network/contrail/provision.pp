@@ -93,7 +93,7 @@ class tripleo::network::contrail::provision(
   $auth_host = hiera('contrail::auth_host'),
   $auth_port = hiera('contrail::auth_port'),
   $auth_protocol = hiera('contrail::auth_protocol'),
-  $api_server = hiera('controller_virtual_ip'),
+  $api_server = hiera('internal_api_virtual_ip'),
 )
 {
   if $step >= 5 {

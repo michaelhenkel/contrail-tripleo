@@ -134,7 +134,7 @@ class tripleo::network::contrail::config(
   $auth_port = hiera('contrail::auth_port'),
   $auth_protocol = hiera('contrail::auth_protocol'),
   $cassandra_server_list = hiera('contrail_database_node_ips'),
-  $disc_server_ip = hiera('controller_virtual_ip'),
+  $disc_server_ip = hiera('internal_api_virtual_ip'),
   $disc_server_port = hiera('contrail::disc_server_port'),
   $insecure = hiera('contrail::insecure'),
   $listen_ip_address = '0.0.0.0',
@@ -143,7 +143,7 @@ class tripleo::network::contrail::config(
   $multi_tenancy = hiera('contrail::multi_tenancy'),
   $redis_server = '127.0.0.1',
   $zk_server_ip = hiera('contrail_database_node_ips'),
-  $api_server = hiera('controller_virtual_ip'),
+  $api_server = hiera('internal_api_virtual_ip'),
 )
 {
   validate_ip_address($listen_ip_address)

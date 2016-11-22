@@ -36,13 +36,13 @@
 class tripleo::network::contrail::database(
   $step = hiera('step'),
   $auth_host = hiera('contrail::auth_host'),
-  $api_server = hiera('controller_virtual_ip'),
+  $api_server = hiera('internal_api_virtual_ip'),
   $admin_password = hiera('contrail::admin_password'),
   $admin_tenant_name = hiera('contrail::admin_tenant_name'),
   $admin_token = hiera('contrail::admin_token'),
   $admin_user = hiera('contrail::admin_user'),
   $host_ip = hiera('contrail::database::host_ip'),
-  $disc_server_ip = hiera('controller_virtual_ip'),
+  $disc_server_ip = hiera('internal_api_virtual_ip'),
   $disc_server_port = hiera('contrail::disc_server_port'),
 )
 {
