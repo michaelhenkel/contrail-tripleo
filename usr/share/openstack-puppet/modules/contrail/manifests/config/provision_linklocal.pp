@@ -52,7 +52,7 @@
 #   (optional) Operation to run (add|del)
 #   Defaults to 'add'
 #
-class contrail::control::provision_linklocal (
+class contrail::config::provision_linklocal (
   $api_address                = '127.0.0.1',
   $api_port                   = 8082,
   $ipfabric_service_ip        = '127.0.0.1',
