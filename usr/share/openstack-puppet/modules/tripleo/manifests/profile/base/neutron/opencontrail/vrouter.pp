@@ -23,21 +23,23 @@
 #   Defaults to hiera('step')
 #
 class tripleo::profile::base::neutron::opencontrail::vrouter (
-  $step           = hiera('step'),
-  $host_ip = hiera('neutron::plugins::opencontrail::host_ip:'),
-  $admin_password = hiera('contrail::admin_password'),
-  $admin_tenant_name = hiera('contrail::admin_tenant_name'),
-  $admin_token = hiera('contrail::admin_token'),
-  $admin_user = hiera('contrail::admin_user'),
-  $auth_host = hiera('contrail::auth_host'),
-  $auth_port = hiera('contrail::auth_port'),
-  $auth_protocol = hiera('contrail::auth_protocol'),
-  $control_server = hiera('contrail_control_node_ips'),
-  $disc_server_ip = hiera('internal_api_virtual_ip'),
-  $disc_server_port = 5998,
-  $insecure = hiera('contrail::insecure'),
-  $memcached_servers = hiera('contrail::memcached_server'),
-  $physical_interface = hiera('neutron::plugins::opencontrail::physical_interface:'),
+  $step               = hiera('step'),
+  $admin_password     = hiera('contrail::admin_password'),
+  $admin_tenant_name  = hiera('contrail::admin_tenant_name'),
+  $admin_token        = hiera('contrail::admin_token'),
+  $admin_user         = hiera('contrail::admin_user'),
+  $api_port           = 8082,
+  $api_server         = hiera('internal_api_virtual_ip'),,
+  $auth_host          = hiera('contrail::auth_host'),
+  $auth_port          = hiera('contrail::auth_port'),
+  $auth_protocol      = hiera('contrail::auth_protocol'),
+  $control_server     = hiera('contrail_control_node_ips'),
+  $disc_server_ip     = hiera('internal_api_virtual_ip'),
+  $disc_server_port   = 5998,
+  $host_ip            = hiera('neutron::plugins::opencontrail::host_ip'),
+  $insecure           = hiera('contrail::insecure'),
+  $memcached_servers  = hiera('contrail::memcached_server'),
+  $physical_interface = hiera('neutron::plugins::opencontrail::physical_interface'),
 ) {
 
     $cidr = netmask_to_cidr($::netmask)
@@ -67,24 +69,24 @@ class tripleo::profile::base::neutron::opencontrail::vrouter (
       },
     } ->
     class {'::contrail::vrouter':
-      vhost_ip => $host_ip,
-      discovery_ip => $disc_server_ip,
-      mask => $cidr,
-      netmask => $::netmask,
-      gateway => $gateway,
-      macaddr => $::macaddress,
-      physical_interface => $physical_interface,
-      host_ip => $host_ip,
+      discovery_ip               => $disc_server_ip,
+      gateway                    => $gateway,
+      host_ip                    => $host_ip,
+      macaddr                    => $::macaddress,
+      mask                       => $cidr,
+      netmask                    => $::netmask,
+      physical_interface         => $physical_interface,
+      vhost_ip                   => $host_ip,
       vrouter_agent_config       => {
         'CONTROL-NODE'  => {
           'server' => $control_server_list,
         },
         'VIRTUAL-HOST-INTERFACE'  => {
-          'name' => "vhost0",
-          'ip'   => "${host_ip}/${cidr}",
-          'gateway' => $gateway,
-          'physical_interface' => $physical_interface,
           'compute_node_address' => $host_ip,
+          'gateway'              => $gateway,
+          'ip'                   => "${host_ip}/${cidr}",
+          'name'                 => "vhost0",
+          'physical_interface'   => $physical_interface,
         },
         'DISCOVERY' => {
           'server' => $disc_server_ip,
@@ -105,7 +107,10 @@ class tripleo::profile::base::neutron::opencontrail::vrouter (
     }
   if $step >= 5 {
     class {'::contrail::vrouter::provision_vrouter':
-      host_ip => $host_ip,
+      api_address                => $api_server,
+      api_port                   => $api_port,
+      host_ip                    => $host_ip,
+      node_name                  => $::hostname,
       keystone_admin_user        => $admin_user,
       keystone_admin_password    => $admin_password,
       keystone_admin_tenant_name => $admin_tenant_name,

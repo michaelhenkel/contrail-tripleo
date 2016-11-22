@@ -39,7 +39,7 @@
 class contrail::vrouter::provision_vrouter (
   $api_address                = '127.0.0.1',
   $api_port                   = 8082,
-  $host_ip                    = $host_ip,
+  $host_ip                    = $::ipaddress,
   $node_name                  = $::hostname,
   $keystone_admin_user        = 'admin',
   $keystone_admin_password    = 'password',
