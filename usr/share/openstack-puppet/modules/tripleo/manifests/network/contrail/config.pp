@@ -259,6 +259,9 @@ class tripleo::network::contrail::config(
     },
   }
   if $step >= 5 {
+    exec { 'restart contrail-config service':
+      command => '/bin/systemctl restart supervisor-config',
+    }->
     class {'::contrail::config::provision_config':
       api_address                => $api_server,
       api_port                   => $api_port,
