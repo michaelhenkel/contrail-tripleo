@@ -42,6 +42,7 @@ class tripleo::profile::base::neutron::opencontrail::vrouter (
   $memcached_servers  = hiera('contrail::memcached_server'),
   $netmask            = hiera('neutron::plugins::opencontrail::netmask'),
   $physical_interface = hiera('neutron::plugins::opencontrail::physical_interface'),
+  $public_vip         = hiera('public_virtual_ip'),
 ) {
     
     $cidr = netmask_to_cidr($netmask)
@@ -100,7 +101,7 @@ class tripleo::profile::base::neutron::opencontrail::vrouter (
       },
       vnc_api_lib_config    => {
         'auth' => {
-          'AUTHN_SERVER' => $auth_host,
+          'AUTHN_SERVER' => $public_vip,
         },
       },
     }

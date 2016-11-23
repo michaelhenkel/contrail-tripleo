@@ -103,6 +103,7 @@ class tripleo::network::contrail::control(
   $ifmap_username    = hiera('contrail::control::host_ip'),
   $insecure          = hiera('contrail::insecure'),
   $memcached_servers = hiera('contrail::memcached_server'),
+  $public_vip        = hiera('public_virtual_ip'),
   $router_asn        = 64512,
   $secret            = hiera('contrail::control::rndc_secret'),
 )

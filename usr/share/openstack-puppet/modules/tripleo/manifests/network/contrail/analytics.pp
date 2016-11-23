@@ -149,6 +149,7 @@ class tripleo::network::contrail::analytics(
   $insecure                   = hiera('contrail::insecure'),
   $kafka_broker_list          = hiera('contrail_database_node_ips'),
   $memcached_servers          = hiera('contrail::memcached_server'),
+  $public_vip                 = hiera('public_virtual_ip'),
   $rabbit_server              = hiera('rabbitmq_node_ips'),
   $rabbit_user                = hiera('contrail::rabbit_user'),
   $rabbit_password            = hiera('contrail::rabbit_password'),
@@ -285,7 +286,7 @@ class tripleo::network::contrail::analytics(
     },
     vnc_api_lib_config    => {
       'auth' => {
-        'AUTHN_SERVER' => $auth_host,
+        'AUTHN_SERVER' => $public_vip,
       },
     },
   }
@@ -298,7 +299,7 @@ class tripleo::network::contrail::analytics(
       keystone_admin_user        => $admin_user,
       keystone_admin_password    => $admin_password,
       keystone_admin_tenant_name => $admin_tenant_name,
-      openstack_vip              => $auth_host,
+      openstack_vip              => $public_vip,
     }
   }
 }

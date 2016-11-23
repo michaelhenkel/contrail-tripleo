@@ -47,6 +47,7 @@ class tripleo::network::contrail::analyticsdatabase(
   $disc_server_port  = hiera('contrail::disc_server_port'),
   $host_ip           = hiera('contrail::analytics::database::host_ip'),
   $host_name         = $::hostname,
+  $public_vip        = hiera('public_virtual_ip'),
 )
 {
   class {'::contrail::analyticsdatabase':
@@ -81,7 +82,7 @@ class tripleo::network::contrail::analyticsdatabase(
       keystone_admin_user        => $admin_user,
       keystone_admin_password    => $admin_password,
       keystone_admin_tenant_name => $admin_tenant_name,
-      openstack_vip              => $auth_host,
+      openstack_vip              => $public_vip,
     }
   }
 }
