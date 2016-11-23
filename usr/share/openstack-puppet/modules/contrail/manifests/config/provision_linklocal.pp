@@ -66,6 +66,10 @@ class contrail::config::provision_linklocal (
   $oper                       = 'add',
 ) {
 
+  exec { "link local deploy wait for contrail config become available" :
+    path => '/usr/bin',
+    command => "/usr/bin/wget --spider --tries 150 --waitretry=2 --retry-connrefused http://${api_address}:8082",
+  } ->
   exec { "provision_linklocal.py ${api_address}" :
     path => '/usr/bin',
     command => "python /opt/contrail/utils/provision_linklocal.py \

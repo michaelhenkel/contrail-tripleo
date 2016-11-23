@@ -48,6 +48,10 @@ class contrail::analytics::provision_analytics (
   $openstack_vip              = '127.0.0.1',
 ) {
 
+  exec { "analytics deploy wait for contrail config become available" :
+    path => '/usr/bin',
+    command => "/usr/bin/wget --spider --tries 150 --waitretry=2 --retry-connrefused http://${api_address}:8082",
+  } ->
   exec { "provision_analytics_node.py ${control_node_name}" :
     path => '/usr/bin',
     command => "python /opt/contrail/utils/provision_analytics_node.py \

@@ -46,7 +46,10 @@ class contrail::vrouter::provision_vrouter (
   $keystone_admin_tenant_name = 'admin',
   $oper                       = 'add',
 ) {
-
+  exec { "vrouter deploy wait for contrail config become available" :
+    path => '/usr/bin',
+    command => "/usr/bin/wget --spider --tries 150 --waitretry=2 --retry-connrefused http://${api_address}:8082",
+  } ->
   exec { "provision_vrouter.py ${node_name}" :
     path => '/usr/bin',
     command => "python /opt/contrail/utils/provision_vrouter.py \

@@ -62,7 +62,10 @@ class contrail::control::provision_control (
   } else {
     $ibgp_auto_mesh_opt = '--no_ibgp_auto_mesh'
   }
-
+  exec { "control deploy wait for contrail config become available" :
+    path => '/usr/bin',
+    command => "/usr/bin/wget --spider --tries 150 --waitretry=2 --retry-connrefused http://${api_address}:8082",
+  } ->
   exec { "provision_control.py ${control_node_name}" :
     path => '/usr/bin',
     command => "python /opt/contrail/utils/provision_control.py \
