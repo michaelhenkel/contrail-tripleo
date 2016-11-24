@@ -40,6 +40,7 @@ class tripleo::profile::base::neutron::opencontrail::vrouter (
   $host_ip            = hiera('neutron::plugins::opencontrail::host_ip'),
   $insecure           = hiera('contrail::insecure'),
   $memcached_servers  = hiera('contrail::memcached_server'),
+  $metadata_secret    = hiera('neutron::plugins::opencontrail::metadata_proxy_shared_secret'),
   $netmask            = hiera('neutron::plugins::opencontrail::netmask'),
   $physical_interface = hiera('neutron::plugins::opencontrail::physical_interface'),
   $public_vip         = hiera('public_virtual_ip'),
@@ -87,6 +88,9 @@ class tripleo::profile::base::neutron::opencontrail::vrouter (
           'ip'                   => "${host_ip}/${cidr}",
           'name'                 => "vhost0",
           'physical_interface'   => $physical_interface,
+        },
+        'METADATA' => {
+          'metadata_proxy_secret' => $metadata_secret,
         },
         'DISCOVERY' => {
           'server' => $disc_server_ip,
