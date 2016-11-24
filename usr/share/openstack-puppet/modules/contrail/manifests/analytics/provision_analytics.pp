@@ -48,6 +48,10 @@ class contrail::analytics::provision_analytics (
   $openstack_vip              = '127.0.0.1',
 ) {
 
+  exec { "analytics deploy wait for keystone become available" :
+    path => '/usr/bin',
+    command => "/usr/bin/wget --spider --tries 150 --waitretry=2 --retry-connrefused http://${openstack_vip}:35357",
+  } ->
   exec { "analytics deploy wait for contrail config become available" :
     path => '/usr/bin',
     command => "/usr/bin/wget --spider --tries 150 --waitretry=2 --retry-connrefused http://${api_address}:8082",
