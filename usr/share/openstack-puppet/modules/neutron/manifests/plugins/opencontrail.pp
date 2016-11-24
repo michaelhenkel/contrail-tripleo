@@ -65,6 +65,7 @@ class neutron::plugins::opencontrail (
   $keystone_admin_tenant_name = $::os_service_default,
   $keystone_admin_password    = $::os_service_default,
   $keystone_admin_token       = $::os_service_default,
+  $keystone_public_vip        = $::os_service_default,
   $package_ensure             = 'present',
   $purge_config               = false,
 ) {
@@ -122,7 +123,7 @@ class neutron::plugins::opencontrail (
     'keystone_authtoken/admin_user':     value => $keystone_admin_user;
     'keystone_authtoken/admin_tenant':   value => $keystone_admin_tenant_name;
     'keystone_authtoken/admin_password': value => $keystone_admin_password, secret =>true;
-    'keystone_authtoken/auth_host':      value => $keystone_auth_host;
+    'keystone_authtoken/auth_host':      value => $keystone_public_vip;
     'keystone_authtoken/auth_protocol':  value => $keystone_auth_protocol;
     'keystone_authtoken/auth_port':      value => $keystone_auth_port;
   }
