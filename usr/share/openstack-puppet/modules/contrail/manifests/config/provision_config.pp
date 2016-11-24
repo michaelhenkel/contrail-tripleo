@@ -67,5 +67,7 @@ class contrail::config::provision_config (
                  --admin_tenant ${keystone_admin_tenant_name} \
                  --openstack_ip ${openstack_vip} \
                  --oper ${oper}",
+    tries => 15,
+    try_sleep => 2,
   }
 }

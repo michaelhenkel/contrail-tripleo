@@ -83,5 +83,7 @@ class contrail::control::provision_control (
                  --admin_password ${keystone_admin_password} \
                  --admin_tenant ${keystone_admin_tenant_name} \
                  --oper ${oper}",
+    tries => 15,
+    try_sleep => 2,
   }
 }
