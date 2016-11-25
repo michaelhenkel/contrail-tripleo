@@ -64,7 +64,7 @@ class contrail::control::provision_control (
   }
   exec { "control deploy wait for keystone become available" :
     path => '/usr/bin',
-    command => "/usr/bin/wget --spider --tries 150 --waitretry=2 --retry-connrefused http://${openstack_vip}:35357",
+    command => "/usr/bin/wget --spider --tries 150 --waitretry=2 --retry-connrefused http://${}:35357",
   } ->
   exec { "control deploy wait for contrail config become available" :
     path => '/usr/bin',
