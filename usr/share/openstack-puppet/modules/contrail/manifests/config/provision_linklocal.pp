@@ -66,10 +66,6 @@ class contrail::config::provision_linklocal (
   $oper                       = 'add',
 ) {
 
-  exec { "link local deploy wait for keystone become available" :
-    path => '/usr/bin',
-    command => "/usr/bin/wget --spider --tries 150 --waitretry=2 --retry-connrefused http://${openstack_vip}:35357",
-  } ->
   exec { "link local deploy wait for contrail config become available" :
     path => '/usr/bin',
     command => "/usr/bin/wget --spider --tries 150 --waitretry=2 --retry-connrefused http://${api_address}:8082",
