@@ -68,7 +68,7 @@ class contrail::analytics::provision_analytics (
                  --admin_tenant ${keystone_admin_tenant_name} \
                  --openstack_ip ${openstack_vip} \
                  --oper ${oper}",
-    tries => 15,
+    tries => 50,
     try_sleep => 2, 
   }
 }
