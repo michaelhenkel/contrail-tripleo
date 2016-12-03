@@ -65,6 +65,7 @@ class contrail::vrouter::config (
   $macaddr                = $::macaddress,
   $mask                   = '24',
   $netmask                = '255.255.255.0',
+  $keystone_config        = {},
   $vhost_ip               = '127.0.0.1',
   $vgw_public_subnet      = undef,
   $vgw_interface          = undef,
@@ -73,17 +74,24 @@ class contrail::vrouter::config (
   $vnc_api_lib_config     = {},
 ) {
 
-  include ::contrail::vnc_api
-  include ::contrail::ctrl_details
-  include ::contrail::service_token
+#  include ::contrail::vnc_api
+#  include ::contrail::ctrl_details
+#  include ::contrail::service_token
+#
+  file { '/etc/contrail/contrail-keystone-auth.conf':
+    ensure => file,
+  }
 
   validate_hash($vrouter_agent_config)
   validate_hash($vrouter_nodemgr_config)
+  validate_hash($keystone_config)
 
+  $contrail_keystone_config = { 'path' => '/etc/contrail/contrail-keystone-auth.conf' }
   $contrail_vrouter_agent_config = { 'path' => '/etc/contrail/contrail-vrouter-agent.conf' }
   $contrail_vrouter_nodemgr_config = { 'path' => '/etc/contrail/contrail-vrouter-nodemgr.conf' }
   $contrail_vnc_api_lib_config = { 'path' => '/etc/contrail/vnc_api_lib.ini' }
 
+  create_ini_settings($keystone_config, $contrail_keystone_config)
   create_ini_settings($vrouter_agent_config, $contrail_vrouter_agent_config)
   create_ini_settings($vrouter_nodemgr_config, $contrail_vrouter_nodemgr_config)
   create_ini_settings($vnc_api_lib_config, $contrail_vnc_api_lib_config)

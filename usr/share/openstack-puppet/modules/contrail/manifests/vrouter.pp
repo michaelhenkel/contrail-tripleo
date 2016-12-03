@@ -17,13 +17,14 @@ class contrail::vrouter (
   $package_name = $contrail::params::vrouter_package_name,
   $physical_interface,
   $vhost_ip,
+  $keystone_config = {},
   $vrouter_agent_config = {},
   $vrouter_nodemgr_config = {},
   $vnc_api_lib_config = {},
 ) inherits contrail::params {
 
   anchor {'contrail::vrouter::start': } ->
-  #class {'::contrail::vrouter::install': } ->
+  class {'::contrail::vrouter::install': } ->
   class {'::contrail::vrouter::config':
     compute_device         => $physical_interface,
     device                 => $physical_interface,
@@ -33,6 +34,7 @@ class contrail::vrouter (
     mask                   => $mask,
     netmask                => $netmask,
     vhost_ip               => $vhost_ip,
+    keystone_config        => $keystone_config,
     vrouter_agent_config   => $vrouter_agent_config,
     vrouter_nodemgr_config => $vrouter_nodemgr_config,
     vnc_api_lib_config     => $vnc_api_lib_config,

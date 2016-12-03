@@ -55,7 +55,15 @@ class tripleo::profile::base::neutron::opencontrail::vrouter (
     # NOTE: it's not possible to use this class without a functional
     # contrail controller up and running
     $control_server_list = join($control_server, ' ')
-    class {'::contrail::keystone':
+    class {'::contrail::vrouter':
+      discovery_ip               => $disc_server_ip,
+      gateway                    => $gateway,
+      host_ip                    => $host_ip,
+      macaddr                    => $macaddress,
+      mask                       => $cidr,
+      netmask                    => $netmask,
+      physical_interface         => $physical_interface,
+      vhost_ip                   => $host_ip,
       keystone_config => {
         'KEYSTONE' => {
           'admin_password'    => $admin_password,
@@ -68,16 +76,6 @@ class tripleo::profile::base::neutron::opencontrail::vrouter (
           'memcache_servers'  => $memcached_servers,
         },
       },
-    } ->
-    class {'::contrail::vrouter':
-      discovery_ip               => $disc_server_ip,
-      gateway                    => $gateway,
-      host_ip                    => $host_ip,
-      macaddr                    => $macaddress,
-      mask                       => $cidr,
-      netmask                    => $netmask,
-      physical_interface         => $physical_interface,
-      vhost_ip                   => $host_ip,
       vrouter_agent_config       => {
         'CONTROL-NODE'  => {
           'server' => $control_server_list,

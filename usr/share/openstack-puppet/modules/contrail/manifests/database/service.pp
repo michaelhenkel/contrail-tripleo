@@ -14,8 +14,8 @@ class contrail::database::service {
     enable => true,
   }
   service {'supervisor-database' :
-    ensure => running,
-    enable => true,
+    ensure => stopped,
+    enable => false,
   }
 
 }

@@ -8,10 +8,12 @@
 #   (optional) Package name for database
 #
 class contrail::database::install (
-  $package_name = $contrail::database::package_name,
 ) {
 
-  package { $package_name :
+  package { 'java-1.8.0-openjdk' :
+    ensure => installed,
+  } ->
+  package { 'contrail-openstack-database' :
     ensure => installed,
   }
 

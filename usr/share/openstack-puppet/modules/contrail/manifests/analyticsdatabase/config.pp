@@ -10,13 +10,16 @@
 #
 class contrail::analyticsdatabase::config (
   $database_nodemgr_config = {},
-  $cassandra_servers  = "",
-  $cassandra_ip       = $::ipaddress,
-  $storage_port       = '7000',
-  $ssl_storage_port   = '7001',
-  $client_port        = '9042',
-  $client_port_thrift = '9160',
+  $cassandra_servers       = "",
+  $cassandra_ip            = $::ipaddress,
+  $storage_port            = '7000',
+  $ssl_storage_port        = '7001',
+  $client_port             = '9042',
+  $client_port_thrift      = '9160',
+  $kafka_hostnames         = hiera('contrail_analytics_database_short_node_names', ''),
+  $zookeeper_server_ips    = hiera('contrail_database_node_ips'),
 ) {
+  $zk_server_ip_2181 = join([join($zookeeper_server_ips, ':2181,'),":2181"],'')
   validate_hash($database_nodemgr_config)
   $contrail_database_nodemgr_config = { 'path' => '/etc/contrail/contrail-database-nodemgr.conf' }
 
@@ -60,4 +63,18 @@ class contrail::analyticsdatabase::config (
       'start_native_transport'      => true,
     }
   } 
+  file { '/usr/share/kafka/config/server.properties':
+    ensure => present,
+  }->
+  file_line { 'add zookeeper servers to kafka config':
+    path => '/usr/share/kafka/config/server.properties',
+    line => "zookeeper.connect=${zk_server_ip_2181}",
+    match   => "^zookeeper.connect=.*$",
+  }
+  $kafka_broker_id = extract_id($kafka_hostnames, $::hostname)
+  file_line { 'set kafka broker id':
+    path => '/usr/share/kafka/config/server.properties',
+    line => "broker.id=${kafka_broker_id}",
+    match   => "^broker.id=.*$",
+  }
 }

@@ -147,7 +147,7 @@ class tripleo::network::contrail::analytics(
   $http_server_port           = 8090,
   $host_ip                    = hiera('contrail::analytics::host_ip'),
   $insecure                   = hiera('contrail::insecure'),
-  $kafka_broker_list          = hiera('contrail_database_node_ips'),
+  $kafka_broker_list          = hiera('contrail_analytics_database_node_ips'),
   $memcached_servers          = hiera('contrail::memcached_server'),
   $public_vip                 = hiera('public_virtual_ip'),
   $rabbit_server              = hiera('rabbitmq_node_ips'),
@@ -168,20 +168,6 @@ class tripleo::network::contrail::analytics(
   $zk_server_ip_2181 = join([join($zk_server_ip, ':2181 '),":2181"],'')
   $zk_server_ip_2181_comma = join([join($zk_server_ip, ':2181,'),":2181"],'')
 
-  class {'::contrail::keystone':
-    keystone_config => {
-      'KEYSTONE' => {
-        'admin_password'    => $admin_password,
-        'admin_tenant_name' => $admin_tenant_name,
-        'admin_user'        => $admin_user,
-        'auth_host'         => $auth_host,
-        'auth_port'         => $auth_port,
-        'auth_protocol'     => $auth_protocol,
-        'insecure'          => $insecure,
-        'memcache_servers'  => $memcached_servers,
-      },
-    },
-  } ->
   class {'::contrail::analytics':
     alarm_gen_config       => {
       'DEFAULTS'  => {
@@ -287,6 +273,18 @@ class tripleo::network::contrail::analytics(
     vnc_api_lib_config    => {
       'auth' => {
         'AUTHN_SERVER' => $public_vip,
+      },
+    },
+    keystone_config => {
+      'KEYSTONE' => {
+        'admin_password'    => $admin_password,
+        'admin_tenant_name' => $admin_tenant_name,
+        'admin_user'        => $admin_user,
+        'auth_host'         => $auth_host,
+        'auth_port'         => $auth_port,
+        'auth_protocol'     => $auth_protocol,
+        'insecure'          => $insecure,
+        'memcache_servers'  => $memcached_servers,
       },
     },
   }

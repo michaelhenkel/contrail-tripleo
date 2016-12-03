@@ -48,14 +48,14 @@ class contrail::database::provision_database (
   $openstack_vip              = '127.0.0.1',
 ) {
 
-  exec { "analytics database deploy wait for keystone become available" :
-    path => '/usr/bin',
-    command => "/usr/bin/wget --spider --tries 150 --waitretry=2 --retry-connrefused http://${openstack_vip}:35357",
-  } ->
-  exec { "analytics database deploy wait for contrail config become available" :
-    path => '/usr/bin',
-    command => "/usr/bin/wget --spider --tries 150 --waitretry=2 --retry-connrefused http://${api_address}:8082",
-  } ->
+  #exec { "analytics database deploy wait for keystone become available" :
+  #  path => '/usr/bin',
+  #  command => "/usr/bin/wget --spider --tries 150 --waitretry=2 --retry-connrefused http://${openstack_vip}:35357",
+  #} ->
+  #exec { "analytics database deploy wait for contrail config become available" :
+  #  path => '/usr/bin',
+  #  command => "/usr/bin/wget --spider --tries 150 --waitretry=2 --retry-connrefused http://${api_address}:8082",
+  #} ->
   exec { "provision_database_node.py ${control_node_name}" :
     path => '/usr/bin',
     command => "python /opt/contrail/utils/provision_database_node.py \
@@ -68,7 +68,7 @@ class contrail::database::provision_database (
                  --admin_tenant ${keystone_admin_tenant_name} \
                  --openstack_ip ${openstack_vip} \
                  --oper ${oper}",
-    tries => 50,
-    try_sleep => 2,
+    tries => 100,
+    try_sleep => 3,
   }
 }

@@ -102,20 +102,19 @@ class contrail::database::config (
     #manage_service_file => true,
   }
 
-  #File['/usr/lib/zookeeper/bin/zkEnv.sh'] -> Class['::zookeeper']
 
-  file { '/usr/share/kafka/config/server.properties':
-    ensure => present,
-  }->
-  file_line { 'add zookeeper servers to kafka config':
-    path => '/usr/share/kafka/config/server.properties',
-    line => "zookeeper.connect=${zk_server_ip_2181}",
-    match   => "^zookeeper.connect=.*$",
-  }
-  $kafka_broker_id = extract_id($zookeeper_hostnames, $::hostname)
-  file_line { 'set kafka broker id':
-    path => '/usr/share/kafka/config/server.properties',
-    line => "broker.id=${kafka_broker_id}",
-    match   => "^broker.id=.*$",
-  }
+  #file { '/usr/share/kafka/config/server.properties':
+  #  ensure => present,
+  #}->
+  #file_line { 'add zookeeper servers to kafka config':
+  #  path => '/usr/share/kafka/config/server.properties',
+  #  line => "zookeeper.connect=${zk_server_ip_2181}",
+  #  match   => "^zookeeper.connect=.*$",
+  #}
+  #$kafka_broker_id = extract_id($zookeeper_hostnames, $::hostname)
+  #file_line { 'set kafka broker id':
+  #  path => '/usr/share/kafka/config/server.properties',
+  #  line => "broker.id=${kafka_broker_id}",
+  #  match   => "^broker.id=.*$",
+  #}
 }

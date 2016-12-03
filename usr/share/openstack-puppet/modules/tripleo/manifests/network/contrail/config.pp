@@ -163,21 +163,6 @@ class tripleo::network::contrail::config(
   $rabbit_server_list_5672 = join([join($rabbit_server, ':5672,'),":5672"],'')
   $zk_server_ip_2181 = join([join($zk_server_ip, ':2181,'),":2181"],'')
 
-  class {'::contrail::keystone':
-    keystone_config => {
-      'KEYSTONE' => {
-        'admin_password'    => $admin_password,
-        'admin_tenant_name' => $admin_tenant_name,
-        'admin_token'       => $admin_token,
-        'admin_user'        => $admin_user,
-        'auth_host'         => $auth_host,
-        'auth_port'         => $auth_port,
-        'auth_protocol'     => $auth_protocol,
-        'insecure'          => $insecure,
-        'memcached_servers' => $memcached_servers,
-      },
-    },
-  } ->
   class {'::contrail::config':
     api_config            => {
       'DEFAULTS' => {
@@ -195,6 +180,19 @@ class tripleo::network::contrail::config(
         'rabbit_password'       => $rabbit_password,
         'redis_server'          => $redis_server,
         'zk_server_ip'          => $zk_server_ip_2181,
+      },
+    },
+    keystone_config => {
+      'KEYSTONE' => {
+        'admin_password'    => $admin_password,
+        'admin_tenant_name' => $admin_tenant_name,
+        'admin_token'       => $admin_token,
+        'admin_user'        => $admin_user,
+        'auth_host'         => $auth_host,
+        'auth_port'         => $auth_port,
+        'auth_protocol'     => $auth_protocol,
+        'insecure'          => $insecure,
+        'memcached_servers' => $memcached_servers,
       },
     },
     basicauthusers_property => $basicauthusers_property,

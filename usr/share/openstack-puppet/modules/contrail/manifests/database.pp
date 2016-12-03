@@ -18,7 +18,7 @@ class contrail::database (
   Service['supervisor-database'] -> Service <| name == 'supervisor-webui' |>
 
   anchor {'contrail::database::start': } ->
-  #class {'::contrail::database::install': } ->
+  class {'::contrail::database::install': } ->
   class {'::contrail::database::config': 
     cassandra_servers       => $database_params['cassandra_servers'],
     cassandra_ip            => $database_params['host_ip'],

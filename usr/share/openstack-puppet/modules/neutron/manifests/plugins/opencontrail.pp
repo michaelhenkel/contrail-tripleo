@@ -80,6 +80,9 @@ class neutron::plugins::opencontrail (
     name   => $::neutron::params::opencontrail_plugin_package,
     tag    => ['neutron-package', 'openstack'],
   }
+  package {'python-contrail':
+    ensure => installed,
+  }
 
   ensure_resource('file', '/etc/neutron/plugins/opencontrail', {
     ensure => directory,

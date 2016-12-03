@@ -47,14 +47,14 @@ class contrail::config::provision_config (
   $oper                       = 'add',
   $openstack_vip              = '127.0.0.1',
 ) {
-  exec { "config deploy wait for keystone become available" :
-    path => '/usr/bin',
-    command => "/usr/bin/wget --spider --tries 150 --waitretry=2 --retry-connrefused http://${openstack_vip}:35357",
-  } ->
-  exec { "config deploy wait for contrail config become available" :
-    path => '/usr/bin',
-    command => "/usr/bin/wget --spider --tries 150 --waitretry=2 --retry-connrefused http://${api_address}:8082",
-  } ->
+  #exec { "config deploy wait for keystone become available" :
+  #  path => '/usr/bin',
+  #  command => "/usr/bin/wget --spider --tries 150 --waitretry=2 --retry-connrefused http://${openstack_vip}:35357",
+  #} ->
+  #exec { "config deploy wait for contrail config become available" :
+  #  path => '/usr/bin',
+  #  command => "/usr/bin/wget --spider --tries 150 --waitretry=2 --retry-connrefused http://${api_address}:8082",
+  #} ->
   exec { "provision_config_node.py ${config_node_name}" :
     path => '/usr/bin',
     command => "python /opt/contrail/utils/provision_config_node.py \
@@ -67,7 +67,7 @@ class contrail::config::provision_config (
                  --admin_tenant ${keystone_admin_tenant_name} \
                  --openstack_ip ${openstack_vip} \
                  --oper ${oper}",
-    tries => 50,
-    try_sleep => 2,
+    tries => 100,
+    try_sleep => 3,
   }
 }

@@ -16,7 +16,7 @@ class contrail::control (
 ) inherits contrail::params {
 
   anchor {'contrail::control::start': } ->
-  #class {'::contrail::control::install': } ->
+  class {'::contrail::control::install': } ->
   class {'::contrail::control::config':
     control_config         => $control_config,
     control_nodemgr_config => $control_nodemgr_config,

@@ -32,10 +32,10 @@ class contrail::control::config (
   $control_nodemgr_config = {},
 ) {
 
-  include ::contrail::vnc_api
-  include ::contrail::ctrl_details
-  include ::contrail::service_token
-  include ::contrail::keystone
+#  include ::contrail::vnc_api
+#  include ::contrail::ctrl_details
+#  include ::contrail::service_token
+#  include ::contrail::keystone
 
   validate_hash($dns_config)
   validate_hash($control_config)
