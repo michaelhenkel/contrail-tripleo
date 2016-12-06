@@ -116,6 +116,7 @@
 #
 class tripleo::network::contrail::config(
   $step = hiera('step'),
+  $aaa_mode               = hiera('contrail::aaa_mode'),
   $admin_password         = hiera('contrail::admin_password'),
   $admin_tenant_name      = hiera('contrail::admin_tenant_name'),
   $admin_token            = hiera('contrail::admin_token'),
@@ -163,9 +164,25 @@ class tripleo::network::contrail::config(
   $rabbit_server_list_5672 = join([join($rabbit_server, ':5672,'),":5672"],'')
   $zk_server_ip_2181 = join([join($zk_server_ip, ':2181,'),":2181"],'')
 
+  class {'::contrail::keystone':
+    keystone_config => {
+      'KEYSTONE' => {
+        'admin_password'    => $admin_password,
+        'admin_tenant_name' => $admin_tenant_name,
+        'admin_token'       => $admin_token,
+        'admin_user'        => $admin_user,
+        'auth_host'         => $auth_host,
+        'auth_port'         => $auth_port,
+        'auth_protocol'     => $auth_protocol,
+        'insecure'          => $insecure,
+        'memcached_servers' => $memcached_servers,
+      },      
+    },
+  } ->
   class {'::contrail::config':
     api_config            => {
       'DEFAULTS' => {
+        'aaa_mode'              => $aaa_mode,
         'auth'                  => $auth,
         'cassandra_server_list' => $cassandra_server_list_9160,
         'disc_server_ip'        => $disc_server_ip,
