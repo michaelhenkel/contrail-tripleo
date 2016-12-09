@@ -53,30 +53,32 @@ class tripleo::network::contrail::database(
   $zookeeper_server_ips = hiera('contrail_database_node_ips'),
 )
 {
-  class {'::contrail::database':
-    database_params => {
-      'auth_host'            => $auth_host,
-      'api_server'           => $api_server,
-      'admin_password'       => $admin_password,
-      'admin_tenant_name'    => $admin_tenant_name,
-      'admin_token'          => $admin_token,
-      'admin_user'           => $admin_user,
-      'cassandra_servers'    => $cassandra_servers,
-      'host_ip'              => $host_ip,
-      'disc_server_ip'       => $disc_server_ip,
-      'disc_server_port'     => $disc_server_port,
-      'zookeeper_client_ip'  => $zookeeper_client_ip,
-      'zookeeper_hostnames'  => $zookeeper_hostnames,
-      'zookeeper_server_ips' => $zookeeper_server_ips,
-      database_nodemgr_config => {
-        'DEFAULT'   => {
-          'hostip' => $host_ip,
+  if $step == 2 {
+    class {'::contrail::database':
+      database_params => {
+        'auth_host'            => $auth_host,
+        'api_server'           => $api_server,
+        'admin_password'       => $admin_password,
+        'admin_tenant_name'    => $admin_tenant_name,
+        'admin_token'          => $admin_token,
+        'admin_user'           => $admin_user,
+        'cassandra_servers'    => $cassandra_servers,
+        'host_ip'              => $host_ip,
+        'disc_server_ip'       => $disc_server_ip,
+        'disc_server_port'     => $disc_server_port,
+        'zookeeper_client_ip'  => $zookeeper_client_ip,
+        'zookeeper_hostnames'  => $zookeeper_hostnames,
+        'zookeeper_server_ips' => $zookeeper_server_ips,
+        database_nodemgr_config => {
+          'DEFAULT'   => {
+            'hostip' => $host_ip,
+          },
+          'DISCOVERY' => {
+            'port'   => $disc_server_port,
+            'server' => $disc_server_ip,
+          },
         },
-        'DISCOVERY' => {
-          'port'   => $disc_server_port,
-          'server' => $disc_server_ip,
-        },
-      },
+      }
     }
   }
   if $step >= 5 {

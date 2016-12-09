@@ -113,41 +113,43 @@ class tripleo::network::contrail::control(
   $dns_ifmap_user         = "${ifmap_username}.dns"
   $dns_ifmap_password     = "${ifmap_username}.dns"
 
-  class {'::contrail::control':
-    secret                 => $secret,
-    control_config         => {
-      'DEFAULT'  => {
-        'hostip' => $host_ip,
+  if $step >= 3 {
+    class {'::contrail::control':
+      secret                 => $secret,
+      control_config         => {
+        'DEFAULT'  => {
+          'hostip' => $host_ip,
+        },
+        'DISCOVERY' => {
+          'port'   => $disc_server_port,
+          'server' => $disc_server_ip,
+        },
+        'IFMAP'     => {
+          'password' => $control_ifmap_user,
+          'user'     => $control_ifmap_password,
+        },
       },
-      'DISCOVERY' => {
-        'port'   => $disc_server_port,
-        'server' => $disc_server_ip,
+      dns_config             => {
+        'DEFAULT'  => {
+          'hostip'      => $host_ip,
+          'rndc_secret' => $secret,
+        },
+        'DISCOVERY' => {
+          'port'   => $disc_server_port,
+          'server' => $disc_server_ip,
+        },
+        'IFMAP'     => {
+          'password' => $dns_ifmap_user,
+          'user'     => $dns_ifmap_password,
+        }
       },
-      'IFMAP'     => {
-        'password' => $control_ifmap_user,
-        'user'     => $control_ifmap_password,
+      control_nodemgr_config => {
+        'DISCOVERY' => {
+          'port'   => $disc_server_port,
+          'server' => $disc_server_ip,
+        },
       },
-    },
-    dns_config             => {
-      'DEFAULT'  => {
-        'hostip'      => $host_ip,
-        'rndc_secret' => $secret,
-      },
-      'DISCOVERY' => {
-        'port'   => $disc_server_port,
-        'server' => $disc_server_ip,
-      },
-      'IFMAP'     => {
-        'password' => $dns_ifmap_user,
-        'user'     => $dns_ifmap_password,
-      }
-    },
-    control_nodemgr_config => {
-      'DISCOVERY' => {
-        'port'   => $disc_server_port,
-        'server' => $disc_server_ip,
-      },
-    },
+    }
   }
   if $step >= 5 {
     class {'::contrail::control::provision_control':

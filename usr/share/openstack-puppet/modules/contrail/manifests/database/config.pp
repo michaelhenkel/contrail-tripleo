@@ -25,13 +25,16 @@ class contrail::database::config (
   $zk_server_ip_2181 = join([join($zookeeper_server_ips, ':2181,'),":2181"],'')
   validate_hash($database_nodemgr_config)
   $contrail_database_nodemgr_config = { 'path' => '/etc/contrail/contrail-database-nodemgr.conf' }
+  $cassandra_seeds_list = $cassandra_servers[0,2]
+  if $cassandra_seeds_list.size > 1 {
+    $cassandra_seeds = join($cassandra_seeds_list,",")
+  } else {
+    $cassandra_seeds = $cassandra_seeds_list
+  }
 
   create_ini_settings($database_nodemgr_config, $contrail_database_nodemgr_config)
   validate_ipv4_address($cassandra_ip)
 
-#  package { 'java-1.8.0-openjdk.x86_64':
-#    ensure => 'installed',
-#  } ->
   file { ['/var/lib/cassandra',
           '/var/lib/cassandra/data',
           '/var/lib/cassandra/saved_caches',
@@ -41,7 +44,8 @@ class contrail::database::config (
     mode   => '0750',
   } ->
   class {'::cassandra':
-    service_ensure => true,
+    service_ensure => stopped,
+    service_enable => false,
     settings => {
       'cluster_name'          => 'ConfigDatabase',
       'listen_address'        => $cassandra_ip,
@@ -61,7 +65,7 @@ class contrail::database::config (
           'class_name' => 'org.apache.cassandra.locator.SimpleSeedProvider',
           'parameters' => [
             {
-              'seeds' => $cassandra_servers[0],
+              'seeds' => $cassandra_seeds,
             },
           ],
         },

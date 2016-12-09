@@ -163,98 +163,100 @@ class tripleo::network::contrail::config(
   $rabbit_server_list_5672 = join([join($rabbit_server, ':5672,'),":5672"],'')
   $zk_server_ip_2181 = join([join($zk_server_ip, ':2181,'),":2181"],'')
 
-  class {'::contrail::config':
-    api_config            => {
-      'DEFAULTS' => {
-        'auth'                  => $auth,
-        'cassandra_server_list' => $cassandra_server_list_9160,
-        'disc_server_ip'        => $disc_server_ip,
-        'ifmap_password'        => $ifmap_password,
-        'ifmap_server_ip'       => $ifmap_server_ip,
-        'ifmap_username'        => $ifmap_username,
-        'listen_ip_addr'        => $listen_ip_address,
-        'listen_port'           => $listen_port,
-        'multi_tenancy'         => $multi_tenancy,
-        'rabbit_server'         => $rabbit_server_list_5672,
-        'rabbit_user'           => $rabbit_user,
-        'rabbit_password'       => $rabbit_password,
-        'redis_server'          => $redis_server,
-        'zk_server_ip'          => $zk_server_ip_2181,
+  if $step >= 3 {
+    class {'::contrail::config':
+      api_config            => {
+        'DEFAULTS' => {
+          'auth'                  => $auth,
+          'cassandra_server_list' => $cassandra_server_list_9160,
+          'disc_server_ip'        => $disc_server_ip,
+          'ifmap_password'        => $ifmap_password,
+          'ifmap_server_ip'       => $ifmap_server_ip,
+          'ifmap_username'        => $ifmap_username,
+          'listen_ip_addr'        => $listen_ip_address,
+          'listen_port'           => $listen_port,
+          'multi_tenancy'         => $multi_tenancy,
+          'rabbit_server'         => $rabbit_server_list_5672,
+          'rabbit_user'           => $rabbit_user,
+          'rabbit_password'       => $rabbit_password,
+          'redis_server'          => $redis_server,
+          'zk_server_ip'          => $zk_server_ip_2181,
+        },
       },
-    },
-    keystone_config => {
-      'KEYSTONE' => {
-        'admin_password'    => $admin_password,
-        'admin_tenant_name' => $admin_tenant_name,
-        'admin_token'       => $admin_token,
-        'admin_user'        => $admin_user,
-        'auth_host'         => $auth_host,
-        'auth_port'         => $auth_port,
-        'auth_protocol'     => $auth_protocol,
-        'insecure'          => $insecure,
-        'memcached_servers' => $memcached_servers,
+      keystone_config => {
+        'KEYSTONE' => {
+          'admin_password'    => $admin_password,
+          'admin_tenant_name' => $admin_tenant_name,
+          'admin_token'       => $admin_token,
+          'admin_user'        => $admin_user,
+          'auth_host'         => $auth_host,
+          'auth_port'         => $auth_port,
+          'auth_protocol'     => $auth_protocol,
+          'insecure'          => $insecure,
+          'memcached_servers' => $memcached_servers,
+        },
       },
-    },
-    basicauthusers_property => $basicauthusers_property,
-    config_nodemgr_config => {
-      'DISCOVERY' => {
-        'server' => $disc_server_ip,
-        'port'   => $disc_server_port,
+      basicauthusers_property => $basicauthusers_property,
+      config_nodemgr_config => {
+        'DISCOVERY' => {
+          'server' => $disc_server_ip,
+          'port'   => $disc_server_port,
+        },
       },
-    },
-    device_manager_config => {
-      'DEFAULTS' => {
-        'cassandra_server_list' => $cassandra_server_list_9160,
-        'disc_server_ip'        => $disc_server_ip,
-        'disc_server_port'      => $disc_server_port,
-        'rabbit_server'         => $rabbit_server_list_5672,
-        'redis_server'          => $redis_server,
-        'rabbit_user'           => $rabbit_user,
-        'rabbit_password'       => $rabbit_password,
-        'zk_server_ip'          => $zk_server_ip_2181,
+      device_manager_config => {
+        'DEFAULTS' => {
+          'cassandra_server_list' => $cassandra_server_list_9160,
+          'disc_server_ip'        => $disc_server_ip,
+          'disc_server_port'      => $disc_server_port,
+          'rabbit_server'         => $rabbit_server_list_5672,
+          'redis_server'          => $redis_server,
+          'rabbit_user'           => $rabbit_user,
+          'rabbit_password'       => $rabbit_password,
+          'zk_server_ip'          => $zk_server_ip_2181,
+        },
       },
-    },
-    schema_config         => {
-      'DEFAULTS' => {
-        'cassandra_server_list' => $cassandra_server_list_9160,
-        'disc_server_ip'        => $disc_server_ip,
-        'disc_server_port'      => $disc_server_port,
-        'ifmap_password'        => $ifmap_password,
-        'ifmap_server_ip'       => $ifmap_server_ip,
-        'ifmap_username'        => $ifmap_username,
-        'rabbit_server'         => $rabbit_server_list_5672,
-        'rabbit_user'           => $rabbit_user,
-        'rabbit_password'       => $rabbit_password,
-        'redis_server'          => $redis_server,
-        'zk_server_ip'          => $zk_server_ip_2181,
+      schema_config         => {
+        'DEFAULTS' => {
+          'cassandra_server_list' => $cassandra_server_list_9160,
+          'disc_server_ip'        => $disc_server_ip,
+          'disc_server_port'      => $disc_server_port,
+          'ifmap_password'        => $ifmap_password,
+          'ifmap_server_ip'       => $ifmap_server_ip,
+          'ifmap_username'        => $ifmap_username,
+          'rabbit_server'         => $rabbit_server_list_5672,
+          'rabbit_user'           => $rabbit_user,
+          'rabbit_password'       => $rabbit_password,
+          'redis_server'          => $redis_server,
+          'zk_server_ip'          => $zk_server_ip_2181,
+        },
       },
-    },
-    discovery_config      => {
-      'DEFAULTS' => {
-        'cassandra_server_list' => $cassandra_server_list_9160,
-        'zk_server_ip'          => $zk_server_ip_2181,
+      discovery_config      => {
+        'DEFAULTS' => {
+          'cassandra_server_list' => $cassandra_server_list_9160,
+          'zk_server_ip'          => $zk_server_ip_2181,
+          },
       },
-    },
-    svc_monitor_config    => {
-      'DEFAULTS' => {
-        'cassandra_server_list' => $cassandra_server_list_9160,
-        'disc_server_ip'        => $disc_server_ip,
-        'disc_server_port'      => $disc_server_port,
-        'ifmap_password'        => $ifmap_password,
-        'ifmap_server_ip'       => $ifmap_server_ip,
-        'ifmap_username'        => $ifmap_username,
-        'rabbit_server'         => $rabbit_server_list_5672,
-        'rabbit_user'           => $rabbit_user,
-        'rabbit_password'       => $rabbit_password,
-        'redis_server'          => $redis_server,
-        'zk_server_ip'          => $zk_server_ip_2181,
+      svc_monitor_config    => {
+        'DEFAULTS' => {
+          'cassandra_server_list' => $cassandra_server_list_9160,
+          'disc_server_ip'        => $disc_server_ip,
+          'disc_server_port'      => $disc_server_port,
+          'ifmap_password'        => $ifmap_password,
+          'ifmap_server_ip'       => $ifmap_server_ip,
+          'ifmap_username'        => $ifmap_username,
+          'rabbit_server'         => $rabbit_server_list_5672,
+          'rabbit_user'           => $rabbit_user,
+          'rabbit_password'       => $rabbit_password,
+          'redis_server'          => $redis_server,
+          'zk_server_ip'          => $zk_server_ip_2181,
+        },
       },
-    },
-    vnc_api_lib_config    => {
-      'auth' => {
-        'AUTHN_SERVER' => $public_vip,
+      vnc_api_lib_config    => {
+        'auth' => {
+          'AUTHN_SERVER' => $public_vip,
+        },
       },
-    },
+    }
   }
   if $step >= 4 {
     exec { 'restart contrail-config service':
