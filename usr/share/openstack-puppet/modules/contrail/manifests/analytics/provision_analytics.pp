@@ -59,7 +59,7 @@ class contrail::analytics::provision_analytics (
   exec { "provision_analytics_node.py ${control_node_name}" :
     path => '/usr/bin',
     command => "python /opt/contrail/utils/provision_analytics_node.py \
-                 --host_name ${analytics_node_name} \
+                 --host_name ${::fqdn} \
                  --host_ip ${analytics_node_address} \
                  --api_server_ip ${api_address} \
                  --api_server_port ${api_port} \

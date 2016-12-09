@@ -69,7 +69,7 @@ class contrail::control::provision_control (
   exec { "provision_control.py ${control_node_name}" :
     path => '/usr/bin',
     command => "python /opt/contrail/utils/provision_control.py \
-                 --host_name ${control_node_name} \
+                 --host_name ${::fqdn} \
                  --host_ip ${control_node_address} \
                  --router_asn ${router_asn} \
                  ${ibgp_auto_mesh_opt} \

@@ -47,18 +47,10 @@ class contrail::config::provision_config (
   $oper                       = 'add',
   $openstack_vip              = '127.0.0.1',
 ) {
-  #exec { "config deploy wait for keystone become available" :
-  #  path => '/usr/bin',
-  #  command => "/usr/bin/wget --spider --tries 150 --waitretry=2 --retry-connrefused http://${openstack_vip}:35357",
-  #} ->
-  #exec { "config deploy wait for contrail config become available" :
-  #  path => '/usr/bin',
-  #  command => "/usr/bin/wget --spider --tries 150 --waitretry=2 --retry-connrefused http://${api_address}:8082",
-  #} ->
   exec { "provision_config_node.py ${config_node_name}" :
     path => '/usr/bin',
     command => "python /opt/contrail/utils/provision_config_node.py \
-                 --host_name ${config_node_name} \
+                 --host_name ${::fqdn} \
                  --host_ip ${config_node_address} \
                  --api_server_ip ${api_address} \
                  --api_server_port ${api_port} \

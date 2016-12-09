@@ -53,7 +53,7 @@ class contrail::vrouter::provision_vrouter (
   exec { "provision_vrouter.py ${node_name}" :
     path => '/usr/bin',
     command => "python /opt/contrail/utils/provision_vrouter.py \
-                 --host_name ${node_name} \
+                 --host_name ${::fqdn} \
                  --host_ip ${host_ip} \
                  --api_server_ip ${api_address} \
                  --api_server_port ${api_port} \

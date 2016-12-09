@@ -38,7 +38,8 @@ class contrail::webui (
     admin_password            => $admin_password,
     admin_token               => $admin_token,
     admin_tenant_name         => $admin_tenant_name,
-  } ~>
+#  } ~>
+  } ->
   class {'::contrail::webui::service': }
   anchor {'contrail::webui::end': }
   

@@ -59,7 +59,7 @@ class contrail::database::provision_database (
   exec { "provision_database_node.py ${control_node_name}" :
     path => '/usr/bin',
     command => "python /opt/contrail/utils/provision_database_node.py \
-                 --host_name ${database_node_name} \
+                 --host_name ${::fqdn} \
                  --host_ip ${database_node_address} \
                  --api_server_ip ${api_address} \
                  --api_server_port ${api_port} \
