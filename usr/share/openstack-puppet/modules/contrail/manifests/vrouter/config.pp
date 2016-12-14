@@ -57,6 +57,7 @@
 #   Defaults {}
 #
 class contrail::vrouter::config (
+  $step = hiera('step'),
   $compute_device         = 'eth0',
   $discovery_ip           = '127.0.0.1',
   $device                 = 'eth0',
@@ -96,8 +97,32 @@ class contrail::vrouter::config (
   create_ini_settings($vrouter_nodemgr_config, $contrail_vrouter_nodemgr_config)
   create_ini_settings($vnc_api_lib_config, $contrail_vnc_api_lib_config)
 
-  #create_resources('contrail_vrouter_agent_config', $vrouter_agent_config)
-  #create_resources('contrail_vrouter_nodemgr_config', $vrouter_nodemgr_config)
+  if $step == 5 {
+    ini_setting { "set custom cpu_mode":
+      ensure  => present,
+      path    => '/etc/nova/nova.conf',
+      section => 'libvirt',
+      setting => 'cpu_mode',
+      value   => 'custom',
+    }
+    ini_setting { "set cpu_model":
+      ensure  => present,
+      path    => '/etc/nova/nova.conf',
+      section => 'libvirt',
+      setting => 'cpu_model',
+      value   => 'Nehalem',
+    }
+    file { '/nova_libvirt.patch' :
+      ensure  => file,
+      content => template('contrail/vrouter/nova_libvirt.patch.erb'),
+    } ->
+    file_line { 'patch nova':
+      ensure => present,
+      path   => '/usr/lib/python2.7/site-packages/nova/virt/libvirt/designer.py',
+      line   => '    conf.script = None',
+      match  => '^\ \ \ \ conf.script\ \=',
+    }
+  }
 
   file { '/etc/contrail/agent_param' :
     ensure  => file,
@@ -130,5 +155,4 @@ class contrail::vrouter::config (
                    --mac ${macaddr}",
     }
   }
-
 }

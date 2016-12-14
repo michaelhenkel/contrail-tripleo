@@ -3,6 +3,7 @@
 # Manage the vrouter service
 #
 class contrail::vrouter::service(
+  $step = hiera('step'),
   $cidr,
   $gateway,
   $host_ip,
@@ -28,6 +29,12 @@ class contrail::vrouter::service(
       path => '/sbin',
       command => "ip route add default via ${gateway}",
       refreshonly => true,
+    }
+  }
+  if $step == 5 {
+    exec { 'restart nova compute':
+      path => '/bin',
+      command => "systemctl restart openstack-nova-compute",
     }
   }
 }
