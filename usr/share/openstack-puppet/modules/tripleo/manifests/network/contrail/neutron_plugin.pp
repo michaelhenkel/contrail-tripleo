@@ -52,21 +52,20 @@
 #   in the opencontrail config.
 #   Defaults to false.
 #
-class neutron::plugins::opencontrail (
-  $api_server_ip              = $::os_service_default,
-  $api_server_port            = $::os_service_default,
-  $multi_tenancy              = $::os_service_default,
-  $contrail_extensions        = $::os_service_default,
-  $keystone_auth_host         = $::os_service_default,
-  $keystone_auth_protocol     = $::os_service_default,
-  $keystone_auth_port         = $::os_service_default,
-  $keystone_auth_url          = $::os_service_default,
-  $keystone_admin_user        = $::os_service_default,
-  $keystone_admin_tenant_name = $::os_service_default,
-  $keystone_admin_password    = $::os_service_default,
-  $keystone_admin_token       = $::os_service_default,
-  $keystone_public_vip        = $::os_service_default,
-  $package_ensure             = 'present',
+class tripleo::network::contrail::neutron_plugin (
+  $api_server_ip              = hiera('neutron::plugins::opencontrail::api_server_ip'),
+  $api_server_port            = hiera('neutron::plugins::opencontrail::api_server_port'),
+  $multi_tenancy              = hiera('neutron::plugins::opencontrail::multi_tenancy'),
+  $contrail_extensions        = hiera('neutron::plugins::opencontrail::contrail_extensions'),
+  $keystone_auth_host         = hiera('neutron::plugins::opencontrail::keystone_auth_host'),
+  $keystone_auth_protocol     = hiera('neutron::plugins::opencontrail::keystone_auth_protocol'),
+  $keystone_auth_port         = hiera('neutron::plugins::opencontrail::keystone_auth_port'),
+  $keystone_auth_url          = hiera('neutron::plugins::opencontrail::keystone_auth_url'),
+  $keystone_admin_user        = hiera('neutron::plugins::opencontrail::keystone_admin_user'),
+  $keystone_admin_tenant_name = hiera('neutron::plugins::opencontrail::keystone_admin_tenant_name'),
+  $keystone_admin_password    = hiera('neutron::plugins::opencontrail::keystone_admin_password'),
+  $keystone_admin_token       = hiera('neutron::plugins::opencontrail::keystone_admin_token'),
+  $keystone_public_vip        = hiera('neutron::plugins::opencontrail::keystone_public_vip'),
   $purge_config               = false,
 ) {
 
@@ -81,9 +80,6 @@ class neutron::plugins::opencontrail (
     tag    => ['neutron-package', 'openstack'],
   }
   package {'python-contrail':
-    ensure => installed,
-  }
-  package {'contrail-heat':
     ensure => installed,
   }
 
@@ -132,29 +128,5 @@ class neutron::plugins::opencontrail (
     'keystone_authtoken/auth_host':      value => $keystone_public_vip;
     'keystone_authtoken/auth_protocol':  value => $keystone_auth_protocol;
     'keystone_authtoken/auth_port':      value => $keystone_auth_port;
-  }
-
-  file { '/usr/lib/heat':
-    ensure => 'directory',
-  } ->
-  file { '/usr/lib/heat/contrail_heat':
-    ensure => 'link',
-    target => '/usr/lib/python2.7/site-packages/vnc_api/gen/heat',
-  }
-  $heat_conf_path = { 'path' => '/etc/heat/heat.conf' }
-  $heat_conf = { 'clients_contrail' =>
-    {
-      'user'         => $keystone_admin_user,
-      'password'     => $keystone_admin_password,
-      'api_base_url' => '/',
-      'api_server'   => $api_server_ip,
-      'api_port'     => $api_server_port,
-      'auth_host_ip' => $keystone_public_vip,
-      'use_ssl'      => 'False',
-    }
-  }
-  create_ini_settings($heat_conf, $heat_conf_path)
-  exec { 'systemctl restart openstack-heat-engine':
-    path => '/bin',
   }
 }
