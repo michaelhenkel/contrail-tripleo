@@ -32,7 +32,7 @@
 # [*api_port*]
 #  (optional) Port of Contrail Config API
 #  String value
-#  Defaults to hiera('contrail::config::api_port')
+#  Defaults to hiera('contrail::api_port')
 #
 # [*admin_password*]
 #  (optional) Keystone Admin password
@@ -98,7 +98,7 @@ class tripleo::network::contrail::analyticsdatabase(
   $step                 = hiera('step'),
   $auth_host            = hiera('contrail::auth_host'),
   $api_server           = hiera('internal_api_virtual_ip'),
-  $api_port             = hiera('contrail::config::api_port'),
+  $api_port             = hiera('contrail::api_port'),
   $admin_password       = hiera('contrail::admin_password'),
   $admin_tenant_name    = hiera('contrail::admin_tenant_name'),
   $admin_token          = hiera('contrail::admin_token'),
