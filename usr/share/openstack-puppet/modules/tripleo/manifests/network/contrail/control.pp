@@ -19,19 +19,6 @@
 #
 # == Parameters:
 #
-# [*host_ip*]
-#  (required) host IP address of Control
-#  String (IPv4) value.
-#
-# [*ifmap_password*]
-#  (required) ifmap password
-#  String value.
-#
-# [*ifmap_username*]
-#  (optional) ifmap username
-#  String value.
-#  Defaults to hiera('contrail::ifmap_username'),
-#
 # [*admin_password*]
 #  (optional) admin password
 #  String value.
@@ -75,6 +62,26 @@
 #  Integer value.
 #  Defaults to hiera('contrail::disc_server_port'),
 #
+# [*host_ip*]
+#  (optional) IP address of host
+#  String (IPv4) value.
+#  Defaults to hiera('contrail::control::host_ip')
+#
+# [*ibgp_auto_mesh*]
+#  (optional) iBPG auto mesh
+#  String value.
+#  Defaults to true
+#
+# [*ifmap_password*]
+#  (optional) ifmap password
+#  String value.
+#  Defaults to hiera('contrail::ifmap_password'),
+#
+# [*ifmap_username*]
+#  (optional) ifmap username
+#  String value.
+#  Defaults to hiera('contrail::ifmap_username'),
+#
 # [*insecure*]
 #  (optional) insecure mode.
 #  Defaults to hiera('contrail::insecure'),
@@ -84,6 +91,21 @@
 #  String (IPv4) value + port
 #  Defaults to hiera('contrail::memcached_servers'),
 #
+# [*public_vip*]
+#  (optional) Public Virtual IP address
+#  String (IPv4) value
+#  Defaults to hiera('public_virtual_ip')
+#
+# [*router_asn*]
+#  (optional) Autonomus System Number
+#  String value
+#  Defaults to hiera('contrail::control::asn')
+#
+# [*secret*]
+#  (optional) RNDC secret for named
+#  String value
+#  Defaults to hiera('contrail::control::rndc_secret')
+#
 class tripleo::network::contrail::control(
   $step              = hiera('step'),
   $admin_password    = hiera('contrail::admin_password'),
@@ -91,7 +113,7 @@ class tripleo::network::contrail::control(
   $admin_token       = hiera('contrail::admin_token'),
   $admin_user        = hiera('contrail::admin_user'),
   $api_server        = hiera('internal_api_virtual_ip'),
-  $api_port          = 8082,
+  $api_port          = hiera('contrail::api_port'),
   $auth_host         = hiera('contrail::auth_host'),
   $auth_port         = hiera('contrail::auth_port'),
   $auth_protocol     = hiera('contrail::auth_protocol'),
@@ -104,7 +126,7 @@ class tripleo::network::contrail::control(
   $insecure          = hiera('contrail::insecure'),
   $memcached_servers = hiera('contrail::memcached_server'),
   $public_vip        = hiera('public_virtual_ip'),
-  $router_asn        = 64512,
+  $router_asn        = hiera('contrail::control::asn'),
   $secret            = hiera('contrail::control::rndc_secret'),
 )
 {

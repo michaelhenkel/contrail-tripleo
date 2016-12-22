@@ -1,0 +1,35 @@
+***************
+*** 73,92 ****
+        'start_native_transport'      => true,
+      }
+    }
+-   # validate_array($zookeeper_server_ips)
+    validate_ipv4_address($zookeeper_client_ip)
+-   # validate_array($zookeeper_hostnames)
+  
+-   # TODO(devvesa) Zookeeper package should provide these paths,
+-   # remove this lines as soon as it will.
+    file {['/usr/lib', '/usr/lib/zookeeper', '/usr/lib/zookeeper/bin/']:
+      ensure => directory
+    }
+  
+-   #file {'/usr/lib/zookeeper/bin/zkEnv.sh':
+-   #  ensure => link,
+-   #  target => '/usr/libexec/zkEnv.sh'
+-   #}
+    file_line { 'adjust zookeeper service':
+      path => '/etc/rc.d/init.d/zookeeper',
+      line => "ZOOCFGDIR=/etc/zookeeper/conf",
+--- 73,84 ----
+        'start_native_transport'      => true,
+      }
+    }
+    validate_ipv4_address($zookeeper_client_ip)
+  
+    file {['/usr/lib', '/usr/lib/zookeeper', '/usr/lib/zookeeper/bin/']:
+      ensure => directory
+    }
+  
+    file_line { 'adjust zookeeper service':
+      path => '/etc/rc.d/init.d/zookeeper',
+      line => "ZOOCFGDIR=/etc/zookeeper/conf",

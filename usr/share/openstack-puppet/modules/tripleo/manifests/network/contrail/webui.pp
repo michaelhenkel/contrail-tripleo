@@ -19,18 +19,6 @@
 #
 # == Parameters:
 #
-# [*contrail_analytics_vip*]
-#  (required) VIP of Contrail Analytics
-#  String (IPv4) value.
-#
-# [*contrail_config_vip*]
-#  (required) VIP of Contrail Config
-#  String (IPv4) value.
-#
-# [*neutron_vip*]
-#  (required) VIP of Neutron
-#  String (IPv4) value.
-#
 # [*admin_password*]
 #  (optional) admin password
 #  String value.
@@ -61,6 +49,16 @@
 #  Array of strings value.
 #  Defaults to hiera('contrail::cassandra_server_list')
 #
+# [*contrail_analytics_vip*]
+#  (optional) VIP of Contrail Analytics
+#  String (IPv4) value.
+#  Defaults to hiera('internal_api_virtual_ip')
+#
+# [*contrail_config_vip*]
+#  (optional) VIP of Contrail Config
+#  String (IPv4) value.
+#  Defaults to hiera('internal_api_virtual_ip')
+#
 # [*contrail_webui_http_port*]
 #  (optional) Webui HTTP Port
 #  Integer value.
@@ -70,6 +68,11 @@
 #  (optional) Webui HTTPS Port
 #  Integer value.
 #  Defaults to 8143
+#
+# [*neutron_vip*]
+#  (optional) VIP of Neutron
+#  String (IPv4) value.
+#  Defaults to hiera('internal_api_virtual_ip')
 #
 # [*redis_ip*]
 #  (optional) IP of Redis
@@ -85,10 +88,10 @@ class tripleo::network::contrail::webui(
   $cassandra_server_list     = hiera('contrail_database_node_ips'),
   $contrail_analytics_vip    = hiera('internal_api_virtual_ip'),
   $contrail_config_vip       = hiera('internal_api_virtual_ip'),
-  $contrail_webui_http_port  = 8080,
-  $contrail_webui_https_port = 8143,
+  $contrail_webui_http_port  = hiera('contrail::webui::http_port'),
+  $contrail_webui_https_port = hiera('contrail::webui::https_port'),
   $neutron_vip               = hiera('internal_api_virtual_ip'),
-  $redis_ip                  = '127.0.0.1',
+  $redis_ip                  = hiera('contrail::webui::redis_ip'),
 )
 {
   class {'::contrail::webui':

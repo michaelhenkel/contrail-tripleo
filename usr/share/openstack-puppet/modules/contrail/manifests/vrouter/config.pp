@@ -97,25 +97,25 @@ class contrail::vrouter::config (
   create_ini_settings($vrouter_nodemgr_config, $contrail_vrouter_nodemgr_config)
   create_ini_settings($vnc_api_lib_config, $contrail_vnc_api_lib_config)
 
-  if $step == 4 {
-    #ini_setting { "set custom cpu_mode":
-    #  ensure  => present,
-    #  path    => '/etc/nova/nova.conf',
-    #  section => 'libvirt',
-    #  setting => 'cpu_mode',
-    #  value   => 'custom',
-    #}
-    #ini_setting { "set cpu_model":
-    #  ensure  => present,
-    #  path    => '/etc/nova/nova.conf',
-    #  section => 'libvirt',
-    #  setting => 'cpu_model',
-    #  value   => 'Nehalem',
-    #}
-    #file { '/nova_libvirt.patch' :
-    #  ensure  => file,
-    #  content => template('contrail/vrouter/nova_libvirt.patch.erb'),
-    #} ->
+  if $step == 5 {
+    ini_setting { "set custom cpu_mode":
+      ensure  => present,
+      path    => '/etc/nova/nova.conf',
+      section => 'libvirt',
+      setting => 'cpu_mode',
+      value   => 'custom',
+    }
+    ini_setting { "set cpu_model":
+      ensure  => present,
+      path    => '/etc/nova/nova.conf',
+      section => 'libvirt',
+      setting => 'cpu_model',
+      value   => 'Nehalem',
+    }
+    file { '/nova_libvirt.patch' :
+      ensure  => file,
+      content => template('contrail/vrouter/nova_libvirt.patch.erb'),
+    } ->
     file_line { 'patch nova':
       ensure => present,
       path   => '/usr/lib/python2.7/site-packages/nova/virt/libvirt/designer.py',

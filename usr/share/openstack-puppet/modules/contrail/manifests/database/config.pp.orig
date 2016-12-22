@@ -16,10 +16,10 @@ class contrail::database::config (
   $ssl_storage_port        = '7001',
   $client_port             = '9042',
   $client_port_thrift      = '9160',
-  $zookeeper_server_ips    = [],
+  $zookeeper_server_ips    = hiera('contrail_database_node_ips'),
   $zookeeper_client_ip     = $::ipaddress,
-  $zookeeper_hostnames     = [],
-  $packages                = ['zookeeper'],
+  $zookeeper_hostnames     = hiera('contrail_database_short_node_names', ''),
+  $packages                = hiera('zookeeper::params::packages'),
   $service_name            = 'zookeeper'
 ) {
   $zk_server_ip_2181 = join([join($zookeeper_server_ips, ':2181,'),":2181"],'')
@@ -73,12 +73,20 @@ class contrail::database::config (
       'start_native_transport'      => true,
     }
   } 
+  # validate_array($zookeeper_server_ips)
   validate_ipv4_address($zookeeper_client_ip)
+  # validate_array($zookeeper_hostnames)
 
+  # TODO(devvesa) Zookeeper package should provide these paths,
+  # remove this lines as soon as it will.
   file {['/usr/lib', '/usr/lib/zookeeper', '/usr/lib/zookeeper/bin/']:
     ensure => directory
   }
 
+  #file {'/usr/lib/zookeeper/bin/zkEnv.sh':
+  #  ensure => link,
+  #  target => '/usr/libexec/zkEnv.sh'
+  #}
   file_line { 'adjust zookeeper service':
     path => '/etc/rc.d/init.d/zookeeper',
     line => "ZOOCFGDIR=/etc/zookeeper/conf",
@@ -94,5 +102,23 @@ class contrail::database::config (
     cfg_dir   => '/etc/zookeeper/conf',
     packages  => $packages,
     service_name => $service_name,
+    #service_provider => 'systemd',
+    #manage_service_file => true,
   }
+
+
+  #file { '/usr/share/kafka/config/server.properties':
+  #  ensure => present,
+  #}->
+  #file_line { 'add zookeeper servers to kafka config':
+  #  path => '/usr/share/kafka/config/server.properties',
+  #  line => "zookeeper.connect=${zk_server_ip_2181}",
+  #  match   => "^zookeeper.connect=.*$",
+  #}
+  #$kafka_broker_id = extract_id($zookeeper_hostnames, $::hostname)
+  #file_line { 'set kafka broker id':
+  #  path => '/usr/share/kafka/config/server.properties',
+  #  line => "broker.id=${kafka_broker_id}",
+  #  match   => "^broker.id=.*$",
+  #}
 }

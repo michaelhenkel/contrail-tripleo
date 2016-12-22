@@ -13,15 +13,51 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 #
-# == Class: tripleo::network::contrail::control
+# == Class: tripleo::network::contrail::database
 #
-# Configure Contrail Control services
+# Configure Contrail Database services
 #
 # == Parameters:
 #
-# [*host_ip*]
-#  (required) host IP address of Database node
+# [*admin_password*]
+#  (optional) admin password
+#  String value.
+#  Defaults to hiera('contrail::admin_password')
+#
+# [*admin_tenant_name*]
+#  (optional) admin tenant name.
+#  String value.
+#  Defaults to hiera('contrail::admin_tenant_name')
+#
+# [*admin_token*]
+#  (optional) admin token
+#  String value.
+#  Defaults to hiera('contrail::admin_token')
+#
+# [*admin_user*]
+#  (optional) admin user name.
+#  String value.
+#  Defaults to hiera('contrail::admin_user')
+#
+# [*api_server*]
+#  (optional) VIP of Config API
 #  String (IPv4) value.
+#  Defaults to hiera('internal_api_virtual_ip')
+#
+# [*api_port*]
+#  (optional) Port of Config API
+#  String value.
+#  Defaults to hiera('contrail::api_port')
+#
+# [*auth_host*]
+#  (optional) keystone server ip address
+#  String (IPv4) value.
+#  Defaults to hiera('contrail::auth_host')
+#
+# [*cassandra_servers*]
+#  (optional) List IPs+port of Cassandra servers
+#  Array of strings value.
+#  Defaults to hiera('contrail_database_node_ips')
 #
 # [*disc_server_ip*]
 #  (optional) IPv4 address of discovery server.
@@ -33,15 +69,39 @@
 #  Integer value.
 #  Defaults to hiera('contrail::disc_server_port')
 #
+# [*host_ip*]
+#  (required) host IP address of Database node
+#  String (IPv4) value.
+#
+# [*public_vip*]
+#  (optional) Public virtual ip
+#  String value.
+#  Defaults to hiera('public_virtual_ip')
+#
+# [*zookeeper_client_ip*]
+#  (optional) Zookeeper listen address
+#  String (IPv4) value.
+#  Defaults to hiera('contrail::database::host_ip')
+#
+# [*zookeeper_hostnames*]
+#  (optional) Zookeeper hostname list
+#  Array of string value.
+#  Defaults to hiera('contrail_database_short_node_names')
+#
+# [*zookeeper_server_ips*]
+#  (optional) Zookeeper ip list
+#  Array of string (IPv4) values
+#  Defaults to hiera('contrail_database_node_ips')
+#
 class tripleo::network::contrail::database(
   $step                 = hiera('step'),
-  $auth_host            = hiera('contrail::auth_host'),
-  $api_server           = hiera('internal_api_virtual_ip'),
-  $api_port             = 8082,
   $admin_password       = hiera('contrail::admin_password'),
   $admin_tenant_name    = hiera('contrail::admin_tenant_name'),
   $admin_token          = hiera('contrail::admin_token'),
   $admin_user           = hiera('contrail::admin_user'),
+  $api_server           = hiera('internal_api_virtual_ip'),
+  $api_port             = hiera('contrail::api_port'),
+  $auth_host            = hiera('contrail::auth_host'),
   $cassandra_servers    = hiera('contrail_database_node_ips'),
   $disc_server_ip       = hiera('internal_api_virtual_ip'),
   $disc_server_port     = hiera('contrail::disc_server_port'),

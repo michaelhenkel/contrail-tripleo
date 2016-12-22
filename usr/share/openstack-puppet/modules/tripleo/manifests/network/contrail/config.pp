@@ -19,21 +19,6 @@
 #
 # == Parameters:
 #
-# [*ifmap_password*]
-#  (required) ifmap password
-#  String value.
-#
-# [*ifmap_server_ip*]
-#  (required) ifmap server ip address.
-#  String value.
-#
-# [*ifmap_username*]
-#  (required) ifmap username
-#  String value.
-#
-# [*rabbit_server*]
-#  (required) IPv4 address of rabbit server.
-#  String (IPv4) value.
 #
 # [*admin_password*]
 #  (optional) admin password
@@ -54,6 +39,16 @@
 #  (optional) admin user name.
 #  String value.
 #  Defaults to hiera('contrail::admin_user')
+#
+# [*api_server*]
+#  (optional) VIP of Config API
+#  String (IPv4) value.
+#  Defaults to hiera('internal_api_virtual_ip')
+#
+# [*api_port*]
+#  (optional) Port of Config API
+#  String value.
+#  Defaults to hiera('contrail::api_port')
 #
 # [*auth*]
 #  (optional) Authentication method.
@@ -77,23 +72,83 @@
 #  Array of strings value.
 #  Defaults to hiera('contrail::cassandra_server_list')
 #
+# [*config_hostnames*]
+#  (optional) Config hostname list
+#  Array of string value.
+#  Defaults to hiera('contrail_config_short_node_names')
+#
+# [*control_server_list*]
+#  (optional) IPv4 addresses of control server.
+#  Array of string (IPv4) value.
+#  Defaults to hiera('contrail_control_node_ips')
+#
 # [*disc_server_ip*]
 #  (optional) IPv4 address of discovery server.
 #  String (IPv4) value.
 #  Defaults to hiera('contrail::disc_server_ip')
 #
+# [*disc_server_port*]
+#  (optional) port of discovery server
+#  String value.
+#  Defaults to hiera('contrail::disc_server_port')
+#
+# [*host_ip*]
+#  (optional) IPv4 address of Config server
+#  String (IPv4) value.
+#  Defaults to hiera('contrail::config::host_ip')
+#
+# [*ifmap_password*]
+#  (optional) ifmap password
+#  String value.
+#  Defaults to hiera('contrail::config::ifmap_password')
+#
+# [*ifmap_server_ip*]
+#  (optional) ifmap server ip address.
+#  String value.
+#  Defaults to hiera('contrail::config::host_ip')
+#
+# [*ifmap_username*]
+#  (optional) ifmap username
+#  String value.
+#  Defaults to hiera('contrail::config::ifmap_password')
+#
 # [*insecure*]
 #  (optional) insecure mode.
 #  Defaults to hiera('contrail::insecure')
 #
+# [*ipfabric_service_port*]
+#  (optional) linklocal ip fabric port
+#  String value
+#  Defaults to 8775
+#
 # [*listen_ip_address*]
 #  (optional) IP address to listen on.
 #  String (IPv4) value.
-#  Defaults to '0.0.0.0'
+#  Defaults to hiera('contrail::config::listen_ip_address')
 #
 # [*listen_port*]
 #  (optional) Listen port for config-api
-#  Defaults to 8082
+#  Defaults to hiera('contrail::api_port')
+#
+# [*linklocal_service_name*]
+#  (optional) name of link local service
+#  String value
+#  Defaults to metadata
+#
+# [*linklocal_service_port*]
+#  (optional) port of link local service
+#  String value
+#  Defaults to 80
+#
+# [*linklocal_service_name*]
+#  (optional) name of link local service
+#  String value
+#  Defaults to metadata
+#
+# [*linklocal_service_ip*]
+#  (optional) IPv4 address of link local service
+#  String (IPv4) value
+#  Defaults to 169.254.169.254
 #
 # [*memcached_servers*]
 #  (optional) IPv4 address of memcached servers
@@ -102,17 +157,43 @@
 #
 # [*multi_tenancy*]
 #  (optional) Defines if mutli-tenancy is enabled.
+#  String value
 #  Defaults to hiera('contrail::multi_tenancy')
+#
+# [*public_vip*]
+#  (optional) Public virtual ip
+#  String value.
+#  Defaults to hiera('public_virtual_ip')
+#
+# [*rabbit_server*]
+#  (optional) rabbit server
+#  Array of string value.
+#  Defaults to hiera('rabbitmq_node_ips')
+#
+# [*rabbit_user*]
+#  (optional) rabbit user
+#  String value.
+#  Defaults to hiera('contrail::rabbit_user')
+#
+# [*rabbit_password*]
+#  (optional) rabbit password
+#  String value.
+#  Defaults to hiera('contrail::rabbit_password')
+#
+# [*rabbit_port*]
+#  (optional) rabbit server port
+#  String value.
+#  Defaults to hiera('contrail::rabbit_port')
 #
 # [*redis_server*]
 #  (optional) IPv4 address of redis server.
 #  String (IPv4) value.
-#  Defaults to '127.0.0.1'
+#  Defaults to hiera('contrail::config::redis_server')
 #
 # [*zk_server_ip*]
 #  (optional) List IPs+port of Zookeeper servers
 #  Array of strings value.
-#  Defaults to hiera('contrail::zk_server_ip')
+#  Defaults to hiera('contrail_database_node_ips')
 #
 class tripleo::network::contrail::config(
   $step = hiera('step'),
@@ -121,7 +202,7 @@ class tripleo::network::contrail::config(
   $admin_token            = hiera('contrail::admin_token'),
   $admin_user             = hiera('contrail::admin_user'),
   $api_server             = hiera('internal_api_virtual_ip'),
-  $api_port               = 8082,
+  $api_port               = hiera('contrail::api_port'),
   $auth                   = hiera('contrail::auth'),
   $auth_host              = hiera('contrail::auth_host'),
   $auth_port              = hiera('contrail::auth_port'),
@@ -137,8 +218,8 @@ class tripleo::network::contrail::config(
   $ifmap_username         = hiera('contrail::config::ifmap_username'),
   $insecure               = hiera('contrail::insecure'),
   $ipfabric_service_port  = 8775,
-  $listen_ip_address      = '0.0.0.0',
-  $listen_port            = 8082,
+  $listen_ip_address      = hiera('contrail::config::listen_ip_address'),
+  $listen_port            = hiera('contrail::api_port'),
   $linklocal_service_port = 80,
   $linklocal_service_name = 'metadata',
   $linklocal_service_ip   = '169.254.169.254',
@@ -149,7 +230,7 @@ class tripleo::network::contrail::config(
   $rabbit_user            = hiera('contrail::rabbit_user'),
   $rabbit_password        = hiera('contrail::rabbit_password'),
   $rabbit_port            = hiera('contrail::rabbit_port'),
-  $redis_server           = '127.0.0.1',
+  $redis_server           = hiera('contrail::config::redis_server'),
   $zk_server_ip           = hiera('contrail_database_node_ips'),
 )
 {
@@ -165,7 +246,7 @@ class tripleo::network::contrail::config(
 
   if $step >= 3 {
     class {'::contrail::config':
-      api_config            => {
+      api_config              => {
         'DEFAULTS' => {
           'auth'                  => $auth,
           'cassandra_server_list' => $cassandra_server_list_9160,
@@ -183,7 +264,32 @@ class tripleo::network::contrail::config(
           'zk_server_ip'          => $zk_server_ip_2181,
         },
       },
-      keystone_config => {
+      basicauthusers_property => $basicauthusers_property,
+      config_nodemgr_config   => {
+        'DISCOVERY' => {
+          'server' => $disc_server_ip,
+          'port'   => $disc_server_port,
+        },
+      },
+      device_manager_config   => {
+        'DEFAULTS' => {
+          'cassandra_server_list' => $cassandra_server_list_9160,
+          'disc_server_ip'        => $disc_server_ip,
+          'disc_server_port'      => $disc_server_port,
+          'rabbit_server'         => $rabbit_server_list_5672,
+          'rabbit_user'           => $rabbit_user,
+          'rabbit_password'       => $rabbit_password,
+          'redis_server'          => $redis_server,
+          'zk_server_ip'          => $zk_server_ip_2181,
+        },
+      },
+      discovery_config        => {
+        'DEFAULTS' => {
+          'cassandra_server_list' => $cassandra_server_list_9160,
+          'zk_server_ip'          => $zk_server_ip_2181,
+          },
+      },
+      keystone_config         => {
         'KEYSTONE' => {
           'admin_password'    => $admin_password,
           'admin_tenant_name' => $admin_tenant_name,
@@ -196,26 +302,7 @@ class tripleo::network::contrail::config(
           'memcached_servers' => $memcached_servers,
         },
       },
-      basicauthusers_property => $basicauthusers_property,
-      config_nodemgr_config => {
-        'DISCOVERY' => {
-          'server' => $disc_server_ip,
-          'port'   => $disc_server_port,
-        },
-      },
-      device_manager_config => {
-        'DEFAULTS' => {
-          'cassandra_server_list' => $cassandra_server_list_9160,
-          'disc_server_ip'        => $disc_server_ip,
-          'disc_server_port'      => $disc_server_port,
-          'rabbit_server'         => $rabbit_server_list_5672,
-          'redis_server'          => $redis_server,
-          'rabbit_user'           => $rabbit_user,
-          'rabbit_password'       => $rabbit_password,
-          'zk_server_ip'          => $zk_server_ip_2181,
-        },
-      },
-      schema_config         => {
+      schema_config           => {
         'DEFAULTS' => {
           'cassandra_server_list' => $cassandra_server_list_9160,
           'disc_server_ip'        => $disc_server_ip,
@@ -230,13 +317,7 @@ class tripleo::network::contrail::config(
           'zk_server_ip'          => $zk_server_ip_2181,
         },
       },
-      discovery_config      => {
-        'DEFAULTS' => {
-          'cassandra_server_list' => $cassandra_server_list_9160,
-          'zk_server_ip'          => $zk_server_ip_2181,
-          },
-      },
-      svc_monitor_config    => {
+      svc_monitor_config      => {
         'DEFAULTS' => {
           'cassandra_server_list' => $cassandra_server_list_9160,
           'disc_server_ip'        => $disc_server_ip,
@@ -251,7 +332,7 @@ class tripleo::network::contrail::config(
           'zk_server_ip'          => $zk_server_ip_2181,
         },
       },
-      vnc_api_lib_config    => {
+      vnc_api_lib_config      => {
         'auth' => {
           'AUTHN_SERVER' => $public_vip,
         },
