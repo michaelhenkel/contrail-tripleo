@@ -18,12 +18,13 @@ class contrail::analyticsdatabase::install (
   } ->
   package { 'contrail-openstack-database' :
     ensure => installed,
-  } ->
-  exec { 'stop contrail-database service':
-      command => '/bin/systemctl stop contrail-database',
-  } ->
-  exec { 'rm -rf /var/lib/cassandra/data/*' :
-    path => '/bin',
   }
+#  } ->
+#  exec { 'stop contrail-database service':
+#      command => '/bin/systemctl stop contrail-database',
+#  } ->
+#  exec { 'rm -rf /var/lib/cassandra/data/*' :
+#    path => '/bin',
+#  }
 
 }
