@@ -26,7 +26,7 @@ class contrail::analyticsdatabase::config (
   if $cassandra_seeds_list.size > 1 {
     $cassandra_seeds = join($cassandra_seeds_list,",")
   } else {
-    $cassandra_seeds = $cassandra_seeds_list
+    $cassandra_seeds = $cassandra_seeds_list[0]
   }
 
   create_ini_settings($database_nodemgr_config, $contrail_database_nodemgr_config)

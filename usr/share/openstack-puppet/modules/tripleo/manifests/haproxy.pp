@@ -599,6 +599,7 @@ class tripleo::haproxy (
       service_port      => $ports[contrail_config_port],
       ip_addresses      => hiera('contrail_config_node_ips', $contrail_config_node_ips),
       server_names      => hiera('contrail_config_node_ips', $contrail_config_node_ips),
+      public_ssl_port   => $ports[contrail_config_port],
     }
   }
 
@@ -610,6 +611,7 @@ class tripleo::haproxy (
       service_port      => $ports[contrail_discovery_port],
       ip_addresses      => hiera('contrail_config_node_ips', $contrail_config_node_ips),
       server_names      => hiera('contrail_config_node_ips', $contrail_config_node_ips),
+      public_ssl_port   => $ports[contrail_discovery_port],
     }
   }
 
@@ -621,6 +623,7 @@ class tripleo::haproxy (
       service_port      => $ports[contrail_analytics_port],
       ip_addresses      => hiera('contrail_config_node_ips', $contrail_config_node_ips),
       server_names      => hiera('contrail_config_node_ips', $contrail_config_node_ips),
+      public_ssl_port   => $ports[contrail_analytics_port],
     }
   }
 
@@ -632,6 +635,7 @@ class tripleo::haproxy (
       service_port      => $ports[contrail_webui_http_port],
       ip_addresses      => hiera('contrail_config_node_ips', $contrail_config_node_ips),
       server_names      => hiera('contrail_config_node_ips', $contrail_config_node_ips),
+      public_ssl_port   => $ports[contrail_webui_http_port],
     }
   }
 
@@ -643,6 +647,7 @@ class tripleo::haproxy (
       service_port      => $ports[contrail_webui_https_port],
       ip_addresses      => hiera('contrail_config_node_ips', $contrail_config_node_ips),
       server_names      => hiera('contrail_config_node_ips', $contrail_config_node_ips),
+      public_ssl_port   => $ports[contrail_webui_https_port],
     }
   }
 
