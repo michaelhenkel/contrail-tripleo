@@ -10,6 +10,7 @@
 class contrail::webui (
   $package_name = $contrail::params::webui_package_name,
   $openstack_vip,
+  $cert_file               = '',
   $contrail_config_vip,
   $contrail_analytics_vip,
   $neutron_vip,
@@ -17,6 +18,8 @@ class contrail::webui (
   $admin_tenant_name,
   $admin_token,
   $admin_user,
+  $auth_port,
+  $auth_protocol,
   $cassandra_ip,
   $contrail_webui_http_port,
   $contrail_webui_https_port,
@@ -31,6 +34,7 @@ class contrail::webui (
     contrail_analytics_vip    => $contrail_analytics_vip,
     neutron_vip               => $neutron_vip,
     cassandra_ip              => $cassandra_ip,
+    cert_file                 => $cert_file,
     redis_ip                  => $redis_ip,
     contrail_webui_http_port  => $contrail_webui_http_port,
     contrail_webui_https_port => $contrail_webui_https_port,
@@ -38,6 +42,8 @@ class contrail::webui (
     admin_password            => $admin_password,
     admin_token               => $admin_token,
     admin_tenant_name         => $admin_tenant_name,
+    auth_port                 => $auth_port,
+    auth_protocol             => $auth_protocol,
 #  } ~>
   } ->
   class {'::contrail::webui::service': }

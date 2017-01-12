@@ -17,11 +17,14 @@ class contrail::analyticsdatabase::config (
   $client_port             = '9042',
   $client_port_thrift      = '9160',
   $kafka_hostnames         = hiera('contrail_analytics_database_short_node_names', ''),
+  $vnc_api_lib_config      = {},
   $zookeeper_server_ips    = hiera('contrail_database_node_ips'),
 ) {
   $zk_server_ip_2181 = join([join($zookeeper_server_ips, ':2181,'),":2181"],'')
   validate_hash($database_nodemgr_config)
+  validate_hash($vnc_api_lib_config)
   $contrail_database_nodemgr_config = { 'path' => '/etc/contrail/contrail-database-nodemgr.conf' }
+  $contrail_vnc_api_lib_config = { 'path' => '/etc/contrail/vnc_api_lib.ini' }
   $cassandra_seeds_list = $cassandra_servers[0,2]
   if $cassandra_seeds_list.size > 1 {
     $cassandra_seeds = join($cassandra_seeds_list,",")
@@ -30,6 +33,7 @@ class contrail::analyticsdatabase::config (
   }
 
   create_ini_settings($database_nodemgr_config, $contrail_database_nodemgr_config)
+  create_ini_settings($vnc_api_lib_config, $contrail_vnc_api_lib_config)
   validate_ipv4_address($cassandra_ip)
 
   file { ['/var/lib/cassandra', ]:

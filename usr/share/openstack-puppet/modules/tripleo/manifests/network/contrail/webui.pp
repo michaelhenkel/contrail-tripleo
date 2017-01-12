@@ -85,7 +85,11 @@ class tripleo::network::contrail::webui(
   $admin_token               = hiera('contrail::admin_token'),
   $admin_user                = hiera('contrail::admin_user'),
   $auth_host                 = hiera('contrail::auth_host'),
+  $auth_protocol             = hiera('contrail::auth_protocol'),
+  $auth_port_public          = hiera('contrail::auth_port_public'),
+  $auth_port_ssl_public      = hiera('contrail::auth_port_ssl_public'),
   $cassandra_server_list     = hiera('contrail_database_node_ips'),
+  $cert_file                 = hiera('contrail::cert_file'),
   $contrail_analytics_vip    = hiera('internal_api_virtual_ip'),
   $contrail_config_vip       = hiera('internal_api_virtual_ip'),
   $contrail_webui_http_port  = hiera('contrail::webui::http_port'),
@@ -94,12 +98,21 @@ class tripleo::network::contrail::webui(
   $redis_ip                  = hiera('contrail::webui::redis_ip'),
 )
 {
+  
+  if $auth_protocol == 'https' {
+    $auth_port = $auth_port_ssl_public
+  } else {
+    $auth_port = $auth_port_public
+  }
   class {'::contrail::webui':
     admin_user                => $admin_user,
     admin_password            => $admin_password,
     admin_token               => $admin_token,
     admin_tenant_name         => $admin_tenant_name,
+    auth_port                 => $auth_port,
+    auth_protocol             => $auth_protocol,
     cassandra_ip              => $cassandra_server_list,
+    cert_file                 => $cert_file,
     contrail_config_vip       => $contrail_config_vip,
     contrail_analytics_vip    => $contrail_analytics_vip,
     contrail_webui_http_port  => $contrail_webui_http_port,

@@ -37,10 +37,13 @@ class contrail::webui::config (
   $redis_ip                  = '127.0.0.1',
   $contrail_webui_http_port  = '8080',
   $contrail_webui_https_port = '8143',
-  $admin_user,
-  $admin_password,
-  $admin_token,
-  $admin_tenant_name,
+  $admin_user                = 'admin',
+  $admin_password            = 'admin',
+  $admin_token               = 'admin',
+  $admin_tenant_name         = 'admin',
+  $auth_port                 = '5000',
+  $auth_protocol             = 'http',
+  $cert_file                 = '',
 ) {
 
   $contrail_vip = $contrail_config_vip

@@ -32,13 +32,17 @@ class tripleo::network::contrail::vrouter (
   $api_server         = hiera('internal_api_virtual_ip'),
   $auth_host          = hiera('contrail::auth_host'),
   $auth_port          = hiera('contrail::auth_port'),
+  $auth_port_ssl      = hiera('contrail::auth_port_ssl'),
   $auth_protocol      = hiera('contrail::auth_protocol'),
+  $ca_file            = hiera('contrail::ca_file',False),
+  $cert_file          = hiera('contrail::cert_file',False),
   $control_server     = hiera('contrail_control_node_ips'),
   $disc_server_ip     = hiera('internal_api_virtual_ip'),
   $disc_server_port   = 5998,
   $gateway            = hiera('neutron::plugins::opencontrail::gateway'),
   $host_ip            = hiera('neutron::plugins::opencontrail::host_ip'),
   $insecure           = hiera('contrail::insecure'),
+  $key_file           = hiera('contrail::key_file',False),
   $memcached_servers  = hiera('contrail::memcached_server'),
   $metadata_secret    = hiera('neutron::plugins::opencontrail::metadata_proxy_shared_secret'),
   $netmask            = hiera('neutron::plugins::opencontrail::netmask'),
@@ -55,6 +59,53 @@ class tripleo::network::contrail::vrouter (
     # NOTE: it's not possible to use this class without a functional
     # contrail controller up and running
     $control_server_list = join($control_server, ' ')
+    if $auth_protocol == 'https' {
+      $keystone_config = {
+        'KEYSTONE' => {
+          'admin_password'    => $admin_password,
+          'admin_tenant_name' => $admin_tenant_name,
+          'admin_token'       => $admin_token,
+          'admin_user'        => $admin_user,
+          'auth_host'         => $auth_host,
+          'auth_port'         => $auth_port_ssl,
+          'auth_protocol'     => $auth_protocol,
+          'insecure'          => $insecure,
+          'memcached_servers' => $memcached_servers,
+          'certfile'          => $cert_file,
+          'keyfile'           => $key_file,
+          'cafile'            => $ca_file,
+        },
+      }
+      $vnc_api_lib_config = {
+        'auth' => {
+          'AUTHN_SERVER'   => $public_vip,
+          'AUTHN_PORT'     => $auth_port_ssl,
+          'AUTHN_PROTOCOL' => $auth_protocol,
+          'certfile'       => $cert_file,
+          'keyfile'        => $key_file,
+          'cafile'         => $ca_file,
+        },
+      }
+    } else {
+    $keystone_config = {
+        'KEYSTONE' => {
+          'admin_password'    => $admin_password,
+          'admin_tenant_name' => $admin_tenant_name,
+          'admin_token'       => $admin_token,
+          'admin_user'        => $admin_user,
+          'auth_host'         => $auth_host,
+          'auth_port'         => $auth_port,
+          'auth_protocol'     => $auth_protocol,
+          'insecure'          => $insecure,
+          'memcached_servers' => $memcached_servers,
+        },
+      }
+      $vnc_api_lib_config = {
+        'auth' => {
+          'AUTHN_SERVER' => $public_vip,
+        },
+      }
+    }
     class {'::contrail::vrouter':
       discovery_ip               => $disc_server_ip,
       gateway                    => $gateway,
@@ -64,18 +115,7 @@ class tripleo::network::contrail::vrouter (
       netmask                    => $netmask,
       physical_interface         => $physical_interface,
       vhost_ip                   => $host_ip,
-      keystone_config => {
-        'KEYSTONE' => {
-          'admin_password'    => $admin_password,
-          'admin_tenant_name' => $admin_tenant_name,
-          'admin_user'        => $admin_user,
-          'auth_host'         => $auth_host,
-          'auth_port'         => $auth_port,
-          'auth_protocol'     => $auth_protocol,
-          'insecure'          => $insecure,
-          'memcache_servers'  => $memcached_servers,
-        },
-      },
+      keystone_config            => $keystone_config,
       vrouter_agent_config       => {
         'CONTROL-NODE'  => {
           'server' => $control_server_list,
@@ -101,11 +141,7 @@ class tripleo::network::contrail::vrouter (
           'port'   => $disc_server_port,
         },
       },
-      vnc_api_lib_config    => {
-        'auth' => {
-          'AUTHN_SERVER' => $public_vip,
-        },
-      },
+      vnc_api_lib_config    => $vnc_api_lib_config,
     }
   if $step >= 5 {
     class {'::contrail::vrouter::provision_vrouter':
