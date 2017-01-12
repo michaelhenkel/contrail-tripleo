@@ -206,8 +206,11 @@ class tripleo::network::contrail::config(
   $auth                   = hiera('contrail::auth'),
   $auth_host              = hiera('contrail::auth_host'),
   $auth_port              = hiera('contrail::auth_port'),
+  $auth_port_ssl          = hiera('contrail::auth_port_ssl'),
   $auth_protocol          = hiera('contrail::auth_protocol'),
   $cassandra_server_list  = hiera('contrail_database_node_ips'),
+  $ca_file                = hiera('contrail::ca_file',False),
+  $cert_file              = hiera('contrail::cert_file',False),
   $config_hostnames       = hiera('contrail_config_short_node_names'),
   $control_server_list    = hiera('contrail_control_node_ips'),
   $disc_server_ip         = hiera('internal_api_virtual_ip'),
@@ -218,6 +221,7 @@ class tripleo::network::contrail::config(
   $ifmap_username         = hiera('contrail::config::ifmap_username'),
   $insecure               = hiera('contrail::insecure'),
   $ipfabric_service_port  = 8775,
+  $key_file               = hiera('contrail::key_file',False),
   $listen_ip_address      = hiera('contrail::config::listen_ip_address'),
   $listen_port            = hiera('contrail::api_port'),
   $linklocal_service_port = 80,
@@ -244,6 +248,53 @@ class tripleo::network::contrail::config(
   $rabbit_server_list_5672 = join([join($rabbit_server, ':5672,'),":5672"],'')
   $zk_server_ip_2181 = join([join($zk_server_ip, ':2181,'),":2181"],'')
 
+  if $auth_protocol == 'https' {
+    $keystone_config = {
+      'KEYSTONE' => {
+        'admin_password'    => $admin_password,
+        'admin_tenant_name' => $admin_tenant_name,
+        'admin_token'       => $admin_token,
+        'admin_user'        => $admin_user,
+        'auth_host'         => $auth_host,
+        'auth_port'         => $auth_port_ssl,
+        'auth_protocol'     => $auth_protocol,
+        'insecure'          => $insecure,
+        'memcached_servers' => $memcached_servers,
+        'certfile'          => $cert_file,
+        'keyfile'           => $key_file,
+        'cafile'            => $ca_file,
+      },
+    }
+    $vnc_api_lib_config = {
+      'auth' => {
+        'AUTHN_SERVER'   => $public_vip,
+        'AUTHN_PORT'     => $auth_port_ssl,
+        'AUTHN_PROTOCOL' => $auth_protocol,
+        'certfile'       => $cert_file,
+        'keyfile'        => $key_file,
+        'cafile'         => $ca_file,
+      },
+    }
+  } else {
+    $keystone_config = {
+      'KEYSTONE' => {
+        'admin_password'    => $admin_password,
+        'admin_tenant_name' => $admin_tenant_name,
+        'admin_token'       => $admin_token,
+        'admin_user'        => $admin_user,
+        'auth_host'         => $auth_host,
+        'auth_port'         => $auth_port,
+        'auth_protocol'     => $auth_protocol,
+        'insecure'          => $insecure,
+        'memcached_servers' => $memcached_servers,
+      },
+    }
+    $vnc_api_lib_config = {
+      'auth' => {
+        'AUTHN_SERVER' => $public_vip,
+      },
+    }
+  }
   if $step >= 3 {
     class {'::contrail::config':
       api_config              => {
@@ -289,19 +340,20 @@ class tripleo::network::contrail::config(
           'zk_server_ip'          => $zk_server_ip_2181,
           },
       },
-      keystone_config         => {
-        'KEYSTONE' => {
-          'admin_password'    => $admin_password,
-          'admin_tenant_name' => $admin_tenant_name,
-          'admin_token'       => $admin_token,
-          'admin_user'        => $admin_user,
-          'auth_host'         => $auth_host,
-          'auth_port'         => $auth_port,
-          'auth_protocol'     => $auth_protocol,
-          'insecure'          => $insecure,
-          'memcached_servers' => $memcached_servers,
-        },
-      },
+      keystone_config         => $keystone_config,
+      #keystone_config         => {
+      #  'KEYSTONE' => {
+      #    'admin_password'    => $admin_password,
+      #    'admin_tenant_name' => $admin_tenant_name,
+      #    'admin_token'       => $admin_token,
+      #    'admin_user'        => $admin_user,
+      #    'auth_host'         => $auth_host,
+      #    'auth_port'         => $auth_port,
+      #    'auth_protocol'     => $auth_protocol,
+      #    'insecure'          => $insecure,
+      #    'memcached_servers' => $memcached_servers,
+      #  },
+      #},
       schema_config           => {
         'DEFAULTS' => {
           'cassandra_server_list' => $cassandra_server_list_9160,
@@ -332,18 +384,19 @@ class tripleo::network::contrail::config(
           'zk_server_ip'          => $zk_server_ip_2181,
         },
       },
-      vnc_api_lib_config      => {
-        'auth' => {
-          'AUTHN_SERVER' => $public_vip,
-        },
-      },
+      vnc_api_lib_config      => $vnc_api_lib_config,
+      #vnc_api_lib_config      => {
+      #  'auth' => {
+      #    'AUTHN_SERVER' => $public_vip,
+      #  },
+      #},
     }
   }
-  if $step >= 4 {
-    exec { 'restart contrail-config service':
-      command => '/bin/systemctl restart supervisor-config',
-    }
-  }
+#  if $step >= 4 {
+#    exec { 'restart contrail-config service':
+#      command => '/bin/systemctl restart supervisor-config',
+#    }
+#  }
   if $step >= 5 {
     class {'::contrail::config::provision_config':
       api_address                => $api_server,

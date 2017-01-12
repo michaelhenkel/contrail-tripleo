@@ -19,6 +19,7 @@ class contrail::analyticsdatabase (
     cassandra_servers       => $analyticsdatabase_params['cassandra_servers'],
     cassandra_ip            => $analyticsdatabase_params['host_ip'],
     kafka_hostnames         => $analyticsdatabase_params['kafka_hostnames'],
+    vnc_api_lib_config      => $analyticsdatabase_params['vnc_api_lib_config'],
     zookeeper_server_ips    => $analyticsdatabase_params['zookeeper_server_ips'],
   } ~>
   class {'::contrail::analyticsdatabase::service': }

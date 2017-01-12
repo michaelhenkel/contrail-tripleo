@@ -139,7 +139,10 @@ class tripleo::network::contrail::analytics(
   $auth_host                  = hiera('contrail::auth_host'),
   $auth_port                  = hiera('contrail::auth_port'),
   $auth_protocol              = hiera('contrail::auth_protocol'),
+  $auth_port_ssl              = hiera('contrail::auth_port_ssl'),
   $cassandra_server_list      = hiera('contrail_analytics_database_node_ips'),
+  $ca_file                    = hiera('contrail::ca_file',False),
+  $cert_file                  = hiera('contrail::cert_file',False),
   $collector_http_server_port = hiera('contrail::analytics::collector_http_server_port'),
   $collector_sandesh_port     = hiera('contrail::analytics::collector_sandesh_port'),
   $disc_server_ip             = hiera('internal_api_virtual_ip'),
@@ -148,6 +151,7 @@ class tripleo::network::contrail::analytics(
   $host_ip                    = hiera('contrail::analytics::host_ip'),
   $insecure                   = hiera('contrail::insecure'),
   $kafka_broker_list          = hiera('contrail_analytics_database_node_ips'),
+  $key_file                   = hiera('contrail::key_file',False),
   $memcached_servers          = hiera('contrail::memcached_server'),
   $public_vip                 = hiera('public_virtual_ip'),
   $rabbit_server              = hiera('rabbitmq_node_ips'),
@@ -168,6 +172,45 @@ class tripleo::network::contrail::analytics(
   $zk_server_ip_2181 = join([join($zk_server_ip, ':2181 '),":2181"],'')
   $zk_server_ip_2181_comma = join([join($zk_server_ip, ':2181,'),":2181"],'')
 
+  if $auth_protocol == 'https' {
+    $keystone_config = {
+        'admin_password'    => $admin_password,
+        'admin_tenant_name' => $admin_tenant_name,
+        'admin_user'        => $admin_user,
+        'auth_host'         => $auth_host,
+        'auth_port'         => $auth_port_ssl,
+        'auth_protocol'     => $auth_protocol,
+        'insecure'          => $insecure,
+        'certfile'          => $cert_file,
+        'keyfile'           => $key_file,
+        'cafile'            => $ca_file,
+    }
+    $vnc_api_lib_config = {
+      'auth' => {
+        'AUTHN_SERVER'   => $public_vip,
+        'AUTHN_PORT'     => $auth_port_ssl,
+        'AUTHN_PROTOCOL' => $auth_protocol,
+        'certfile'       => $cert_file,
+        'keyfile'        => $key_file,
+        'cafile'         => $ca_file,
+      },
+    }
+  } else {
+    $keystone_config = {
+        'admin_password'    => $admin_password,
+        'admin_tenant_name' => $admin_tenant_name,
+        'admin_user'        => $admin_user,
+        'auth_host'         => $auth_host,
+        'auth_port'         => $auth_port,
+        'auth_protocol'     => $auth_protocol,
+        'insecure'          => $insecure,
+    }
+    $vnc_api_lib_config = {
+      'auth' => {
+        'AUTHN_SERVER' => $public_vip,
+      },
+    }
+  }
   if $step >= 3 {
     class {'::contrail::analytics':
       alarm_gen_config       => {
@@ -208,15 +251,7 @@ class tripleo::network::contrail::analytics(
           'redis_query_port'  => $redis_server_port,
           'server'            => $redis_server,
         },
-        'KEYSTONE'     => {
-          'admin_password'    => $admin_password,
-          'admin_tenant_name' => $admin_tenant_name,
-          'admin_user'        => $admin_user,
-          'auth_host'         => $auth_host,
-          'auth_port'         => $auth_port,
-          'auth_protocol'     => $auth_protocol,
-          'insecure'          => $insecure,
-        },
+        'KEYSTONE'     => $keystone_config,
       },
       collector_config      => {
         'DEFAULT'  => {
@@ -271,22 +306,9 @@ class tripleo::network::contrail::analytics(
           'disc_server_port' => $disc_server_port,
         },
       },
-      vnc_api_lib_config    => {
-        'auth' => {
-          'AUTHN_SERVER' => $public_vip,
-        },
-      },
+      vnc_api_lib_config    => $vnc_api_lib_config,
       keystone_config => {
-        'KEYSTONE' => {
-          'admin_password'    => $admin_password,
-          'admin_tenant_name' => $admin_tenant_name,
-          'admin_user'        => $admin_user,
-          'auth_host'         => $auth_host,
-          'auth_port'         => $auth_port,
-          'auth_protocol'     => $auth_protocol,
-          'insecure'          => $insecure,
-          'memcache_servers'  => $memcached_servers,
-        },
+        'KEYSTONE'     => $keystone_config,
       },
     }
   }

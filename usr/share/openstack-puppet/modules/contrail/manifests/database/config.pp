@@ -29,23 +29,24 @@ class contrail::database::config (
   if $cassandra_seeds_list.size > 1 {
     $cassandra_seeds = join($cassandra_seeds_list,",")
   } else {
-    $cassandra_seeds = $cassandra_seeds_list
+    $cassandra_seeds = $cassandra_seeds_list[0]
   }
 
   create_ini_settings($database_nodemgr_config, $contrail_database_nodemgr_config)
   validate_ipv4_address($cassandra_ip)
 
-  file { ['/var/lib/cassandra',
-          '/var/lib/cassandra/data',
-          '/var/lib/cassandra/saved_caches',
-          '/var/lib/cassandra/commitlog', ]:
+  file { ['/var/lib/cassandra', ]:
+#          '/var/lib/cassandra/data',
+#          '/var/lib/cassandra/saved_caches',
+#          '/var/lib/cassandra/commitlog', ]:
     ensure => 'directory',
     owner  => 'cassandra',
-    mode   => '0750',
+    group  => 'cassandra',
+    mode   => '0755',
   } ->
   class {'::cassandra':
-    service_ensure => stopped,
-    service_enable => false,
+#    service_ensure => stopped,
+#    service_enable => false,
     settings => {
       'cluster_name'          => 'ConfigDatabase',
       'listen_address'        => $cassandra_ip,

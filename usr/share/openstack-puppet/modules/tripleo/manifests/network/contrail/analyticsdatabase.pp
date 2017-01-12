@@ -103,16 +103,39 @@ class tripleo::network::contrail::analyticsdatabase(
   $admin_tenant_name    = hiera('contrail::admin_tenant_name'),
   $admin_token          = hiera('contrail::admin_token'),
   $admin_user           = hiera('contrail::admin_user'),
+  $auth_port_ssl        = hiera('contrail::auth_port_ssl'),
+  $auth_protocol        = hiera('contrail::auth_protocol'),
   $cassandra_servers    = hiera('contrail_analytics_database_node_ips'),
+  $ca_file              = hiera('contrail::ca_file',False),
+  $cert_file            = hiera('contrail::cert_file',False),
   $disc_server_ip       = hiera('internal_api_virtual_ip'),
   $disc_server_port     = hiera('contrail::disc_server_port'),
   $host_ip              = hiera('contrail::analytics::database::host_ip'),
   $host_name            = $::hostname,
   $kafka_hostnames      = hiera('contrail_analytics_database_short_node_names', ''),
+  $key_file             = hiera('contrail::key_file',False),
   $public_vip           = hiera('public_virtual_ip'),
   $zookeeper_server_ips = hiera('contrail_database_node_ips'),
 )
 {
+  if $auth_protocol == 'https' {
+    $vnc_api_lib_config = {
+      'auth' => {
+        'AUTHN_SERVER'   => $public_vip,
+        'AUTHN_PORT'     => $auth_port_ssl,
+        'AUTHN_PROTOCOL' => $auth_protocol,
+        'certfile'       => $cert_file,
+        'keyfile'        => $key_file,
+        'cafile'         => $ca_file,
+      },
+    }
+  } else {
+    $vnc_api_lib_config = {
+      'auth' => {
+        'AUTHN_SERVER' => $public_vip,
+      },
+    }
+  }
   if $step == 2 {
     class {'::contrail::analyticsdatabase':
       analyticsdatabase_params => {
@@ -137,6 +160,7 @@ class tripleo::network::contrail::analyticsdatabase(
             'server' => $disc_server_ip,
           },
         },
+        vnc_api_lib_config      => $vnc_api_lib_config, 
       }
     }
   }

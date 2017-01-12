@@ -363,8 +363,11 @@ class tripleo::haproxy (
     cinder_api_port => 8776,
     cinder_api_ssl_port => 13776,
     contrail_config_port => 8082,
+    contrail_config_ssl_port => 18082,
     contrail_discovery_port => 5998,
+    contrail_discovery_ssl_port => 15998,
     contrail_analytics_port => 8090,
+    contrail_analytics_ssl_port => 18090,
     contrail_webui_http_port => 8080,
     contrail_webui_https_port => 8143,
     glance_api_port => 9292,
@@ -599,6 +602,7 @@ class tripleo::haproxy (
       service_port      => $ports[contrail_config_port],
       ip_addresses      => hiera('contrail_config_node_ips', $contrail_config_node_ips),
       server_names      => hiera('contrail_config_node_ips', $contrail_config_node_ips),
+      public_ssl_port   => $ports[contrail_config_ssl_port],
     }
   }
 
@@ -610,6 +614,7 @@ class tripleo::haproxy (
       service_port      => $ports[contrail_discovery_port],
       ip_addresses      => hiera('contrail_config_node_ips', $contrail_config_node_ips),
       server_names      => hiera('contrail_config_node_ips', $contrail_config_node_ips),
+      public_ssl_port   => $ports[contrail_discovery_ssl_port],
     }
   }
 
@@ -621,6 +626,7 @@ class tripleo::haproxy (
       service_port      => $ports[contrail_analytics_port],
       ip_addresses      => hiera('contrail_config_node_ips', $contrail_config_node_ips),
       server_names      => hiera('contrail_config_node_ips', $contrail_config_node_ips),
+      public_ssl_port   => $ports[contrail_analytics_ssl_port],
     }
   }
 
@@ -632,6 +638,7 @@ class tripleo::haproxy (
       service_port      => $ports[contrail_webui_http_port],
       ip_addresses      => hiera('contrail_config_node_ips', $contrail_config_node_ips),
       server_names      => hiera('contrail_config_node_ips', $contrail_config_node_ips),
+      public_ssl_port   => $ports[contrail_webui_http_port],
     }
   }
 
@@ -643,6 +650,7 @@ class tripleo::haproxy (
       service_port      => $ports[contrail_webui_https_port],
       ip_addresses      => hiera('contrail_config_node_ips', $contrail_config_node_ips),
       server_names      => hiera('contrail_config_node_ips', $contrail_config_node_ips),
+      public_ssl_port   => $ports[contrail_webui_https_port],
     }
   }
 

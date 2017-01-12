@@ -97,6 +97,9 @@ class contrail::vrouter::config (
   create_ini_settings($vrouter_nodemgr_config, $contrail_vrouter_nodemgr_config)
   create_ini_settings($vnc_api_lib_config, $contrail_vnc_api_lib_config)
 
+  exec { '/sbin/weak-modules --add-kernel' :
+    command => '/sbin/weak-modules --add-kernel',
+  }
   if $step == 5 {
     ini_setting { "set custom cpu_mode":
       ensure  => present,
