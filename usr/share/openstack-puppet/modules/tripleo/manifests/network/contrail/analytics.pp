@@ -130,6 +130,7 @@
 #
 class tripleo::network::contrail::analytics(
   $step                       = hiera('step'),
+  $aaa_mode                   = hiera('contrail::aaa_mode'),
   $admin_password             = hiera('contrail::admin_password'),
   $admin_tenant_name          = hiera('contrail::admin_tenant_name'),
   $admin_token                = hiera('contrail::admin_token'),
@@ -191,6 +192,7 @@ class tripleo::network::contrail::analytics(
     },
     analytics_api_config  => {
       'DEFAULTS'  => {
+        'aaa_mode'              => "no-auth",
         'api_server'            => "${api_server}:8082",
         'cassandra_server_list' => $cassandra_server_list_9042,
         'host_ip'               => $host_ip,
