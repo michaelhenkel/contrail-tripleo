@@ -140,6 +140,7 @@ class tripleo::network::contrail::analytics(
   $auth_port                  = hiera('contrail::auth_port'),
   $auth_protocol              = hiera('contrail::auth_protocol'),
   $auth_port_ssl              = hiera('contrail::auth_port_ssl'),
+  $analytics_aaa_mode         = hiera('contrail::analytics_aaa_mode'),
   $cassandra_server_list      = hiera('contrail_analytics_database_node_ips'),
   $ca_file                    = hiera('contrail::ca_file',False),
   $cert_file                  = hiera('contrail::cert_file',False),
@@ -236,6 +237,7 @@ class tripleo::network::contrail::analytics(
       analytics_api_config  => {
         'DEFAULTS'  => {
           'api_server'            => "${api_server}:${api_port}",
+          'aaa_mode'              => $analytics_aaa_mode,
           'cassandra_server_list' => $cassandra_server_list_9042,
           'host_ip'               => $host_ip,
           'http_server_port'      => $http_server_port,

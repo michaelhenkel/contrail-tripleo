@@ -155,11 +155,6 @@
 #  String (IPv4) value + port
 #  Defaults to hiera('contrail::memcached_server')
 #
-# [*multi_tenancy*]
-#  (optional) Defines if mutli-tenancy is enabled.
-#  String value
-#  Defaults to hiera('contrail::multi_tenancy')
-#
 # [*public_vip*]
 #  (optional) Public virtual ip
 #  String value.
@@ -197,6 +192,7 @@
 #
 class tripleo::network::contrail::config(
   $step = hiera('step'),
+  $aaa_mode               = hiera('contrail::aaa_mode'),
   $admin_password         = hiera('contrail::admin_password'),
   $admin_tenant_name      = hiera('contrail::admin_tenant_name'),
   $admin_token            = hiera('contrail::admin_token'),
@@ -228,7 +224,6 @@ class tripleo::network::contrail::config(
   $linklocal_service_name = 'metadata',
   $linklocal_service_ip   = '169.254.169.254',
   $memcached_servers      = hiera('contrail::memcached_server'),
-  $multi_tenancy          = hiera('contrail::multi_tenancy'),
   $public_vip             = hiera('public_virtual_ip'),
   $rabbit_server          = hiera('rabbitmq_node_ips'),
   $rabbit_user            = hiera('contrail::rabbit_user'),
@@ -299,6 +294,7 @@ class tripleo::network::contrail::config(
     class {'::contrail::config':
       api_config              => {
         'DEFAULTS' => {
+          'aaa_mode'              => $aaa_mode,
           'auth'                  => $auth,
           'cassandra_server_list' => $cassandra_server_list_9160,
           'disc_server_ip'        => $disc_server_ip,
@@ -307,7 +303,6 @@ class tripleo::network::contrail::config(
           'ifmap_username'        => $ifmap_username,
           'listen_ip_addr'        => $listen_ip_address,
           'listen_port'           => $listen_port,
-          'multi_tenancy'         => $multi_tenancy,
           'rabbit_server'         => $rabbit_server_list_5672,
           'rabbit_user'           => $rabbit_user,
           'rabbit_password'       => $rabbit_password,

@@ -10,10 +10,6 @@
 #   Port of the API Server.
 #   Defaults to $::os_service_default
 #
-# [*multi_tenancy*]
-#   Whether to enable multi-tenancy
-#   Default to $::os_service_default
-#
 # [*contrail_extensions*]
 #   Array of OpenContrail extensions to be supported
 #   Defaults to $::os_service_default
@@ -53,20 +49,22 @@
 #   Defaults to false.
 #
 class tripleo::network::contrail::neutron_plugin (
-  $api_server_ip              = hiera('neutron::plugins::opencontrail::api_server_ip'),
-  $api_server_port            = hiera('neutron::plugins::opencontrail::api_server_port'),
-  $multi_tenancy              = hiera('neutron::plugins::opencontrail::multi_tenancy'),
-  $contrail_extensions        = hiera('neutron::plugins::opencontrail::contrail_extensions'),
-  $keystone_auth_host         = hiera('neutron::plugins::opencontrail::keystone_auth_host'),
-  $keystone_auth_protocol     = hiera('neutron::plugins::opencontrail::keystone_auth_protocol'),
-  $keystone_auth_port         = hiera('neutron::plugins::opencontrail::keystone_auth_port'),
-  $keystone_auth_url          = hiera('neutron::plugins::opencontrail::keystone_auth_url'),
-  $keystone_admin_user        = hiera('neutron::plugins::opencontrail::keystone_admin_user'),
-  $keystone_admin_tenant_name = hiera('neutron::plugins::opencontrail::keystone_admin_tenant_name'),
-  $keystone_admin_password    = hiera('neutron::plugins::opencontrail::keystone_admin_password'),
-  $keystone_admin_token       = hiera('neutron::plugins::opencontrail::keystone_admin_token'),
-  $keystone_public_vip        = hiera('neutron::plugins::opencontrail::keystone_public_vip'),
-  $purge_config               = false,
+  $contrail_extensions    = hiera('neutron::plugins::opencontrail::contrail_extensions'),
+  $purge_config           = false,
+  $admin_password         = hiera('contrail::admin_password'),
+  $admin_tenant_name      = hiera('contrail::admin_tenant_name'),
+  $admin_token            = hiera('contrail::admin_token'),
+  $admin_user             = hiera('contrail::admin_user'),
+  $api_server             = hiera('internal_api_virtual_ip'),
+  $api_port               = hiera('contrail::api_port'),
+  $auth_host              = hiera('contrail::auth_host'),
+  $auth_port              = hiera('contrail::auth_port'),
+  $auth_port_ssl          = hiera('contrail::auth_port_ssl'),
+  $auth_protocol          = hiera('contrail::auth_protocol'),
+  $ca_file                = hiera('contrail::ca_file',False),
+  $cert_file              = hiera('contrail::cert_file',False),
+  $key_file               = hiera('contrail::key_file',False),
+  $cert_root_dir          = hiera('contrail::ssl_root_dir',False),
 ) {
 
   include ::neutron::deps
@@ -112,21 +110,51 @@ class tripleo::network::contrail::neutron_plugin (
     purge => $purge_config,
   }
 
-  neutron_plugin_opencontrail {
-    'APISERVER/api_server_ip':           value => $api_server_ip;
-    'APISERVER/api_server_port':         value => $api_server_port;
-    'APISERVER/multi_tenancy':           value => $multi_tenancy;
-    'APISERVER/contrail_extensions':     value => join($contrail_extensions, ',');
-    'KEYSTONE/auth_url':                 value => $keystone_auth_url;
-    'KEYSTONE/admin_user' :              value => $keystone_admin_user;
-    'KEYSTONE/admin_tenant_name':        value => $keystone_admin_tenant_name;
-    'KEYSTONE/admin_password':           value => $keystone_admin_password, secret =>true;
-    'KEYSTONE/admin_token':              value => $keystone_admin_token, secret =>true;
-    'keystone_authtoken/admin_user':     value => $keystone_admin_user;
-    'keystone_authtoken/admin_tenant':   value => $keystone_admin_tenant_name;
-    'keystone_authtoken/admin_password': value => $keystone_admin_password, secret =>true;
-    'keystone_authtoken/auth_host':      value => $keystone_public_vip;
-    'keystone_authtoken/auth_protocol':  value => $keystone_auth_protocol;
-    'keystone_authtoken/auth_port':      value => $keystone_auth_port;
+  if $auth_protocol == 'https' {
+    file { $cert_root_dir:
+      ensure => directory,
+      owner => "neutron",
+      recurse => true,
+    }
+    $auth_url = join([$auth_protocol,'://',$auth_host,':',$auth_port_ssl,'/v2.0'])
+    neutron_plugin_opencontrail {
+      'APISERVER/api_server_ip':           value => $api_server;
+      'APISERVER/api_server_port':         value => $api_port;
+      'APISERVER/contrail_extensions':     value => join($contrail_extensions, ',');
+      'KEYSTONE/auth_url':                 value => $auth_url;
+      'KEYSTONE/admin_user' :              value => $admin_user;
+      'KEYSTONE/admin_tenant_name':        value => $admin_tenant;
+      'KEYSTONE/admin_password':           value => $admin_password, secret =>true;
+      'KEYSTONE/admin_token':              value => $admin_token, secret =>true;
+      'KEYSTONE/cafile':                   value => $ca_file;
+      'KEYSTONE/certfile':                 value => $cert_file;
+      'KEYSTONE/keyfile':                  value => $key_file;
+      'keystone_authtoken/admin_user':     value => $admin_user;
+      'keystone_authtoken/admin_tenant':   value => $admin_tenant;
+      'keystone_authtoken/admin_password': value => $admin_password, secret =>true;
+      'keystone_authtoken/auth_host':      value => $auth_host;
+      'keystone_authtoken/auth_protocol':  value => $auth_protocol;
+      'keystone_authtoken/auth_port':      value => $auth_port_ssl;
+      'keystone_authtoken/cafile':         value => $ca_file;
+      'keystone_authtoken/certfile':       value => $cert_file;
+      'keystone_authtoken/keyfile':        value => $key_file;
+    }
+  } else {
+    $auth_url = join([$auth_protocol,'://',$auth_host,':',$auth_port,'/v2.0'])
+    neutron_plugin_opencontrail {
+      'APISERVER/api_server_ip':           value => $api_server;
+      'APISERVER/api_server_port':         value => $api_port;
+      'APISERVER/contrail_extensions':     value => join($contrail_extensions, ',');
+      'KEYSTONE/auth_url':                 value => $auth_url;
+      'KEYSTONE/admin_user' :              value => $admin_user;
+      'KEYSTONE/admin_tenant_name':        value => $admin_tenant;
+      'KEYSTONE/admin_password':           value => $admin_password, secret =>true;
+      'KEYSTONE/admin_token':              value => $admin_token, secret =>true;                                                                                                           'keystone_authtoken/admin_user':     value => $admin_user;
+      'keystone_authtoken/admin_tenant':   value => $admin_tenant;
+      'keystone_authtoken/admin_password': value => $admin_password, secret =>true;
+      'keystone_authtoken/auth_host':      value => $auth_host;
+      'keystone_authtoken/auth_protocol':  value => $auth_protocol;
+      'keystone_authtoken/auth_port':      value => $auth_port;
+    }
   }
 }
