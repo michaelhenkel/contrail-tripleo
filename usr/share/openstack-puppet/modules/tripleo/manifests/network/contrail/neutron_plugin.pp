@@ -104,8 +104,22 @@ class tripleo::network::contrail::neutron_plugin (
       require => Package[$::neutron::params::opencontrail_plugin_package],
       tag     => 'neutron-config-file',
     }
+    $api_paste_config_file = '/usr/share/neutron/api-paste.ini'
   }
-
+  ini_setting { "filter:user_token":
+    ensure  => present,
+    path    => $api_paste_config_file,
+    section => 'filter:user_token',
+    setting => 'paste.filter_factory',
+    value   => 'neutron_plugin_contrail.plugins.opencontrail.neutron_middleware:token_factory',
+  }
+  ini_setting { "composite:neutronapi_v2_0":
+    ensure  => present,
+    path    => $api_paste_config_file,
+    section => 'composite:neutronapi_v2_0',
+    setting => 'keystone',
+    value   => 'user_token cors http_proxy_to_wsgi request_id catch_errors authtoken keystonecontext extensions neutronapiapp_v2_0',
+  }
   resources { 'neutron_plugin_opencontrail':
     purge => $purge_config,
   }
@@ -149,7 +163,8 @@ class tripleo::network::contrail::neutron_plugin (
       'KEYSTONE/admin_user' :              value => $admin_user;
       'KEYSTONE/admin_tenant_name':        value => $admin_tenant;
       'KEYSTONE/admin_password':           value => $admin_password, secret =>true;
-      'KEYSTONE/admin_token':              value => $admin_token, secret =>true;                                                                                                           'keystone_authtoken/admin_user':     value => $admin_user;
+      'KEYSTONE/admin_token':              value => $admin_token, secret =>true;
+      'keystone_authtoken/admin_user':     value => $admin_user;
       'keystone_authtoken/admin_tenant':   value => $admin_tenant;
       'keystone_authtoken/admin_password': value => $admin_password, secret =>true;
       'keystone_authtoken/auth_host':      value => $auth_host;
