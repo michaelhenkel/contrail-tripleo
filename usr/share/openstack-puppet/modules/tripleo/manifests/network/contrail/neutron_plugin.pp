@@ -61,10 +61,8 @@ class tripleo::network::contrail::neutron_plugin (
   $auth_port              = hiera('contrail::auth_port'),
   $auth_port_ssl          = hiera('contrail::auth_port_ssl'),
   $auth_protocol          = hiera('contrail::auth_protocol'),
-  $ca_file                = hiera('contrail::ca_file',False),
-  $cert_file              = hiera('contrail::cert_file',False),
-  $key_file               = hiera('contrail::key_file',False),
-  $cert_root_dir          = hiera('contrail::ssl_root_dir',False),
+  $ca_file                = hiera('tripleo::haproxy::service_certificate',False),
+  $cert_file              = hiera('tripleo::haproxy::service_certificate',False),
 ) {
 
   include ::neutron::deps
@@ -124,12 +122,11 @@ class tripleo::network::contrail::neutron_plugin (
     purge => $purge_config,
   }
 
+  exec { 'add neutron user to haproxy group':
+    command => '/usr/sbin/usermod -a -G haproxy neutron',
+  }
+
   if $auth_protocol == 'https' {
-    file { $cert_root_dir:
-      ensure => directory,
-      owner => "neutron",
-      recurse => true,
-    }
     $auth_url = join([$auth_protocol,'://',$auth_host,':',$auth_port_ssl,'/v2.0'])
     neutron_plugin_opencontrail {
       'APISERVER/api_server_ip':           value => $api_server;
@@ -142,7 +139,6 @@ class tripleo::network::contrail::neutron_plugin (
       'KEYSTONE/admin_token':              value => $admin_token, secret =>true;
       'KEYSTONE/cafile':                   value => $ca_file;
       'KEYSTONE/certfile':                 value => $cert_file;
-      'KEYSTONE/keyfile':                  value => $key_file;
       'keystone_authtoken/admin_user':     value => $admin_user;
       'keystone_authtoken/admin_tenant':   value => $admin_tenant;
       'keystone_authtoken/admin_password': value => $admin_password, secret =>true;
@@ -151,7 +147,6 @@ class tripleo::network::contrail::neutron_plugin (
       'keystone_authtoken/auth_port':      value => $auth_port_ssl;
       'keystone_authtoken/cafile':         value => $ca_file;
       'keystone_authtoken/certfile':       value => $cert_file;
-      'keystone_authtoken/keyfile':        value => $key_file;
     }
   } else {
     $auth_url = join([$auth_protocol,'://',$auth_host,':',$auth_port,'/v2.0'])

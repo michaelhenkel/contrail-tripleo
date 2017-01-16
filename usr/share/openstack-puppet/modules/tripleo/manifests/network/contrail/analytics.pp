@@ -142,8 +142,8 @@ class tripleo::network::contrail::analytics(
   $auth_port_ssl              = hiera('contrail::auth_port_ssl'),
   $analytics_aaa_mode         = hiera('contrail::analytics_aaa_mode'),
   $cassandra_server_list      = hiera('contrail_analytics_database_node_ips'),
-  $ca_file                    = hiera('contrail::ca_file',False),
-  $cert_file                  = hiera('contrail::cert_file',False),
+  $ca_file                    = hiera('contrail::service_certificate',False),
+  $cert_file                  = hiera('contrail::service_certificate',False),
   $collector_http_server_port = hiera('contrail::analytics::collector_http_server_port'),
   $collector_sandesh_port     = hiera('contrail::analytics::collector_sandesh_port'),
   $disc_server_ip             = hiera('internal_api_virtual_ip'),
@@ -152,7 +152,6 @@ class tripleo::network::contrail::analytics(
   $host_ip                    = hiera('contrail::analytics::host_ip'),
   $insecure                   = hiera('contrail::insecure'),
   $kafka_broker_list          = hiera('contrail_analytics_database_node_ips'),
-  $key_file                   = hiera('contrail::key_file',False),
   $memcached_servers          = hiera('contrail::memcached_server'),
   $public_vip                 = hiera('public_virtual_ip'),
   $rabbit_server              = hiera('rabbitmq_node_ips'),
@@ -183,7 +182,6 @@ class tripleo::network::contrail::analytics(
         'auth_protocol'     => $auth_protocol,
         'insecure'          => $insecure,
         'certfile'          => $cert_file,
-        'keyfile'           => $key_file,
         'cafile'            => $ca_file,
     }
     $vnc_api_lib_config = {
@@ -192,7 +190,6 @@ class tripleo::network::contrail::analytics(
         'AUTHN_PORT'     => $auth_port_ssl,
         'AUTHN_PROTOCOL' => $auth_protocol,
         'certfile'       => $cert_file,
-        'keyfile'        => $key_file,
         'cafile'         => $ca_file,
       },
     }
