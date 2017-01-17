@@ -7,6 +7,7 @@ class contrail::vrouter::service(
   $cidr,
   $gateway,
   $host_ip,
+  $is_tsn,
   $physical_interface,
   $vhost_ip,
 ) {
@@ -31,7 +32,7 @@ class contrail::vrouter::service(
       refreshonly => true,
     }
   }
-  if $step == 5 {
+  if $step == 5 and !$is_tsn {
     exec { 'restart nova compute':
       path => '/bin',
       command => "systemctl restart openstack-nova-compute",

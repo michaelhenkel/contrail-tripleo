@@ -47,7 +47,7 @@ class tripleo::network::contrail::vrouter (
   $netmask            = hiera('contrail::vrouter::netmask'),
   $physical_interface = hiera('contrail::vrouter::physical_interface'),
   $public_vip         = hiera('public_virtual_ip'),
-  $tsn_mode           = hiera('contrail::vrouter::is_tsn',False),
+  $is_tsn             = hiera('contrail::vrouter::is_tsn',False),
 ) {
     
     $cidr = netmask_to_cidr($netmask)
@@ -104,7 +104,7 @@ class tripleo::network::contrail::vrouter (
         },
       }
     }
-    if $tsn_mode {
+    if $is_tsn {
       $vrouter_agent_config = {
         'DEBUG'  => {
           'agent_mode' => 'tsn',
@@ -152,6 +152,7 @@ class tripleo::network::contrail::vrouter (
       discovery_ip               => $disc_server_ip,
       gateway                    => $gateway,
       host_ip                    => $host_ip,
+      is_tsn                     => $is_tsn,
       macaddr                    => $macaddress,
       mask                       => $cidr,
       netmask                    => $netmask,

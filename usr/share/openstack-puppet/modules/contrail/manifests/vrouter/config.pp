@@ -62,6 +62,7 @@ class contrail::vrouter::config (
   $discovery_ip           = '127.0.0.1',
   $device                 = 'eth0',
   $gateway                = '127.0.0.1',
+  $is_tsn                 = undef,
   $kmod_path              = "vrouter",
   $macaddr                = $::macaddress,
   $mask                   = '24',
@@ -100,7 +101,7 @@ class contrail::vrouter::config (
   exec { '/sbin/weak-modules --add-kernel' :
     command => '/sbin/weak-modules --add-kernel',
   }
-  if $step == 5 {
+  if $step == 5 and !$is_tsn {
     ini_setting { "set custom cpu_mode":
       ensure  => present,
       path    => '/etc/nova/nova.conf',

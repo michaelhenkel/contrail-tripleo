@@ -11,6 +11,7 @@ class contrail::vrouter (
   $discovery_ip,
   $gateway,
   $host_ip,
+  $is_tsn,
   $netmask,
   $macaddr,
   $mask,
@@ -30,6 +31,7 @@ class contrail::vrouter (
     device                 => $physical_interface,
     discovery_ip           => $discovery_ip,
     gateway                => $gateway,
+    is_tsn                 => $is_tsn,
     macaddr                => $macaddr,
     mask                   => $mask,
     netmask                => $netmask,
@@ -43,6 +45,7 @@ class contrail::vrouter (
     cidr               => $mask,
     gateway            => $gateway,
     host_ip            => $host_ip,
+    is_tsn             => $is_tsn,
     physical_interface => $physical_interface,
     vhost_ip           => $vhost_ip,
   }
