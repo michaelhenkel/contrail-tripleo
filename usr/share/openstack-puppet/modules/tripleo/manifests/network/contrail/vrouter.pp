@@ -34,8 +34,8 @@ class tripleo::network::contrail::vrouter (
   $auth_port          = hiera('contrail::auth_port'),
   $auth_port_ssl      = hiera('contrail::auth_port_ssl'),
   $auth_protocol      = hiera('contrail::auth_protocol'),
-  $ca_file            = hiera('contrail::service_certificate',False),
-  $cert_file          = hiera('contrail::service_certificate',False),
+  $ca_file            = hiera('contrail::service_certificate',false),
+  $cert_file          = hiera('contrail::service_certificate',false),
   $control_server     = hiera('contrail_control_node_ips'),
   $disc_server_ip     = hiera('internal_api_virtual_ip'),
   $disc_server_port   = hiera('contrail::disc_server_port'),
@@ -47,7 +47,7 @@ class tripleo::network::contrail::vrouter (
   $netmask            = hiera('contrail::vrouter::netmask'),
   $physical_interface = hiera('contrail::vrouter::physical_interface'),
   $public_vip         = hiera('public_virtual_ip'),
-  $is_tsn             = hiera('contrail::vrouter::is_tsn',False),
+  $is_tsn             = hiera('contrail::vrouter::is_tsn',false),
 ) {
     
     $cidr = netmask_to_cidr($netmask)

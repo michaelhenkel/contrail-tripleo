@@ -61,8 +61,8 @@ class tripleo::network::contrail::neutron_plugin (
   $auth_port              = hiera('contrail::auth_port'),
   $auth_port_ssl          = hiera('contrail::auth_port_ssl'),
   $auth_protocol          = hiera('contrail::auth_protocol'),
-  $ca_file                = hiera('tripleo::haproxy::service_certificate',False),
-  $cert_file              = hiera('tripleo::haproxy::service_certificate',False),
+  $ca_file                = hiera('tripleo::haproxy::service_certificate',false),
+  $cert_file              = hiera('tripleo::haproxy::service_certificate',false),
 ) {
 
   include ::neutron::deps
