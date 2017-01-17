@@ -28,7 +28,7 @@ class tripleo::network::contrail::vrouter (
   $admin_tenant_name  = hiera('contrail::admin_tenant_name'),
   $admin_token        = hiera('contrail::admin_token'),
   $admin_user         = hiera('contrail::admin_user'),
-  $api_port           = 8082,
+  $api_port           = hiera('contrail::api_port'),
   $api_server         = hiera('internal_api_virtual_ip'),
   $auth_host          = hiera('contrail::auth_host'),
   $auth_port          = hiera('contrail::auth_port'),
@@ -38,15 +38,16 @@ class tripleo::network::contrail::vrouter (
   $cert_file          = hiera('contrail::service_certificate',False),
   $control_server     = hiera('contrail_control_node_ips'),
   $disc_server_ip     = hiera('internal_api_virtual_ip'),
-  $disc_server_port   = 5998,
-  $gateway            = hiera('neutron::plugins::opencontrail::gateway'),
-  $host_ip            = hiera('neutron::plugins::opencontrail::host_ip'),
+  $disc_server_port   = hiera('contrail::disc_server_port'),
+  $gateway            = hiera('contrail::vrouter::gateway'),
+  $host_ip            = hiera('contrail::vrouter::host_ip'),
   $insecure           = hiera('contrail::insecure'),
   $memcached_servers  = hiera('contrail::memcached_server'),
-  $metadata_secret    = hiera('neutron::plugins::opencontrail::metadata_proxy_shared_secret'),
-  $netmask            = hiera('neutron::plugins::opencontrail::netmask'),
-  $physical_interface = hiera('neutron::plugins::opencontrail::physical_interface'),
+  $metadata_secret    = hiera('contrail::vrouter::metadata_proxy_shared_secret'),
+  $netmask            = hiera('contrail::vrouter::netmask'),
+  $physical_interface = hiera('contrail::vrouter::physical_interface'),
   $public_vip         = hiera('public_virtual_ip'),
+  $tsn_mode           = hiera('contrail::vrouter::is_tsn',False),
 ) {
     
     $cidr = netmask_to_cidr($netmask)
@@ -103,17 +104,11 @@ class tripleo::network::contrail::vrouter (
         },
       }
     }
-    class {'::contrail::vrouter':
-      discovery_ip               => $disc_server_ip,
-      gateway                    => $gateway,
-      host_ip                    => $host_ip,
-      macaddr                    => $macaddress,
-      mask                       => $cidr,
-      netmask                    => $netmask,
-      physical_interface         => $physical_interface,
-      vhost_ip                   => $host_ip,
-      keystone_config            => $keystone_config,
-      vrouter_agent_config       => {
+    if $tsn_mode {
+      $vrouter_agent_config = {
+        'DEBUG'  => {
+          'agent_mode' => 'tsn',
+        },
         'CONTROL-NODE'  => {
           'server' => $control_server_list,
         },
@@ -131,7 +126,39 @@ class tripleo::network::contrail::vrouter (
           'server' => $disc_server_ip,
           'port'   => $disc_server_port,
         },
-      },
+      }
+    } else {
+      $vrouter_agent_config = {
+        'CONTROL-NODE'  => {
+          'server' => $control_server_list,
+        },
+        'VIRTUAL-HOST-INTERFACE'  => {
+          'compute_node_address' => $host_ip,
+          'gateway'              => $gateway,
+          'ip'                   => "${host_ip}/${cidr}",
+          'name'                 => "vhost0",
+          'physical_interface'   => $physical_interface,
+        },
+        'METADATA' => {
+          'metadata_proxy_secret' => $metadata_secret,
+        },
+        'DISCOVERY' => {
+          'server' => $disc_server_ip,
+          'port'   => $disc_server_port,
+        },
+      }
+    }
+    class {'::contrail::vrouter':
+      discovery_ip               => $disc_server_ip,
+      gateway                    => $gateway,
+      host_ip                    => $host_ip,
+      macaddr                    => $macaddress,
+      mask                       => $cidr,
+      netmask                    => $netmask,
+      physical_interface         => $physical_interface,
+      vhost_ip                   => $host_ip,
+      keystone_config            => $keystone_config,
+      vrouter_agent_config       => $vrouter_agent_config,
       vrouter_nodemgr_config       => {
         'DISCOVERY' => {
           'server' => $disc_server_ip,

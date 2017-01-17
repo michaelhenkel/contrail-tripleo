@@ -49,7 +49,7 @@
 #   Defaults to false.
 #
 class tripleo::network::contrail::neutron_plugin (
-  $contrail_extensions    = hiera('neutron::plugins::opencontrail::contrail_extensions'),
+  $contrail_extensions    = hiera('contrail::vrouter::contrail_extensions'),
   $purge_config           = false,
   $admin_password         = hiera('contrail::admin_password'),
   $admin_tenant_name      = hiera('contrail::admin_tenant_name'),
