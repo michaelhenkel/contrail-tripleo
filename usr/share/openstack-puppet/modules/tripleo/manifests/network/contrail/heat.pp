@@ -29,15 +29,40 @@
 #  String value.
 #  Defaults to hiera('contrail::admin_tenant_name')
 #
+# [*admin_token*]
+#  (optional) admin token
+#  String value.
+#  Defaults to hiera('contrail::admin_token')
+#
 # [*admin_user*]
 #  (optional) admin user name.
 #  String value.
 #  Defaults to hiera('contrail::admin_user')
 #
+# [*api_server*]
+#  (optional) IP address of api server
+#  String value.
+#  Defaults to hiera('internal_api_virtual_ip')
+#
+# [*api_port*]
+#  (optional) port of api server
+#  String value.
+#  Defaults to hiera('contrail::api_port')
+#
 # [*auth_host*]
 #  (optional) keystone server ip address
 #  String (IPv4) value.
 #  Defaults to hiera('contrail::auth_host')
+#
+# [*step*]
+#  (optional) Step stack is in
+#  Integer value.
+#  Defaults to hiera('step')
+#
+# [*use_ssl*]
+#  (optional) switch for ssl usage
+#  String value.
+#  Defaults to 'False'
 #
 class tripleo::network::contrail::heat(
   $step = hiera('step'),

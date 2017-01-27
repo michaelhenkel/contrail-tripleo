@@ -73,10 +73,20 @@
 #  (required) host IP address of Database node
 #  String (IPv4) value.
 #
+# [*host_name*]
+#  (optional) host name of Database node
+#  String value.
+#  Defaults to $::hostname
+#
 # [*public_vip*]
 #  (optional) Public virtual ip
 #  String value.
 #  Defaults to hiera('public_virtual_ip')
+#
+# [*step*]
+#  (optional) Step stack is in
+#  Integer value.
+#  Defaults to hiera('step')
 #
 # [*zookeeper_client_ip*]
 #  (optional) Zookeeper listen address

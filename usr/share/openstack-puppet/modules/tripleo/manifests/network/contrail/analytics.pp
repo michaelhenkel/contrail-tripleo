@@ -43,6 +43,21 @@
 #  String value.
 #  Defaults to hiera('contrail::admin_user')
 #
+# [*api_server*]
+#  (optional) IP address of api server
+#  String value.
+#  Defaults to hiera('internal_api_virtual_ip')
+#
+# [*api_port*]
+#  (optional) port of api server
+#  String value.
+#  Defaults to hiera('contrail::api_port')
+#
+# [*analytics_aaa_mode*]
+#  (optional) analytics aaa mode parameter
+#  String value.
+#  Defaults to hiera('contrail::analytics_aaa_mode')
+#
 # [*auth_host*]
 #  (optional) keystone server ip address
 #  String (IPv4) value.
@@ -53,10 +68,25 @@
 #  Integer value.
 #  Defaults to hiera('contrail::auth_port')
 #
+# [*auth_port_ssl*]
+#  (optional) keystone ssl port.
+#  Integer value.
+#  Defaults to hiera('contrail::auth_port_ssl')
+#
 # [*auth_protocol*]
 #  (optional) authentication protocol.
 #  String value.
 #  Defaults to hiera('contrail::auth_protocol')
+#
+# [*ca_file*]
+#  (optional) ca file name
+#  String value.
+#  Defaults to hiera('contrail::service_certificate',false)
+#
+# [*cert_file*]
+#  (optional) cert file name
+#  String value.
+#  Defaults to hiera('contrail::service_certificate',false)
 #
 # [*cassandra_server_list*]
 #  (optional) List IPs+port of Cassandra servers
@@ -103,6 +133,31 @@
 #  String (IPv4) value + port
 #  Defaults to hiera('contrail::memcached_server')
 #
+# [*public_vip*]
+#  (optional) Public virtual IP address
+#  String (IPv4) value
+#  Defaults to hiera('public_virtual_ip')
+#
+# [*rabbit_server*]
+#  (optional) IPv4 addresses of rabbit server.
+#  Array of String (IPv4) value.
+#  Defaults to hiera('rabbitmq_node_ips')
+#
+# [*rabbit_user*]
+#  (optional) Rabbit user
+#  String value.
+#  Defaults to hiera('contrail::rabbit_user')
+#
+# [*rabbit_password*]
+#  (optional) Rabbit password
+#  String value.
+#  Defaults to hiera('contrail::rabbit_password')
+#
+# [*rabbit_port*]
+#  (optional) port of rabbit server
+#  String value.
+#  Defaults to hiera('contrail::rabbit_port')
+#
 # [*redis_server*]
 #  (optional) IPv4 address of redis server.
 #  String (IPv4) value.
@@ -122,6 +177,11 @@
 #  (optional) Analytics rest port
 #  Integer value.
 #  Defaults to 8081
+#
+# [*step*]
+#  (optional) Step stack is in
+#  Integer value.
+#  Defaults to hiera('step')
 #
 # [*zk_server_ip*]
 #  (optional) List IPs+port of Zookeeper servers

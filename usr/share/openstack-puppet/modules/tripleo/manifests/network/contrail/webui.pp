@@ -44,6 +44,31 @@
 #  String (IPv4) value.
 #  Defaults to hiera('contrail::auth_host')
 #
+# [*auth_port_public*]
+#  (optional) keystone port.
+#  Integer value.
+#  Defaults to hiera('contrail::auth_port_public')
+#
+# [*auth_port_ssl*]
+#  (optional) keystone ssl port.
+#  Integer value.
+#  Defaults to hiera('contrail::auth_port_ssl')
+#
+# [*auth_port_ssl_public*]
+#  (optional) keystone public ssl port.
+#  Integer value.
+#  Defaults to hiera('contrail::auth_port_ssl_public')
+#
+# [*auth_protocol*]
+#  (optional) authentication protocol.
+#  String value.
+#  Defaults to hiera('contrail::auth_protocol')
+#
+# [*cert_file*]
+#  (optional) cert file name
+#  String value.
+#  Defaults to hiera('contrail::service_certificate',false)
+#
 # [*cassandra_server_list*]
 #  (optional) List IPs+port of Cassandra servers
 #  Array of strings value.
@@ -89,7 +114,7 @@ class tripleo::network::contrail::webui(
   $auth_port_public          = hiera('contrail::auth_port_public'),
   $auth_port_ssl_public      = hiera('contrail::auth_port_ssl_public'),
   $cassandra_server_list     = hiera('contrail_database_node_ips'),
-  $cert_file                 = hiera('contrail::service_certificate',false),
+  $cert_file                 = hiera('contrail::cert_file'),
   $contrail_analytics_vip    = hiera('internal_api_virtual_ip'),
   $contrail_config_vip       = hiera('internal_api_virtual_ip'),
   $contrail_webui_http_port  = hiera('contrail::webui::http_port'),

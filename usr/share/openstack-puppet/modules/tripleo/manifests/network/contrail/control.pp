@@ -39,6 +39,16 @@
 #  String value.
 #  Defaults to hiera('contrail::admin_user'),
 #
+# [*api_server*]
+#  (optional) IP address of api server
+#  String value.
+#  Defaults to hiera('internal_api_virtual_ip')
+#
+# [*api_port*]
+#  (optional) port of api server
+#  String value.
+#  Defaults to hiera('contrail::api_port')
+#
 # [*auth_host*]
 #  (optional) keystone server ip address
 #  String (IPv4) value.
@@ -105,6 +115,11 @@
 #  (optional) RNDC secret for named
 #  String value
 #  Defaults to hiera('contrail::control::rndc_secret')
+#
+# [*step*]
+#  (optional) Step stack is in
+#  Integer value.
+#  Defaults to hiera('step')
 #
 class tripleo::network::contrail::control(
   $step              = hiera('step'),

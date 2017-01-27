@@ -22,6 +22,126 @@
 #   (Optional) The current step of the deployment
 #   Defaults to hiera('step')
 #
+# [*admin_password*]
+#  (optional) admin password
+#  String value.
+#  Defaults to hiera('contrail::admin_password')
+#
+# [*admin_tenant_name*]
+#  (optional) admin tenant name.
+#  String value.
+#  Defaults to hiera('contrail::admin_tenant_name')
+#
+# [*admin_token*]
+#  (optional) admin token
+#  String value.
+#  Defaults to hiera('contrail::admin_token')
+#
+# [*admin_user*]
+#  (optional) admin user name.
+#  String value.
+#  Defaults to hiera('contrail::admin_user')
+#
+# [*api_server*]
+#  (optional) IP address of api server
+#  String value.
+#  Defaults to hiera('internal_api_virtual_ip')
+#
+# [*api_port*]
+#  (optional) port of api server
+#  String value.
+#  Defaults to hiera('contrail::api_port')
+#
+# [*auth_host*]
+#  (optional) keystone server ip address
+#  String (IPv4) value.
+#  Defaults to hiera('contrail::auth_host')
+#
+# [*auth_port*]
+#  (optional) keystone port.
+#  Integer value.
+#  Defaults to hiera('contrail::auth_port')
+#
+# [*auth_port_ssl*]
+#  (optional) keystone ssl port.
+#  Integer value.
+#  Defaults to hiera('contrail::auth_port_ssl')
+#
+# [*auth_protocol*]
+#  (optional) authentication protocol.
+#  String value.
+#  Defaults to hiera('contrail::auth_protocol')
+#
+# [*ca_file*]
+#  (optional) ca file name
+#  String value.
+#  Defaults to hiera('contrail::service_certificate',false)
+#
+# [*cert_file*]
+#  (optional) cert file name
+#  String value.
+#  Defaults to hiera('contrail::service_certificate',false)
+#
+# [*control_server*]
+#  (optional) Contrail control server IP
+#  Array of String (IPv4) value.
+#  Defaults to hiera('contrail_control_node_ips')
+#
+# [*disc_server_ip*]
+#  (optional) IPv4 address of discovery server.
+#  String (IPv4) value.
+#  Defaults to hiera('contrail::disc_server_ip')
+#
+# [*disc_server_port*]
+#  (optional) port Discovery server listens on.
+#  Integer value.
+#  Defaults to hiera('contrail::disc_server_port')
+#
+# [*gateway*]
+#  (optional) Default GW for vrouter
+#  String (IPv4) value.
+#  Defaults to hiera('contrail::vrouter::gateway')
+#
+# [*host_ip*]
+#  (optional) host IP address of vrouter
+#  String (IPv4) value.
+#  Defaults to hiera('contrail::vrouter::host_ip')
+#
+# [*insecure*]
+#  (optional) insecure connections allowed
+#  String value.
+#  Defaults to hiera('contrail::insecure')
+#
+# [*memcached_servers*]
+#  (optional) memcached server ip
+#  String (IPv4) value.
+#  Defaults to hiera('contrail::memcached_server')
+#
+# [*metadata_secret*]
+#  (optional) secret for metadata
+#  String value.
+#  Defaults to hiera('contrail::vrouter::metadata_proxy_shared_secret')
+#
+# [*netmask*]
+#  (optional) netmask for vrouter interface
+#  String (IPv4) value.
+#  Defaults to hiera('contrail::vrouter::netmask')
+#
+# [*physical_interface*]
+#  (optional) vrouter interface
+#  String value.
+#  Defaults to hiera('contrail::vrouter::physical_interface')
+#
+# [*public_vip*]
+#  (optional) Public VIP to Keystone
+#  String (IPv4) value.
+#  Defaults to hiera('public_virtual_ip')
+#
+# [*is_tsn*]
+#  (optional) Turns vrouter into TSN
+#  String value.
+#  Defaults to hiera('contrail::vrouter::is_tsn',false)
+#
 class tripleo::network::contrail::vrouter (
   $step               = hiera('step'),
   $admin_password     = hiera('contrail::admin_password'),

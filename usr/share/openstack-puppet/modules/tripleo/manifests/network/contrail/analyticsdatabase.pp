@@ -24,6 +24,16 @@
 #  String (IPv4) value
 #  Defaults to hiera('contrail::auth_host')
 #
+# [*auth_port_ssl*]
+#  (optional) keystone ssl port.
+#  Integer value.
+#  Defaults to hiera('contrail::auth_port_ssl')
+#
+# [*auth_protocol*]
+#  (optional) authentication protocol.
+#  String value.
+#  Defaults to hiera('contrail::auth_protocol')
+#
 # [*api_server*]
 #  (optional) IPv4 VIP of Contrail Config API
 #  String (IPv4) value
@@ -53,6 +63,16 @@
 #  (optional) Keystone Admin user
 #  String value
 #  Defaults to hiera('contrail::admin_user')
+#
+# [*ca_file*]
+#  (optional) ca file name
+#  String value.
+#  Defaults to hiera('contrail::service_certificate',false)
+#
+# [*cert_file*]
+#  (optional) cert file name
+#  String value.
+#  Defaults to hiera('contrail::service_certificate',false)
 #
 # [*cassandra_servers*]
 #  (optional) List of analytics cassandra servers
@@ -88,6 +108,11 @@
 #  (optional) Public VIP
 #  String (IPv4) value
 #  Defaults to hiera('public_virtual_ip')
+#
+# [*step*]
+#  (optional) step in the stack
+#  String value
+#  Defaults to hiera('step')
 #
 # [*zookeeper_server_ips*]
 #  (optional) list of zookeeper server IPs

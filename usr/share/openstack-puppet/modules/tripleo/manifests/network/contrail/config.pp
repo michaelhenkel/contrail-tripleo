@@ -20,6 +20,11 @@
 # == Parameters:
 #
 #
+# [*aaa_mode*]
+#  (optional) aaa mode parameter
+#  String value.
+#  Defaults to hiera('contrail::aaa_mode')
+#
 # [*admin_password*]
 #  (optional) admin password
 #  String value.
@@ -63,9 +68,24 @@
 #  (optional) keystone port.
 #  Defaults to hiera('contrail::auth_port')
 #
+# [*auth_port_ssl*]
+#  (optional) keystone ssl port.
+#  Integer value.
+#  Defaults to hiera('contrail::auth_port_ssl')
+#
 # [*auth_protocol*]
 #  (optional) authentication protocol.
 #  Defaults to hiera('contrail::auth_protocol')
+#
+# [*ca_file*]
+#  (optional) ca file name
+#  String value.
+#  Defaults to hiera('contrail::service_certificate',false)
+#
+# [*cert_file*]
+#  (optional) cert file name
+#  String value.
+#  Defaults to hiera('contrail::service_certificate',false)
 #
 # [*cassandra_server_list*]
 #  (optional) List IPs+port of Cassandra servers
@@ -160,6 +180,11 @@
 #  String value.
 #  Defaults to hiera('public_virtual_ip')
 #
+# [*step*]
+#  (optional) Step stack is in
+#  Integer value.
+#  Defaults to hiera('step')
+#
 # [*rabbit_server*]
 #  (optional) rabbit server
 #  Array of string value.
@@ -191,7 +216,7 @@
 #  Defaults to hiera('contrail_database_node_ips')
 #
 class tripleo::network::contrail::config(
-  $step = hiera('step'),
+  $step  = hiera('step'),
   $aaa_mode               = hiera('contrail::aaa_mode'),
   $admin_password         = hiera('contrail::admin_password'),
   $admin_tenant_name      = hiera('contrail::admin_tenant_name'),
@@ -333,19 +358,6 @@ class tripleo::network::contrail::config(
           },
       },
       keystone_config         => $keystone_config,
-      #keystone_config         => {
-      #  'KEYSTONE' => {
-      #    'admin_password'    => $admin_password,
-      #    'admin_tenant_name' => $admin_tenant_name,
-      #    'admin_token'       => $admin_token,
-      #    'admin_user'        => $admin_user,
-      #    'auth_host'         => $auth_host,
-      #    'auth_port'         => $auth_port,
-      #    'auth_protocol'     => $auth_protocol,
-      #    'insecure'          => $insecure,
-      #    'memcached_servers' => $memcached_servers,
-      #  },
-      #},
       schema_config           => {
         'DEFAULTS' => {
           'cassandra_server_list' => $cassandra_server_list_9160,
@@ -377,18 +389,8 @@ class tripleo::network::contrail::config(
         },
       },
       vnc_api_lib_config      => $vnc_api_lib_config,
-      #vnc_api_lib_config      => {
-      #  'auth' => {
-      #    'AUTHN_SERVER' => $public_vip,
-      #  },
-      #},
     }
   }
-#  if $step >= 4 {
-#    exec { 'restart contrail-config service':
-#      command => '/bin/systemctl restart supervisor-config',
-#    }
-#  }
   if $step >= 5 {
     class {'::contrail::config::provision_config':
       api_address                => $api_server,

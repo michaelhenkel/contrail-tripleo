@@ -2,6 +2,66 @@
 #
 # === Parameters
 #
+# [*admin_password*]
+#  (optional) admin password
+#  String value.
+#  Defaults to hiera('contrail::admin_password')
+#
+# [*admin_tenant_name*]
+#  (optional) admin tenant name.
+#  String value.
+#  Defaults to hiera('contrail::admin_tenant_name')
+#
+# [*admin_token*]
+#  (optional) admin token
+#  String value.
+#  Defaults to hiera('contrail::admin_token')
+#
+# [*admin_user*]
+#  (optional) admin user name.
+#  String value.
+#  Defaults to hiera('contrail::admin_user')
+#
+# [*api_server*]
+#  (optional) IP address of api server
+#  String value.
+#  Defaults to hiera('internal_api_virtual_ip')
+#
+# [*api_port*]
+#  (optional) port of api server
+#  String value.
+#  Defaults to hiera('contrail::api_port')
+#
+# [*auth_host*]
+#  (optional) keystone server ip address
+#  String (IPv4) value.
+#  Defaults to hiera('contrail::auth_host')
+#
+# [*auth_port*]
+#  (optional) keystone port.
+#  Integer value.
+#  Defaults to hiera('contrail::auth_port')
+#
+# [*auth_port_ssl*]
+#  (optional) keystone ssl port.
+#  Integer value.
+#  Defaults to hiera('contrail::auth_port_ssl')
+#
+# [*auth_protocol*]
+#  (optional) authentication protocol.
+#  String value.
+#  Defaults to hiera('contrail::auth_protocol')
+#
+# [*ca_file*]
+#  (optional) ca file name
+#  String value.
+#  Defaults to hiera('contrail::service_certificate',false)
+#
+# [*cert_file*]
+#  (optional) cert file name
+#  String value.
+#  Defaults to hiera('contrail::service_certificate',false)
+#
 # [*api_server_ip*]
 #   IP address of the API Server
 #   Defaults to $::os_service_default
