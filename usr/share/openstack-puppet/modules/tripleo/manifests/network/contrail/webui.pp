@@ -114,7 +114,7 @@ class tripleo::network::contrail::webui(
   $auth_port_public          = hiera('contrail::auth_port_public'),
   $auth_port_ssl_public      = hiera('contrail::auth_port_ssl_public'),
   $cassandra_server_list     = hiera('contrail_database_node_ips'),
-  $cert_file                 = hiera('contrail::cert_file'),
+  $cert_file                 = hiera('contrail::service_certificate',false),
   $contrail_analytics_vip    = hiera('internal_api_virtual_ip'),
   $contrail_config_vip       = hiera('internal_api_virtual_ip'),
   $contrail_webui_http_port  = hiera('contrail::webui::http_port'),
