@@ -50,7 +50,6 @@
 #
 class tripleo::network::contrail::neutron_plugin (
   $contrail_extensions    = hiera('contrail::vrouter::contrail_extensions'),
-  $purge_config           = false,
   $admin_password         = hiera('contrail::admin_password'),
   $admin_tenant_name      = hiera('contrail::admin_tenant_name'),
   $admin_token            = hiera('contrail::admin_token'),
@@ -63,6 +62,8 @@ class tripleo::network::contrail::neutron_plugin (
   $auth_protocol          = hiera('contrail::auth_protocol'),
   $ca_file                = hiera('tripleo::haproxy::service_certificate',false),
   $cert_file              = hiera('tripleo::haproxy::service_certificate',false),
+  $purge_config           = false,
+  $package_ensure         = 'present',
 ) {
 
   include ::neutron::deps
@@ -104,14 +105,14 @@ class tripleo::network::contrail::neutron_plugin (
     }
     $api_paste_config_file = '/usr/share/neutron/api-paste.ini'
   }
-  ini_setting { "filter:user_token":
+  ini_setting { 'filter:user_token':
     ensure  => present,
     path    => $api_paste_config_file,
     section => 'filter:user_token',
     setting => 'paste.filter_factory',
     value   => 'neutron_plugin_contrail.plugins.opencontrail.neutron_middleware:token_factory',
   }
-  ini_setting { "composite:neutronapi_v2_0":
+  ini_setting { 'composite:neutronapi_v2_0':
     ensure  => present,
     path    => $api_paste_config_file,
     section => 'composite:neutronapi_v2_0',
@@ -134,13 +135,13 @@ class tripleo::network::contrail::neutron_plugin (
       'APISERVER/contrail_extensions':     value => join($contrail_extensions, ',');
       'KEYSTONE/auth_url':                 value => $auth_url;
       'KEYSTONE/admin_user' :              value => $admin_user;
-      'KEYSTONE/admin_tenant_name':        value => $admin_tenant;
+      'KEYSTONE/admin_tenant_name':        value => $admin_tenant_name;
       'KEYSTONE/admin_password':           value => $admin_password, secret =>true;
       'KEYSTONE/admin_token':              value => $admin_token, secret =>true;
       'KEYSTONE/cafile':                   value => $ca_file;
       'KEYSTONE/certfile':                 value => $cert_file;
       'keystone_authtoken/admin_user':     value => $admin_user;
-      'keystone_authtoken/admin_tenant':   value => $admin_tenant;
+      'keystone_authtoken/admin_tenant':   value => $admin_tenant_name;
       'keystone_authtoken/admin_password': value => $admin_password, secret =>true;
       'keystone_authtoken/auth_host':      value => $auth_host;
       'keystone_authtoken/auth_protocol':  value => $auth_protocol;
@@ -156,11 +157,11 @@ class tripleo::network::contrail::neutron_plugin (
       'APISERVER/contrail_extensions':     value => join($contrail_extensions, ',');
       'KEYSTONE/auth_url':                 value => $auth_url;
       'KEYSTONE/admin_user' :              value => $admin_user;
-      'KEYSTONE/admin_tenant_name':        value => $admin_tenant;
+      'KEYSTONE/admin_tenant_name':        value => $admin_tenant_name;
       'KEYSTONE/admin_password':           value => $admin_password, secret =>true;
       'KEYSTONE/admin_token':              value => $admin_token, secret =>true;
       'keystone_authtoken/admin_user':     value => $admin_user;
-      'keystone_authtoken/admin_tenant':   value => $admin_tenant;
+      'keystone_authtoken/admin_tenant':   value => $admin_tenant_name;
       'keystone_authtoken/admin_password': value => $admin_password, secret =>true;
       'keystone_authtoken/auth_host':      value => $auth_host;
       'keystone_authtoken/auth_protocol':  value => $auth_protocol;

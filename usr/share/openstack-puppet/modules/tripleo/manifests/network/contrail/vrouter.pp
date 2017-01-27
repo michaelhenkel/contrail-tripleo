@@ -49,7 +49,6 @@ class tripleo::network::contrail::vrouter (
   $public_vip         = hiera('public_virtual_ip'),
   $is_tsn             = hiera('contrail::vrouter::is_tsn',false),
 ) {
-    
     $cidr = netmask_to_cidr($netmask)
     notify { 'cidr':
       message => $cidr,
@@ -116,7 +115,7 @@ class tripleo::network::contrail::vrouter (
           'compute_node_address' => $host_ip,
           'gateway'              => $gateway,
           'ip'                   => "${host_ip}/${cidr}",
-          'name'                 => "vhost0",
+          'name'                 => 'vhost0',
           'physical_interface'   => $physical_interface,
         },
         'METADATA' => {
@@ -136,7 +135,7 @@ class tripleo::network::contrail::vrouter (
           'compute_node_address' => $host_ip,
           'gateway'              => $gateway,
           'ip'                   => "${host_ip}/${cidr}",
-          'name'                 => "vhost0",
+          'name'                 => 'vhost0',
           'physical_interface'   => $physical_interface,
         },
         'METADATA' => {
@@ -149,24 +148,24 @@ class tripleo::network::contrail::vrouter (
       }
     }
     class {'::contrail::vrouter':
-      discovery_ip               => $disc_server_ip,
-      gateway                    => $gateway,
-      host_ip                    => $host_ip,
-      is_tsn                     => $is_tsn,
-      macaddr                    => $macaddress,
-      mask                       => $cidr,
-      netmask                    => $netmask,
-      physical_interface         => $physical_interface,
-      vhost_ip                   => $host_ip,
-      keystone_config            => $keystone_config,
-      vrouter_agent_config       => $vrouter_agent_config,
-      vrouter_nodemgr_config       => {
+      discovery_ip           => $disc_server_ip,
+      gateway                => $gateway,
+      host_ip                => $host_ip,
+      is_tsn                 => $is_tsn,
+      macaddr                => $macaddress,
+      mask                   => $cidr,
+      netmask                => $netmask,
+      physical_interface     => $physical_interface,
+      vhost_ip               => $host_ip,
+      keystone_config        => $keystone_config,
+      vrouter_agent_config   => $vrouter_agent_config,
+      vrouter_nodemgr_config => {
         'DISCOVERY' => {
           'server' => $disc_server_ip,
           'port'   => $disc_server_port,
         },
       },
-      vnc_api_lib_config    => $vnc_api_lib_config,
+      vnc_api_lib_config     => $vnc_api_lib_config,
     }
   if $step >= 5 {
     class {'::contrail::vrouter::provision_vrouter':

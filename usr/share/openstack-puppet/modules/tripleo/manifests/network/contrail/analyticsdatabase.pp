@@ -137,18 +137,18 @@ class tripleo::network::contrail::analyticsdatabase(
   if $step == 2 {
     class {'::contrail::analyticsdatabase':
       analyticsdatabase_params => {
-        'auth_host'            => $auth_host,
-        'api_server'           => $api_server,
-        'admin_password'       => $admin_password,
-        'admin_tenant_name'    => $admin_tenant_name,
-        'admin_token'          => $admin_token,
-        'admin_user'           => $admin_user,
-        'cassandra_servers'    => $cassandra_servers,
-        'host_ip'              => $host_ip,
-        'disc_server_ip'       => $disc_server_ip,
-        'disc_server_port'     => $disc_server_port,
-        'kafka_hostnames'      => $kafka_hostnames,
-        'zookeeper_server_ips' => $zookeeper_server_ips,
+        'auth_host'             => $auth_host,
+        'api_server'            => $api_server,
+        'admin_password'        => $admin_password,
+        'admin_tenant_name'     => $admin_tenant_name,
+        'admin_token'           => $admin_token,
+        'admin_user'            => $admin_user,
+        'cassandra_servers'     => $cassandra_servers,
+        'host_ip'               => $host_ip,
+        'disc_server_ip'        => $disc_server_ip,
+        'disc_server_port'      => $disc_server_port,
+        'kafka_hostnames'       => $kafka_hostnames,
+        'zookeeper_server_ips'  => $zookeeper_server_ips,
         database_nodemgr_config => {
           'DEFAULT'   => {
             'hostip' => $host_ip,
@@ -158,7 +158,7 @@ class tripleo::network::contrail::analyticsdatabase(
             'server' => $disc_server_ip,
           },
         },
-        vnc_api_lib_config      => $vnc_api_lib_config, 
+        vnc_api_lib_config      => $vnc_api_lib_config,
       }
     }
   }

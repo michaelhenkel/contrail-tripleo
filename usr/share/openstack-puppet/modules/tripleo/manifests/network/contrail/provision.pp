@@ -13,24 +13,15 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 #
-# == Class: tripleo::network::contrail::control
+# == Class: tripleo::network::contrail::provision
 #
-# Configure Contrail Control services
+# Provisions Contrail Control and link local services
 #
 # == Parameters:
 #
 # [*host_ip*]
 #  (required) host IP address of Control
 #  String (IPv4) value.
-#
-# [*ifmap_password*]
-#  (required) ifmap password
-#  String value.
-#
-# [*ifmap_username*]
-#  (optional) ifmap username
-#  String value.
-#  Defaults to hiera('contrail::ifmap_username'),
 #
 # [*admin_password*]
 #  (optional) admin password
@@ -65,25 +56,6 @@
 #  (optional) authentication protocol.
 #  Defaults to hiera('contrail::auth_protocol'),
 #
-# [*disc_server_ip*]
-#  (optional) IPv4 address of discovery server.
-#  String (IPv4) value.
-#  Defaults to hiera('contrail::disc_server_ip'),
-#
-# [*disc_server_port*]
-#  (optional) port Discovery server listens on.
-#  Integer value.
-#  Defaults to hiera('contrail::disc_server_port'),
-#
-# [*insecure*]
-#  (optional) insecure mode.
-#  Defaults to hiera('contrail::insecure'),
-#
-# [*memcached_servers*]
-#  (optional) IPv4 address of memcached servers
-#  String (IPv4) value + port
-#  Defaults to hiera('contrail::memcached_servers'),
-#
 class tripleo::network::contrail::provision(
   $step             = hiera('step'),
   $admin_password = hiera('contrail::admin_password'),
@@ -98,17 +70,17 @@ class tripleo::network::contrail::provision(
 {
   if $step >= 5 {
     class {'::contrail::control::provision_control':
-      api_address => $api_server,
-      keystone_admin_user => $admin_user,
-      keystone_admin_password => $admin_password,
+      api_address                => $api_server,
+      keystone_admin_user        => $admin_user,
+      keystone_admin_password    => $admin_password,
       keystone_admin_tenant_name => $admin_tenant_name,
     }
     class {'::contrail::control::provision_linklocal':
-      api_address => $api_server,
-      keystone_admin_user => $admin_user,
-      keystone_admin_password => $admin_password,
+      api_address                => $api_server,
+      keystone_admin_user        => $admin_user,
+      keystone_admin_password    => $admin_password,
       keystone_admin_tenant_name => $admin_tenant_name,
-      ipfabric_service_ip => $api_server,
+      ipfabric_service_ip        => $api_server,
     }
   }
 }

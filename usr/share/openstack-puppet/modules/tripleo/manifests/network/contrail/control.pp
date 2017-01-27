@@ -139,7 +139,7 @@ class tripleo::network::contrail::control(
     class {'::contrail::control':
       secret                 => $secret,
       control_config         => {
-        'DEFAULT'  => {
+        'DEFAULT'   => {
           'hostip' => $host_ip,
         },
         'DISCOVERY' => {
@@ -152,7 +152,7 @@ class tripleo::network::contrail::control(
         },
       },
       dns_config             => {
-        'DEFAULT'  => {
+        'DEFAULT'   => {
           'hostip'      => $host_ip,
           'rndc_secret' => $secret,
         },

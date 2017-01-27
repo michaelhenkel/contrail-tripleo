@@ -238,9 +238,9 @@ class tripleo::network::contrail::config(
   $basicauthusers_property_control = map($control_server_list) |$item| { "${item}.control:${item}.control" }
   $basicauthusers_property_dns = $control_server_list.map |$item| { "${item}.dns:${item}.dns" }
   $basicauthusers_property = concat($basicauthusers_property_control, $basicauthusers_property_dns)
-  $cassandra_server_list_9160 = join([join($cassandra_server_list, ':9160 '),":9160"],'')
-  $rabbit_server_list_5672 = join([join($rabbit_server, ':5672,'),":5672"],'')
-  $zk_server_ip_2181 = join([join($zk_server_ip, ':2181,'),":2181"],'')
+  $cassandra_server_list_9160 = join([join($cassandra_server_list, ':9160 '),':9160'],'')
+  $rabbit_server_list_5672 = join([join($rabbit_server, ':5672,'),':5672'],'')
+  $zk_server_ip_2181 = join([join($zk_server_ip, ':2181,'),':2181'],'')
 
   if $auth_protocol == 'https' {
     $keystone_config = {

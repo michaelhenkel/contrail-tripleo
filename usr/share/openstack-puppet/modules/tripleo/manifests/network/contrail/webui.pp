@@ -98,7 +98,6 @@ class tripleo::network::contrail::webui(
   $redis_ip                  = hiera('contrail::webui::redis_ip'),
 )
 {
-  
   if $auth_protocol == 'https' {
     $auth_port = $auth_port_ssl_public
   } else {
